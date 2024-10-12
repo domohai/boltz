@@ -1,2 +1,2 @@
 # BoltZ
-A delivery management system
+An express management system
