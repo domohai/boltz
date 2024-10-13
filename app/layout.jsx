@@ -1,16 +1,18 @@
 import '@styles/global.css';
-import { Html } from 'next/document';
+import Providers from '@components/Providers';
 
 export const metadata = {
   title: "BoltZ",
-  description: "An express management system"
+  description: "An express management system",
 }
 
 const RootLayout = ({ children }) => {
   return (
-    <html lang='en'>
+    <html lang="en">
       <body>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   )
