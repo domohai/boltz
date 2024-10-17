@@ -3,16 +3,16 @@ import Footer from '@components/Footer';
 
 const GlobalLayout = ({ children }) => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       {/* Đức Hải */}
       {/* Navbar start */}
       <Nav />
       {/* NavBar end */}
       
       {/* Delete this when add page Content ;) */}
-      <div style={styles.contentWrapper}>
+      <main className="flex-grow h-[500px]">
         {children}
-      </div>
+      </main>
       
       {/* Footer start */}
       <Footer />
@@ -21,18 +21,5 @@ const GlobalLayout = ({ children }) => {
   )
 }
 
-// Delete this when add page Content ;)
-const styles = {
-  pageWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100vh', 
-  },
-  contentWrapper: {
-    flex: '1', 
-    backgroundColor: '#f0f0f0', 
-    padding: '300px', 
-  }
-};
 
 export default GlobalLayout
