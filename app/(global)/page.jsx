@@ -1,13 +1,13 @@
+import Banner from '@components/Banner';
 import HomepageTabs from '@components/HomepageTabs';
+
 
 const HomePage = () => {
   return (
     <div>
       {/* Đức Hiệp */}
       {/* Banner start */}
-      
-      {/* Nội dung banner ở đây */}
-
+      <Banner />
       {/* Banner end */}
 
       {/* Hữu Đức */}

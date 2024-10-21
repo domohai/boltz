@@ -8,12 +8,9 @@ const GlobalLayout = ({ children }) => {
       {/* Navbar start */}
       <Nav />
       {/* NavBar end */}
-      
-      {/* Delete this when add page Content ;) */}
       <main>
         {children}
       </main>
-      
       {/* Footer start */}
       <Footer />
       {/* Footer end */}
