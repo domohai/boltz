@@ -10,9 +10,9 @@ const GlobalLayout = ({ children }) => {
       {/* NavBar end */}
       
       {/* Delete this when add page Content ;) */}
-      <main className="flex-grow h-[500px]">
+      {/* <main className="flex-grow h-[500px]"> */}
         {children}
-      </main>
+      {/* </main> */}
       
       {/* Footer start */}
       <Footer />
