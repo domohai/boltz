@@ -2,7 +2,7 @@ import { Link } from "@nextui-org/react";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-8">
+    <footer className="bg-gray-800 text-white py-8 mt-[100px]">
       <div className="flex justify-between max-w-7xl mx-auto flex-wrap">
         {/* Left Column */}
         <div className="flex-1 p-2 min-w-[450px] mr-[20px]">
