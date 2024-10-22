@@ -1,6 +1,6 @@
 import BackToWebsiteLink from '@components/BackToWebsiteLink';
 import SignInForm from '@components/SignInForm';
-import Footer from '@components/Footer';
+
 
 const LoginPage = () => {
   return (
