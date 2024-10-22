@@ -1,4 +1,4 @@
-import HomepageTabs from '@components/HomepageTabs';
+import HomepageTabs from '@components/HomepagetabsComp/HomepageTabs';
 
 const HomePage = () => {
   return (
