@@ -1,10 +1,10 @@
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Tabs, Tab} from "@nextui-org/tabs";
-import {Card, CardBody} from "@nextui-org/card";
-import { Input} from "@nextui-org/input";
-import { Button} from "@nextui-org/button";
-import { Autocomplete, AutocompleteItem} from "@nextui-org/autocomplete";
+import { Card, CardBody } from "@nextui-org/card";
+import { Input } from "@nextui-org/input";
+import { Button } from "@nextui-org/button";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { SearchIcon } from './SearchIcon';
 import { provinces } from "./dataProvinces";
 import { districts } from "./dataDistricts";
