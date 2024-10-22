@@ -1,48 +1,47 @@
 'use client';
 import React, { useState } from 'react';
-import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
-import { Input, Button, Autocomplete, AutocompleteItem } from "@nextui-org/react";
+import { Tabs, Tab} from "@nextui-org/tabs";
+import {Card, CardBody} from "@nextui-org/card";
+import { Input} from "@nextui-org/input";
+import { Button} from "@nextui-org/button";
+import { Autocomplete, AutocompleteItem} from "@nextui-org/autocomplete";
 import { SearchIcon } from './SearchIcon';
-import { address } from "./dataProvinces"; // Tỉnh/TP
-import { districts } from "./dataDistricts"; // Quận/Huyện
+import { provinces } from "./dataProvinces";
+import { districts } from "./dataDistricts";
 
 const HomepageTabs = () => {
   const [activeKey, setActiveKey] = useState('tracking');
-  const [selectedFromProvince, setSelectedFromProvince] = useState(""); // Quản lý tỉnh "Gửi từ"
-  const [selectedToProvince, setSelectedToProvince] = useState(""); // Quản lý tỉnh "Gửi đến"
-  const [fromDistricts, setFromDistricts] = useState([]); // Danh sách huyện "Gửi từ"
-  const [toDistricts, setToDistricts] = useState([]); // Danh sách huyện "Gửi đến"
-  const [selectedFromDistrict, setSelectedFromDistrict] = useState(""); // Quản lý huyện "Gửi từ"
-  const [selectedToDistrict, setSelectedToDistrict] = useState(""); // Quản lý huyện "Gửi đến"
-  const [weight, setWeight] = useState(""); // Quản lý trọng lượng
+  const [selectedFromProvince, setSelectedFromProvince] = useState("");
+  const [selectedToProvince, setSelectedToProvince] = useState("");
+  const [fromDistricts, setFromDistricts] = useState([]);
+  const [toDistricts, setToDistricts] = useState([]);
+  const [selectedFromDistrict, setSelectedFromDistrict] = useState("");
+  const [selectedToDistrict, setSelectedToDistrict] = useState("");
+  const [weight, setWeight] = useState("");
 
-  // Xử lý khi chọn tab
   const handleTabChange = (key) => {
     setActiveKey(key);
   };
 
-// Xử lý khi chọn tỉnh "Gửi từ"
-  const handleFromProvinceSelect = (item) => {
-  setSelectedFromProvince(item.value); // Cập nhật tỉnh đã chọn
-  const filteredDistricts = districts[item.value] || []; // Lọc huyện theo tỉnh đã chọn
-  setFromDistricts(filteredDistricts); // Cập nhật danh sách quận/huyện
-  setSelectedFromDistrict(""); // Đặt lại huyện khi tỉnh thay đổi
-};
-
-// Xử lý khi chọn tỉnh "Gửi đến"
-  const handleToProvinceSelect = (item) => {
-  setSelectedToProvince(item.value); // Cập nhật tỉnh đã chọn
-  const filteredDistricts = districts[item.value] || []; // Lọc huyện theo tỉnh đã chọn
-  setToDistricts(filteredDistricts); // Cập nhật danh sách quận/huyện
-  setSelectedToDistrict(""); // Đặt lại huyện khi tỉnh thay đổi
-};
-
-  // Xử lý chọn huyện cho cả "Gửi từ" và "Gửi đến"
-  const handleFromDistrictSelect = (item) => {
-    setSelectedFromDistrict(item.value);
+  const formatDistricts = (districtsArray) => {
+    return districtsArray.map(district => ({
+      label: district,
+      value: district
+    }));
   };
-  const handleToDistrictSelect = (item) => {
-    setSelectedToDistrict(item.value);
+
+  const handleFromProvinceSelect = (item) => {
+    setSelectedFromProvince(item.value);
+    const filteredDistricts = districts[item.value] || [];
+    setFromDistricts(formatDistricts(filteredDistricts));
+    setSelectedFromDistrict("");
+  };
+
+  const handleToProvinceSelect = (item) => {
+    setSelectedToProvince(item.value);
+    const filteredDistricts = districts[item.value] || [];
+    setToDistricts(formatDistricts(filteredDistricts));
+    setSelectedToDistrict("");
   };
 
   return (
@@ -53,9 +52,9 @@ const HomepageTabs = () => {
         selectedKey={activeKey}
         onSelectionChange={handleTabChange}
       >
-        <Tab key="tracking" title="Tra cứu bưu gửi" />
-        <Tab key="estimation" title="Ước tính cước phí" />
-        <Tab key="restricted" title="Tra hàng cấm gửi" />
+        <Tab key="tracking" title={<span className="text-xl">Tra cứu bưu gửi</span>} />
+        <Tab key="estimation" title={<span className="text-xl">Ước tính cước phí</span>} />
+        <Tab key="restricted" title={<span className="text-xl">Tra hàng cấm gửi</span>} />
       </Tabs>
 
       <div className="mt-4 w-full md:w-3/4">
@@ -72,59 +71,72 @@ const HomepageTabs = () => {
         {activeKey === 'estimation' && (
           <Card>
             <CardBody>
-              <h2 className="text-xl font-bold mb-4">Thông tin gửi hàng</h2>
-              
-              {/* Gửi từ */}
               <h3 className="text-lg font-semibold">Gửi từ</h3>
               <Autocomplete
-                placeholder="Tỉnh/TP" className="mt-4 w-full"
-                onItemSelect={handleFromProvinceSelect}
+                placeholder="Tỉnh/TP"
+                className="mt-4 w-full"
+                selectedKey={selectedFromProvince}
+                onSelectionChange={(value) => {
+                  const selectedItem = provinces.find(p => p.value === value);
+                  if (selectedItem) {
+                    handleFromProvinceSelect(selectedItem);
+                  }
+                }}
               >
-                {address.map((item) => (
+                {provinces.map((item) => (
                   <AutocompleteItem key={item.value} value={item.value}>
                     {item.label}
                   </AutocompleteItem>
                 ))}
               </Autocomplete>
-    
+
               <Autocomplete
-                placeholder="Quận/huyện" className="mt-4 w-full"
-                disabled={!selectedFromProvince} // Chỉ cho phép chọn khi tỉnh đã được chọn
-                onItemSelect={handleFromDistrictSelect}
+                placeholder="Quận/huyện"
+                className="mt-4 w-full"
+                disabled={!selectedFromProvince}
+                selectedKey={selectedFromDistrict}
+                onSelectionChange={(value) => setSelectedFromDistrict(value)}
               >
                 {fromDistricts.map((district) => (
-                  <AutocompleteItem key={district} value={district}>
-                    {district}
+                  <AutocompleteItem key={district.value} value={district.value}>
+                    {district.label}
                   </AutocompleteItem>
                 ))}
               </Autocomplete>
-    
-              {/* Gửi đến */}
+
               <h3 className="text-lg font-semibold mt-6">Gửi đến</h3>
               <Autocomplete
-                placeholder="Tỉnh/TP" className="mt-4 w-full"
-                onItemSelect={handleToProvinceSelect}
+                placeholder="Tỉnh/TP"
+                className="mt-4 w-full"
+                selectedKey={selectedToProvince}
+                onSelectionChange={(value) => {
+                  const selectedItem = provinces.find(p => p.value === value);
+                  if (selectedItem) {
+                    handleToProvinceSelect(selectedItem);
+                  }
+                }}
               >
-                {address.map((item) => (
+                {provinces.map((item) => (
                   <AutocompleteItem key={item.value} value={item.value}>
                     {item.label}
                   </AutocompleteItem>
                 ))}
               </Autocomplete>
-    
+
               <Autocomplete
-                placeholder="Quận/huyện" className="mt-4 w-full"
+                placeholder="Quận/huyện"
+                className="mt-4 w-full"
                 disabled={!selectedToProvince}
-                onItemSelect={handleToDistrictSelect}
+                selectedKey={selectedToDistrict}
+                onSelectionChange={(value) => setSelectedToDistrict(value)}
               >
                 {toDistricts.map((district) => (
-                  <AutocompleteItem key={district} value={district}>
-                    {district}
+                  <AutocompleteItem key={district.value} value={district.value}>
+                    {district.label}
                   </AutocompleteItem>
                 ))}
               </Autocomplete>
-    
-              {/* Trọng lượng */}
+
               <h3 className="text-lg font-semibold mt-6">Trọng lượng (g)</h3>
               <Input
                 type="number"
@@ -133,7 +145,7 @@ const HomepageTabs = () => {
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
               />
-    
+
               <Button className="mt-6 px-5 py-2 rounded-full">Tính cước</Button>
             </CardBody>
           </Card>
@@ -141,10 +153,10 @@ const HomepageTabs = () => {
         {activeKey === 'restricted' && (
           <Card>
             <CardBody>
-              <h1 className="text-2xl font-bold">Tra cứu hàng cấm gửi</h1><br />
+            <h1 className="text-center text-2xl font-bold">Tra cứu hàng cấm gửi</h1><br />
               <h3 className="text-xl font-bold">1. Danh mục vật phẩm, hàng hóa cấm gửi</h3><br />
               <h4 className="text-l font-bold">1.1. Danh mục vật phẩm, hàng hóa cấm gửi đối với bưu gửi EMS trong nước</h4><br />
-              <p>
+              <p className-="ml-6">
                 Theo quy định của Nhà nước, các loại vật phẩm, hàng hóa sau bị cấm gửi:<br />
                 - Các chất ma tuý và chất kích thích thần kinh.<br />
                 - Vũ khí đạn dược, trang thiết bị kỹ thuật quân sự.<br />

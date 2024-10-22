@@ -1,5 +1,5 @@
+import HomepageTabs from '@components/HomepagetabsComp/HomepageTabs';
 import Banner from '@components/Banner';
-import HomepageTabs from '@components/HomepageTabs';
 
 
 const HomePage = () => {
