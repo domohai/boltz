@@ -2,10 +2,10 @@ import { Link } from "@nextui-org/react";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-8">
-      <div className="flex justify-between max-w-6xl mx-auto flex-wrap">
+    <footer className="bg-gray-800 text-white py-8 mt-[100px]">
+      <div className="flex justify-between max-w-7xl mx-auto flex-wrap">
         {/* Left Column */}
-        <div className="flex-1 p-2 min-w-[200px]">
+        <div className="flex-1 p-2 min-w-[450px] mr-[20px]">
           <h4 className="text-lg font-bold mb-2">TỔNG CÔNG TY CỔ PHẦN BOLTZ</h4>
           <p>BOLTZ là doanh nghiệp hàng đầu cung cấp dịch vụ chuyển phát nhanh hàng hóa, bưu kiện trong nước, quốc tế tại Việt Nam.</p>
           <p>📄 Giấy chứng nhận Đăng ký Kinh doanh số: meow meow</p>
@@ -33,7 +33,7 @@ const Footer = () => {
         </div>
 
         {/* Right Column */}
-        <div className="flex-1 p-2 min-w-[200px]">
+        <div className="flex-1 p-2 min-w-[250px]">
           <h4 className="text-lg font-bold mb-2">Thông tin liên hệ</h4>
           <p>📍 VP giao dịch: 144 Xuân Thủy, Cầu Giấy, Hà Nội</p>
           <p>📧 boltz_company@vnu.edu.vn</p>

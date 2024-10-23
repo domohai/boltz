@@ -1,4 +1,4 @@
-export const address = [
+export const provinces = [
     { label: "Hà Nội", value: "Hà Nội" },
     { label: "TP.HCM", value: "TP.HCM" },
     { label: "Hải Phòng", value: "Hải Phòng" },
