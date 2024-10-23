@@ -1,10 +1,9 @@
 import HomepageTabs from '@components/HomepagetabsComp/HomepageTabs';
 import Banner from '@components/Banner';
 
-
 const HomePage = () => {
   return (
-    <div>
+    <section>
       {/* Đức Hiệp */}
       {/* Banner start */}
       <Banner />
@@ -14,7 +13,7 @@ const HomePage = () => {
       {/* Nhóm tra cứu */}
       <HomepageTabs />
       {/* Nhóm tra cứu */}
-    </div>
+    </section>
   )
 }
 
