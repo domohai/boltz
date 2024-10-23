@@ -1,20 +1,14 @@
-import { Navbar, 
-  NavbarBrand, 
-  NavbarContent, 
-  NavbarItem, 
-  NavbarMenuToggle, 
-  NavbarMenu, 
-  NavbarMenuItem } from "@nextui-org/navbar";
-import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/link";
-import { Image } from '@nextui-org/image';
+import {Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
+import {Button} from "@nextui-org/button";
+import {Link} from "@nextui-org/link";
+import {Image} from '@nextui-org/image';
 
 const Nav = () => {
   return (
     <Navbar className="w-full bg-white shadow-md" maxWidth={'full'}>
       <NavbarBrand className="flex items-center space-x-2">
         <Link href="/">
-          <Image src="/assets/images/logo_BoltZ.png" alt="BoltZ Logo" width={92} height={92} />
+          <Image src="/assets/images/logo_BoltZ.png" alt="BoltZ Logo" width={100} height={75} />
           <p className="font-bold text-xl text-gray-800">BoltZ</p>
         </Link>
       </NavbarBrand>

@@ -2,13 +2,14 @@ import ManagementNav from "@components/ManagementComp/ManagementNav";
 
 const ManagementLayout = ({ children }) => {
   return (
-    <div>
-      <ManagementNav/>
-      { children }
+    <section>
       {/* Minh Hải */}
       {/* Giao diện chung cho các staff */}
+      <ManagementNav/>
       
-    </div>
+      { children }
+      
+    </section>
   )
 }
 
