@@ -46,7 +46,7 @@ const HomepageTabs = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-start h-fit my-[8rem]">
       <Tabs
         variant="underlined"
         aria-label="Tabs"
@@ -70,8 +70,8 @@ const HomepageTabs = () => {
           </Card>
         )}
         {activeKey === 'estimation' && (
-          <Card>
-            <CardBody>
+          <Card className=''>
+            <CardBody className='my-[0.7rem] mx-[0.5rem]'>
               <h2 className="text-xl font-bold mb-4">Thông tin gửi hàng</h2>
               
               {/* Gửi từ */}
@@ -140,11 +140,11 @@ const HomepageTabs = () => {
         )}
         {activeKey === 'restricted' && (
           <Card>
-            <CardBody>
+            <CardBody  className='my-[1rem] mx-[0.5rem]'>
               <h1 className="text-2xl font-bold">Tra cứu hàng cấm gửi</h1><br />
               <h3 className="text-xl font-bold">1. Danh mục vật phẩm, hàng hóa cấm gửi</h3><br />
-              <h4 className="text-l font-bold">1.1. Danh mục vật phẩm, hàng hóa cấm gửi đối với bưu gửi EMS trong nước</h4><br />
-              <p>
+              <h4 className="text-l font-bold my-[8px]">1.1. Danh mục vật phẩm, hàng hóa cấm gửi đối với bưu gửi EMS trong nước</h4>
+              <p className='ml-[16px]'>
                 Theo quy định của Nhà nước, các loại vật phẩm, hàng hóa sau bị cấm gửi:<br />
                 - Các chất ma tuý và chất kích thích thần kinh.<br />
                 - Vũ khí đạn dược, trang thiết bị kỹ thuật quân sự.<br />
@@ -158,8 +158,8 @@ const HomepageTabs = () => {
                 - Bưu gửi chứa nhiều bưu gửi, gửi cho nhiều địa chỉ nhận khác nhau.<br />
                 - Các vật phẩm, hàng hóa mà tính chất hoặc cách gói bọc có thể gây nguy hiểm cho người nhân viên khai thác, vận chuyển, người dân hoặc làm mất vệ sinh, gây ô nhiễm môi trường.
               </p><br />
-              <h4 className="text-l font-bold">1.2. Danh mục vật phẩm, hàng hóa cấm gửi đối với bưu gửi EMS Quốc tế</h4><br />
-              <p>
+              <h4 className="text-l font-bold my-[8px]">1.2. Danh mục vật phẩm, hàng hóa cấm gửi đối với bưu gửi EMS Quốc tế</h4>
+              <p className='ml-[16px]'>
                 Một số vật phẩm, hàng hóa dù có hoặc không được liệt kê trong danh mục “Hàng cấm gửi” tra cứu theo quy định từng nước cũng sẽ không được chấp nhận vận chuyển qua dịch vụ EMS quốc tế. Các mặt hàng bao gồm:<br />
                 - Các vật phẩm bất hợp pháp, chất ma tuý, chất kích thích thần kinh, narcotics…<br />
                 - Vũ khí, đạn dược, trang thiết bị kỹ thuật quân sự (bao gồm các vật phẩm có hình dáng tương tự; đồ chơi…).<br />
@@ -176,15 +176,15 @@ const HomepageTabs = () => {
                 - Bưu gửi chứa nhiều bưu gửi, gửi cho nhiều địa chỉ nhận khác nhau.<br />
                 - Hàng giả, hàng nhái, hàng hóa vi phạm bản quyền, quyền sở hữu trí tuệ…<br />
               </p><br />
-              <h3 className="text-xl font-bold">2. Danh mục vật phẩm, hàng hóa gửi có điều kiện</h3><br />
-              <p>
+              <h3 className="text-xl font-bold my-[8px]">2. Danh mục vật phẩm, hàng hóa gửi có điều kiện</h3>
+              <p className='ml-[16px]'>
                 - Bưu gửi có vật phẩm, hàng hoá để kinh doanh phải có chứng từ thuế theo quy định của pháp luật.<br />
                 - Vật phẩm, hàng hoá xuất khẩu, nhập khẩu thuộc quản lý chuyên ngành phải thực hiện theo quy định của cơ quan quản lý chuyên ngành có thẩm quyền và theo thông báo của Hiệp hội Bưu chính thế giới.<br />
                 - Vật phẩm, hàng hoá dễ bị hư hỏng, chất lỏng, chất bột đóng gói phải bảo đảm không gây hư hỏng, ô nhiễm bưu gửi khác.<br />
                 - Vật phẩm, hàng hoá gửi trong bưu gửi EMS vận chuyển qua đường hàng không phải tuân theo những quy định về an ninh hàng không.<br />
               </p><br />
               <h3 className="text-xl font-bold">3. Điều kiện nhận gửi bưu gửi đi quốc tế</h3><br />
-              <p>
+              <p className='ml-[16px]'>
                 Ngoài những quy định đối với bưu gửi trong nước, bưu gửi đi quốc tế phải tuân thủ các quy định sau:<br />
                 - Vật phẩm, hàng hóa trong bưu gửi phải thực hiện các quy định về xuất khẩu của Nhà nước và điều kiện nhập khẩu vào các nước nhận (căn cứ quy định về hàng hoá và vật phẩm cấm nhập và nhập có điều kiện vào các nước của Việt Nam, Bưu chính nước nhận và Hiệp hội Bưu chính thế giới).<br />
                 - Bưu gửi có vật phẩm, hàng hoá để kinh doanh phải có đầy đủ chứng từ theo quy định của pháp luật.<br />
