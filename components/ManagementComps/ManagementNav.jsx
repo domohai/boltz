@@ -1,7 +1,7 @@
 'use client';
 import {Image, Avatar, AvatarIcon, Modal, ModalContent, ModalHeader, Navbar, 
         Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,
-        NavbarBrand, NavbarContent, NavbarItem, Button,
+        NavbarBrand, NavbarContent, NavbarItem, Button, Link,
         ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 
 const ManagementNav = () => {
@@ -70,7 +70,9 @@ const ManagementNav = () => {
 const Logo = () => {
   return (
     <NavbarBrand>
-      <Image src="./assets/images/logo_BoltZ.png" alt="BoltZ logo" width="100" height="80" />
+      <Link href="/">
+        <Image src="/assets/images/logo_BoltZ.png" alt="BoltZ logo" width="100" height="80" />
+      </Link>
     </NavbarBrand>
   )
 }
