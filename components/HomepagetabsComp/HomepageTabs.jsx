@@ -69,7 +69,7 @@ const HomepageTabs = () => {
           </Card>
         )}
         {activeKey === 'estimation' && (
-          <Card className=''>
+          <Card>
             <CardBody className='my-[0.7rem] mx-[0.5rem]'>
               <h2 className="text-xl font-bold mb-4">Thông tin gửi hàng</h2>
               
