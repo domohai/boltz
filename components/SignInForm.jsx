@@ -4,8 +4,8 @@ import React from 'react';
 const SignInForm = () => {
   return (
     <div className="my-auto mb-auto mt-8 flex flex-col md:mt-[70px] w-[350px] max-w-[450px] mx-auto md:max-w-[450px] lg:mt-[30px] lg:max-w-[450px] bg-[#f0f0f2] p-8 rounded-lg">
-      <p className="text-[32px] font-bold text-zinc-950 dark:text-white">Đăng nhập</p>
-      <p className="mb-2.5 mt-2.5 font-normal text-zinc-950 dark:text-zinc-400">Vui lòng nhập tài khoản và mật khẩu để đăng nhập!</p>
+      <p className="text-[32px] font-bold text-zinc-950 dark:text-white text-[#022873]">Đăng nhập</p>
+      <p className="mb-2.5 mt-2.5 font-normal text-zinc-950 dark:text-zinc-400 text-[#022873]">Vui lòng nhập tài khoản và mật khẩu để đăng nhập!</p>
       {/* <div className="mt-8">
         <form className="pb-2">
           <input type="hidden" name="provider" value="google" />
@@ -48,7 +48,7 @@ const SignInForm = () => {
         <form noValidate className="mb-4">
           <div className="grid gap-2">
             <div className="grid gap-1">
-              <label className="text-zinc-950 dark:text-white" htmlFor="email">Tài khoản</label>
+              <label className="text-zinc-950 dark:text-white text-[#022873]" htmlFor="email">Tài khoản</label>
               <input
                 className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
                 id="email"
@@ -59,7 +59,7 @@ const SignInForm = () => {
                 autoCorrect="off"
                 name="email"
               />
-              <label className="text-zinc-950 mt-2 dark:text-white" htmlFor="password">Mật khẩu</label>
+              <label className="text-zinc-950 mt-2 dark:text-white text-[#022873]" htmlFor="password">Mật khẩu</label>
               <input
                 id="password"
                 placeholder="Nhập mật khẩu"
@@ -70,7 +70,7 @@ const SignInForm = () => {
               />
             </div>
             <button
-              className="whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium"
+              className="whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium bg-[#022873]"
               type="submit"
             >
               Đăng nhập
@@ -78,7 +78,7 @@ const SignInForm = () => {
           </div>
         </form>
         <p>
-          <a href="/dashboard/signin/forgot_password" className="font-medium text-zinc-950 dark:text-white text-sm">
+          <a href="/dashboard/signin/forgot_password" className="font-medium text-zinc-950 dark:text-white text-sm text-[#022873]">
             Quên mật khẩu?
           </a>
         </p>
@@ -88,7 +88,7 @@ const SignInForm = () => {
           </a>
         </p> */}
         <p>
-          <a href="/dashboard/signin/signup" className="font-medium text-zinc-950 dark:text-white text-sm">
+          <a href="/dashboard/signin/signup" className="font-medium text-zinc-950 dark:text-white text-sm text-[#022873]">
             Chưa có tài khoản? Đăng ký ngay
           </a>
         </p>
