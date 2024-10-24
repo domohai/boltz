@@ -10,6 +10,7 @@ const Sidebar = () => {
       <Accordion>
         <AccordionItem title="Leader">
           <div className="flex flex-col">
+            <Button as={Link} href="/leader/dashboard" className="text-left p-2 hover:bg-gray-200 rounded">Thống kê</Button>
             <Button as={Link} href="/leader/manage_warehouse" className="text-left p-2 hover:bg-gray-200 rounded">Quản lý kho bãi</Button>
             <Button as={Link} href="/leader/manage_accounts" className="text-left p-2 hover:bg-gray-200 rounded">Quản lý tài khoản</Button>
           </div>

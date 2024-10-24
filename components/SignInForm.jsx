@@ -1,5 +1,4 @@
-// components/SignInForm.jsx
-import React from 'react';
+
 
 const SignInForm = () => {
   return (
@@ -77,21 +76,21 @@ const SignInForm = () => {
             </button>
           </div>
         </form>
-        <p>
+        {/* <p>
           <a href="/dashboard/signin/forgot_password" className="font-medium text-zinc-950 dark:text-white text-sm text-[#022873]">
             Quên mật khẩu?
           </a>
-        </p>
+        </p> */}
         {/* <p>
           <a href="/dashboard/signin/email_signin" className="font-medium text-zinc-950 dark:text-white text-sm">
             Sign in via magic link
           </a>
         </p> */}
-        <p>
+        {/* <p>
           <a href="/dashboard/signin/signup" className="font-medium text-zinc-950 dark:text-white text-sm text-[#022873]">
             Chưa có tài khoản? Đăng ký ngay
           </a>
-        </p>
+        </p> */}
       </div>
     </div>
   );
