@@ -5,8 +5,8 @@ import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { DateInput } from "@nextui-org/date-input";
-import gatheringPointAccounts from "./gatheringPointAccounts.js";
-import transactionPointAccounts from "./transactionPointAccounts.js";
+import gatheringPointAccounts from "./gatheringPointAccounts";
+import transactionPointAccounts from "./transactionPointAccounts";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
 
 const LeaderManageAccount = () => {
