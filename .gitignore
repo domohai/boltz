@@ -40,4 +40,6 @@ next-env.d.ts
 .vscode
 
 # queries file
-**/*.sql
+# **/*.sql
+
+**/scripts
