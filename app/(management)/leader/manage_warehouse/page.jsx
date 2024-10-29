@@ -16,23 +16,22 @@ const gatheringPointAccounts = [
 ];
 
 const transactionPointAccounts = [
-  { key: 'TP001', place_name: 'Tên F', address: '159 Đường PQR', name: 'Trưởng F', region : 'TB', gather_place: 'HN' },
-  { key: 'TP002', place_name: 'Tên G', address: '753 Đường STU', name: 'Trưởng G' , region : 'TB', gather_place: 'HN' },
-  { key: 'TP003', place_name: 'Tên H', address: '357 Đường VWX', name: 'Trưởng H' , region : 'TB', gather_place: 'HN' },
-  { key: 'TP004', place_name: 'Tên I', address: '951 Đường YZ', name: 'Trưởng I' , region : 'TB', gather_place: 'HN' },
-  { key: 'TP005', place_name: 'Tên J', address: '753 Đường ABC', name: 'Trưởng J', region : 'TB', gather_place: 'HN'  }
+  { key: 'TP001', place_name: 'Tên F', address: '159 Đường PQR', name: 'Trưởng F', region: 'TB', gather_place: 'HN' },
+  { key: 'TP002', place_name: 'Tên G', address: '753 Đường STU', name: 'Trưởng G', region: 'TB', gather_place: 'HN' },
+  { key: 'TP003', place_name: 'Tên H', address: '357 Đường VWX', name: 'Trưởng H', region: 'TB', gather_place: 'HN' },
+  { key: 'TP004', place_name: 'Tên I', address: '951 Đường YZ', name: 'Trưởng I', region: 'TB', gather_place: 'HN' },
+  { key: 'TP005', place_name: 'Tên J', address: '753 Đường ABC', name: 'Trưởng J', region: 'TB', gather_place: 'HN' }
 ];
 
 const WarehouseManagement = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   const [currentAccounts, setCurrentAccounts] = useState(gatheringPointAccounts);
   const [selectedRole, setSelectedRole] = useState('ma_diem_tap_ket');
 
   const handleRoleChange = (role) => {
     if (role === 'ma_diem_tap_ket') {
       setCurrentAccounts(gatheringPointAccounts);
-    } else if (role === 'place_name') {
+    } else if (role === 'diem_giao_dich') {
       setCurrentAccounts(transactionPointAccounts);
     }
     setSelectedRole(role);
@@ -67,34 +66,60 @@ const WarehouseManagement = () => {
               <ModalBody>
                 <div className="flex flex-col gap-4">
                   <label>
-                    Họ và tên:
+                    Tên:
                     <Input autoFocus variant="bordered" />
                   </label>
 
+
                   <label>
-                    Giới tính:
-                    <RadioGroup orientation="horizontal">
-                      <Radio value="male">Nam</Radio>
-                      <Radio value="female">Nữ</Radio>
-                    </RadioGroup>
+                    Hotline:
+                    <Input variant="bordered" />
+                  </label>
+
+                  
+                  <label>
+                    Trưởng điểm:
+                    <Input  variant="bordered" />
                   </label>
 
                   <label>
-                    Ngày sinh:
+                    Email:
+                    <Input variant="bordered" />
+                  </label>
+
+                  <label>
+                    Địa chỉ:
+                    <Input variant="bordered" />
+                  </label>
+
+                  <label>
+                    Ngày thành lập:
                     <DateInput />
                   </label>
 
                   <label>
-                    Số điện thoại:
+                    Vùng thành lập:
                     <Input variant="bordered" />
                   </label>
 
-                  <label>
-                    {selectedRole === 'ma_diem_tap_ket'
-                      ? 'Điểm tập kết:'
-                      : 'Địa chỉ:'}
-                    <Input variant="bordered" />
-                  </label>
+                  
+                  {selectedRole === 'ma_diem_tap_ket' ? (
+                    <label>
+                      Điểm tập kết:
+                      <Input variant="bordered" />
+                    </label>
+                  ) : (
+                    <>
+                      <label>
+                        Khu vực:
+                        <Input variant="bordered" />
+                      </label>
+                      <label>
+                        Nơi tập kết:
+                        <Input variant="bordered" />
+                      </label>
+                    </>
+                  )}
                 </div>
               </ModalBody>
               <ModalFooter>
@@ -110,13 +135,13 @@ const WarehouseManagement = () => {
       <div className="flex gap-4 mb-6">
         <Button
           onClick={() => handleRoleChange('ma_diem_tap_ket')}
-          className={`px-5 py-2 rounded-full ${selectedRole === 'ma_diem_tap_ket' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
+          className={`border rounded py-2 px-4 ${selectedRole === 'ma_diem_tap_ket' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
         >
           Điểm tập kết
         </Button>
         <Button
-          onClick={() => handleRoleChange('place_name')}
-          className={`px-5 py-2 rounded-full ${selectedRole === 'place_name' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
+          onClick={() => handleRoleChange('diem_giao_dich')}
+          className={`border rounded py-2 px-4 ${selectedRole === 'diem_giao_dich' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
         >
           Điểm giao dịch
         </Button>
@@ -127,10 +152,16 @@ const WarehouseManagement = () => {
         <table className="w-full">
           <thead className="bg-gray-200">
             <tr className="border-b border-gray-700">
-              <th className="text-left py-3 px-4 text-black font-medium">Mã điểm tập kết</th>
+              <th className="text-left py-3 px-4 text-black font-medium">Mã</th>
               <th className="text-left py-3 px-4 text-black font-medium">Tên</th>
               <th className="text-left py-3 px-4 text-black font-medium">Địa chỉ</th>
-              <th className="text-left py-3 px-4 text-black font-medium">Trưởng điểm tập kết</th>
+              <th className="text-left py-3 px-4 text-black font-medium">Trưởng</th>
+              {selectedRole === 'diem_giao_dich' && (
+                <>
+                  <th className="text-left py-3 px-4 text-black font-medium">Khu vực</th>
+                  <th className="text-left py-3 px-4 text-black font-medium">Nơi tập kết</th>
+                </>
+              )}
               <th className="text-left py-3 px-4 text-black font-medium"></th>
             </tr>
           </thead>
@@ -141,6 +172,12 @@ const WarehouseManagement = () => {
                 <td className="py-4 px-4">{account.place_name}</td>
                 <td className="py-4 px-4">{account.address}</td>
                 <td className="py-4 px-4">{account.name}</td>
+                {selectedRole === 'diem_giao_dich' && (
+                  <>
+                    <td className="py-4 px-4">{account.region}</td>
+                    <td className="py-4 px-4">{account.gather_place}</td>
+                  </>
+                )}
                 <td className="py-4 px-4">
                   <div className="flex gap-3">
                     <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-gray-400">
