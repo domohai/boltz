@@ -9,5 +9,5 @@ export async function POST(req, res) {
     return NextResponse.json({ message: "Required field is empty", ok: false }, { status: 400 });
   }
 
-  return NextResponse.json({ res: "Successfully add users", ok: true }, { status: 201 });
+  return NextResponse.json({ res: "Successfully add manager", ok: true }, { status: 201 });
 }

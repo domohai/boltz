@@ -24,6 +24,25 @@ const LeaderManageAccount = () => {
     setSelectedRole(role);
   };
 
+  const addManagerHandler = async () => {
+    let response = await fetch('/api/managers', {
+      method: 'POST',
+      body: JSON.stringify({name, email, password, role: selectedRole}),
+    });
+    let data = await response.json();
+    if (data.ok) {
+      alert('Thêm tài khoản thành công');
+      resetForm();
+    } else {
+      alert(data.message);
+    }
+  };
+  const resetForm = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+  };
+
   const [currentAccounts, setCurrentAccounts] = useState(gatheringPointAccounts);
   
   return (
@@ -58,19 +77,24 @@ const LeaderManageAccount = () => {
                     label="Họ và tên" 
                     placeholder='Nhập họ và tên' 
                     onChange={(e) => setName(e.target.value)}
+                    value={name}
                     autoFocus 
                     variant="bordered" />
                   <Input 
+                    isRequired
                     type='email' 
                     label="Email" 
                     placeholder='Nhập email' 
                     onChange={(e) => setEmail(e.target.value)}
+                    value={email}
                     variant="bordered" />
                   <Input 
+                    isRequired
                     type='password' 
                     label="Mật khẩu" 
                     placeholder='Nhập mật khẩu' 
                     onChange={(e) => setPassword(e.target.value)}
+                    value={password}
                     variant="bordered" />
                   <Input 
                     isDisabled 
@@ -84,7 +108,7 @@ const LeaderManageAccount = () => {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Huỷ
                 </Button>
-                <Button color="primary" onPress={onClose}>
+                <Button onPress={() => {addManagerHandler(); onClose();}} color="primary">
                   Thêm
                 </Button>
               </ModalFooter>
