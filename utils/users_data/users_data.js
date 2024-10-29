@@ -1,6 +1,6 @@
-import { ROLES } from "./roles";
+import { ROLES } from "../roles";
 
-export const users = [
+export const leader = [
   {
     id: 1,
     name: 'Minh Hai',
@@ -8,6 +8,9 @@ export const users = [
     password: '12345678',
     role: ROLES.LEADER,
   },
+];
+
+export const collectionManager = [
   {
     id: 2,
     name: 'Duc Hiep',

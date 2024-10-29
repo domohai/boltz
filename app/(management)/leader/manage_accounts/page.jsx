@@ -1,41 +1,44 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { RadioGroup, Radio } from "@nextui-org/radio";
-import { DateInput } from "@nextui-org/date-input";
+import {Tabs, Tab} from "@nextui-org/tabs";
 import gatheringPointAccounts from "./gatheringPointAccounts";
 import transactionPointAccounts from "./transactionPointAccounts";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
 
 const LeaderManageAccount = () => {
+  {/* MHai msg - "Không thay đổi phần này" - starts */}
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  const [currentAccounts, setCurrentAccounts] = useState(gatheringPointAccounts);
-  const [selectedRole, setSelectedRole] = useState('gathering');
-
+  const [selectedRole, setSelectedRole] = useState('collection_manager');
   const handleRoleChange = (role) => {
-    if (role === 'gathering') {
+    if (role === 'collection_manager') {
       setCurrentAccounts(gatheringPointAccounts);
-    } else if (role === 'transaction') {
+    } else if (role === 'service_manager') {
       setCurrentAccounts(transactionPointAccounts);
     }
     setSelectedRole(role);
   };
+  {/* MHai msg - "Không thay đổi phần này" - ends */}
 
+  const [currentAccounts, setCurrentAccounts] = useState(gatheringPointAccounts);
+  
   return (
     <div className="w-full p-6 bg-white min-h-screen">
+      {/* MHai msg - "Không thay đổi phần này" - starts */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-xl font-bold text-black">Quản lý tài khoản</h1>
-        <Button
+        <Button 
           className="bg-blue-600 text-white hover:bg-blue-700" 
-          onPress={onOpen}
-        >
+          onPress={onOpen}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
           </svg>
-          Thêm
+          Thêm tài khoản
         </Button>
       </div>
 
@@ -45,46 +48,45 @@ const LeaderManageAccount = () => {
             <>
               <ModalHeader className="flex justify-center">
                 <h2 className="text-lg font-bold">
-                  {selectedRole === 'gathering'
+                  {selectedRole === 'collection_manager'
                     ? 'Thêm tài khoản trưởng điểm tập kết'
                     : 'Thêm tài khoản trưởng điểm giao dịch'}
                 </h2>
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col gap-4">
-                  <label>
-                    Họ và tên:
-                    <Input autoFocus variant="bordered" />
-                  </label>
-
-                  <label>
-                    Giới tính:
-                    <RadioGroup orientation="horizontal">
-                      <Radio value="male">Nam</Radio>
-                      <Radio value="female">Nữ</Radio>
-                    </RadioGroup>
-                  </label>
-
-                  <label>
-                    Ngày sinh:
-                    <DateInput />
-                  </label>
-
-                  <label>
-                    Số điện thoại:
-                    <Input variant="bordered" />
-                  </label>
-
-                  <label>
-                    {selectedRole === 'gathering'
-                      ? 'Điểm tập kết:'
-                      : 'Điểm giao dịch:'}
-                    <Input variant="bordered" />
-                  </label>
+                  <Input 
+                    type='text' 
+                    label="Họ và tên" 
+                    placeholder='Nhập họ và tên' 
+                    onChange={(e) => setName(e.target.value)}
+                    autoFocus 
+                    variant="bordered" />
+                  <Input 
+                    type='email' 
+                    label="Email" 
+                    placeholder='Nhập email' 
+                    onChange={(e) => setEmail(e.target.value)}
+                    variant="bordered" />
+                  <Input 
+                    type='password' 
+                    label="Mật khẩu" 
+                    placeholder='Nhập mật khẩu' 
+                    onChange={(e) => setPassword(e.target.value)}
+                    variant="bordered" />
+                  <Input 
+                    isDisabled 
+                    type='text' 
+                    label="Chức vụ" 
+                    defaultValue={selectedRole === 'collection_manager' ? 'Trưởng điểm tập kết' : 'Trưởng điểm giao dịch'} 
+                    variant='border'/>
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onPress={onClose} className="w-full">
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Huỷ
+                </Button>
+                <Button color="primary" onPress={onClose}>
                   Thêm
                 </Button>
               </ModalFooter>
@@ -92,17 +94,39 @@ const LeaderManageAccount = () => {
           )}
         </ModalContent>
       </Modal>
+      {/* MHai msg - "Không thay đổi phần này" - ends */}
 
+      {/* MHai starts */}
+      <div className="flex gap-4 mb-6">
+        <Tabs 
+					variant='underlined' 
+					aria-label='Types of accounts tabs' 
+					selectedKey={selectedRole} 
+					onSelectionChange={setSelectedRole}>
+					{/* Huu Duc */}
+					<Tab key="collection_manager" title="Trưởng điểm tập kết"> 
+						{/* add table that list all accounts */}
+						{/* should use the Table component in NextUI */}
+					</Tab>
+					<Tab key="service_manager" title="Trưởng điểm giao dịch"> 
+						{/* add table that list all accounts */}
+						{/* should use the Table component in NextUI */}
+					</Tab>
+				</Tabs>
+      </div>
+      {/* MHai ends */}
+			
+			{/* Content down here should be deleted or modified */}
       <div className="flex gap-4 mb-6">
         <Button
-          onClick={() => handleRoleChange('gathering')}
-          className={`border rounded py-2 px-4 ${selectedRole === 'gathering' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
+          onClick={() => handleRoleChange('collection_manager')}
+          className={`border rounded py-2 px-4 ${selectedRole === 'collection_manager' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
         >
           Trưởng điểm tập kết
         </Button>
         <Button
-          onClick={() => handleRoleChange('transaction')}
-          className={`border rounded py-2 px-4 ${selectedRole === 'transaction' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
+          onClick={() => handleRoleChange('service_manager')}
+          className={`border rounded py-2 px-4 ${selectedRole === 'service_manager' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
         >
           Trưởng điểm giao dịch
         </Button>
