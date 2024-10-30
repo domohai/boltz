@@ -24,14 +24,16 @@ const LeaderManageAccount = () => {
     setSelectedRole(role);
   };
 
-  const addManagerHandler = async () => {
-    let response = await fetch('/api/managers', {
+  const addManagerHandler = async (e) => {
+    e.preventDefault();
+    
+    let response = await fetch('/api/leader/collection_manager', {
       method: 'POST',
       body: JSON.stringify({name, email, password, role: selectedRole}),
     });
     let data = await response.json();
     if (data.ok) {
-      alert('Thêm tài khoản thành công');
+      alert('Thêm tài khoản thành công!');
       resetForm();
     } else {
       alert(data.message);
@@ -62,7 +64,7 @@ const LeaderManageAccount = () => {
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           {(onClose) => (
-            <>
+            <form onSubmit={addManagerHandler}>
               <ModalHeader className="flex justify-center">
                 <h2 className="text-lg font-bold">
                   {selectedRole === 'collection_manager'
@@ -73,12 +75,12 @@ const LeaderManageAccount = () => {
               <ModalBody>
                 <div className="flex flex-col gap-4">
                   <Input 
+                    autoFocus
                     type='text' 
                     label="Họ và tên" 
                     placeholder='Nhập họ và tên' 
                     onChange={(e) => setName(e.target.value)}
                     value={name}
-                    autoFocus 
                     variant="bordered" />
                   <Input 
                     isRequired
@@ -105,14 +107,14 @@ const LeaderManageAccount = () => {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+								<Button color="danger" variant="light" onPress={onClose}>
                   Huỷ
                 </Button>
-                <Button onPress={() => {addManagerHandler(); onClose();}} color="primary">
+                <Button type='submit' onPress={onClose} color="primary">
                   Thêm
                 </Button>
               </ModalFooter>
-            </>
+            </form>
           )}
         </ModalContent>
       </Modal>

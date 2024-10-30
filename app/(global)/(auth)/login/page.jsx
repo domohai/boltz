@@ -1,4 +1,3 @@
-import SignInForm from '@components/SignInForm';
 import LoginForm from '@components/LoginForm';
 
 const LoginPage = () => {

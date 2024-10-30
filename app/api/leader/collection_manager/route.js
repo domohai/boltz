@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server";
-import { createConnection } from "@utils/db.js";
-import { leader } from "@utils/users_data/users_data.js";
+import { handleGetAllCollectionManagers, handleAddCollectionManager } from "@back-end/controllers/colManagerController";
+
+export async function GET(req, res) {
+  return handleGetAllCollectionManagers(req, res);
+}
 
 export async function POST(req, res) {
-  let data = await req.json();
-  
-  if (!data.email || !data.password || !data.role) {
-    return NextResponse.json({ message: "Required field is empty", ok: false }, { status: 400 });
-  }
-
-  return NextResponse.json({ res: "Successfully add manager", ok: true }, { status: 201 });
+  return handleAddCollectionManager(req, res);
 }

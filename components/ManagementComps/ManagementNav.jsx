@@ -10,7 +10,7 @@ const ManagementNav = () => {
 
   return (
     <div>
-      <Navbar maxWidth={'full'} className=" bg-[#2d8bba] shadow-md">
+      <Navbar position="static" maxWidth={'full'} className=" bg-[#2d8bba] shadow-md">
         <Logo />
 
         <NavbarContent justify="end">
