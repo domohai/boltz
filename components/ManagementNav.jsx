@@ -1,12 +1,26 @@
 'use client';
-import {Image, Avatar, AvatarIcon, Modal, ModalContent, ModalHeader, Navbar, 
-        Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,
-        NavbarBrand, NavbarContent, NavbarItem, Button, Link,
-        ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
+import {Image} from "@nextui-org/image";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/modal";
+import {Navbar, NavbarContent, NavbarBrand, NavbarItem} from "@nextui-org/navbar";
+import {Avatar, AvatarIcon} from "@nextui-org/avatar";
+import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@nextui-org/dropdown";
+import {Button} from "@nextui-org/button";
+import {Link} from "@nextui-org/link";
+import {useSession, signOut} from "next-auth/react";
+import {redirect} from "next/navigation";
 
 const ManagementNav = () => {
-  const role = "Leader";
+  // check if the user is logged in
+  const {data: session, status} = useSession();
+  if (!session) {
+    redirect('/login');
+  }
+
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const handleLogout = async () => {
+    await signOut();
+    redirect('/');
+  }
 
   return (
     <div>
@@ -15,7 +29,7 @@ const ManagementNav = () => {
 
         <NavbarContent justify="end">
           <NavbarItem>
-            {role}
+            {session.user.name ? session.user.name : session.user.role}
           </NavbarItem>
           <NavbarItem>
             <Dropdown>
@@ -32,7 +46,7 @@ const ManagementNav = () => {
                 <DropdownItem key="settings" onPress={onOpen}>
                   Cài đặt tài khoản
                 </DropdownItem>
-                <DropdownItem key="logout" color="danger" href="/">
+                <DropdownItem onPress={handleLogout} key="logout" color="danger">
                   Log Out
                 </DropdownItem>
               </DropdownMenu>

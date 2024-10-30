@@ -15,6 +15,7 @@ const LeaderManageAccount = () => {
   const [password, setPassword] = useState('');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selectedRole, setSelectedRole] = useState('collection_manager');
+  
   const handleRoleChange = (role) => {
     if (role === 'collection_manager') {
       setCurrentAccounts(gatheringPointAccounts);

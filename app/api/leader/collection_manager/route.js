@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { handleGetAllCollectionManagers, handleAddCollectionManager } from "@back-end/controllers/colManagerController";
 
 export async function GET(req, res) {

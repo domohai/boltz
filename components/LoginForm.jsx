@@ -5,13 +5,14 @@ import { Button } from "@nextui-org/button";
 import { useState, useEffect } from 'react';
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { ROLES } from "@utils/roles";
 
 const LoginForm = () => {
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
   useEffect(() => {
     if (sessionStatus === 'authenticated') {
-      if (session.user.role === 'cp_manager') {
+      if (session.user.role === ROLES.LEADER) {
         router.push('/leader/dashboard');
       }
     }
@@ -40,6 +41,7 @@ const LoginForm = () => {
       setError('An unexpected error occurred');
     }
   };
+  console.log(sessionStatus);
 
   return (sessionStatus !== 'authenticated' && (
     <Card className="flex flex-col">

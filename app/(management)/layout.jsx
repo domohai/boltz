@@ -1,5 +1,5 @@
-import ManagementNav from "@components/ManagementComps/ManagementNav";
-import Sidebar from "@components/ManagementComps/Sidebar";
+import ManagementNav from "@components/ManagementNav";
+import Sidebar from "@components/Sidebar";
 
 const ManagementLayout = ({ children }) => {
   return (
