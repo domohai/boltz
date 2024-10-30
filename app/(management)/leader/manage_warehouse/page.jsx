@@ -135,13 +135,13 @@ const WarehouseManagement = () => {
       <div className="flex gap-4 mb-6">
         <Button
           onClick={() => handleRoleChange('ma_diem_tap_ket')}
-          className={`border rounded py-2 px-4 ${selectedRole === 'ma_diem_tap_ket' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
+          className={`px-5 py-2 rounded-full ${selectedRole === 'ma_diem_tap_ket' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
         >
           Điểm tập kết
         </Button>
         <Button
           onClick={() => handleRoleChange('diem_giao_dich')}
-          className={`border rounded py-2 px-4 ${selectedRole === 'diem_giao_dich' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
+          className={`px-5 py-2 rounded-full ${selectedRole === 'diem_giao_dich' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
         >
           Điểm giao dịch
         </Button>
