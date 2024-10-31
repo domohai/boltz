@@ -1,9 +1,11 @@
+'use client';
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 import {Button} from "@nextui-org/button";
 import {Link} from "@nextui-org/link";
 import {Image} from '@nextui-org/image';
 
 const Nav = () => {
+
   return (
     <Navbar className="w-full bg-white shadow-md" maxWidth={'full'}>
       <NavbarBrand className="flex items-center space-x-2">

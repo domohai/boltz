@@ -4,7 +4,7 @@
 CREATE TABLE `user` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
-  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL UNIQUE,
   `password` varchar(255) NOT NULL,
   `role` enum('leader','cp_manager','sp_manager','collection_staff','service_staff')
 );

@@ -1,20 +1,22 @@
-import ManagementNav from "@components/ManagementComps/ManagementNav";
-import Sidebar from "@components/ManagementComps/Sidebar";
+import ManagementNav from "@components/ManagementNav";
+import Sidebar from "@components/Sidebar";
 
 const ManagementLayout = ({ children }) => {
   return (
-    <section>
+    <section className="grid grid-cols-4">
       {/* Minh Hải */}
       {/* Giao diện chung cho các staff */}
-      <ManagementNav/>
+      {/* Nav */}
+      <div className="col-span-4">
+        <ManagementNav/>
+      </div>
       {/* Sidebar */}
-      <div className="flex flex-row flex-grow">
-        <div className="w-1/4">
-          <Sidebar/>
-        </div>
-        <div className="w-3/4 p-4">
-          { children }
-        </div>
+      <div className="h-full min-h-screen">
+        <Sidebar/>
+      </div>
+      {/* Content */}
+      <div className="col-span-3">
+        { children }
       </div>
     </section>
   )
