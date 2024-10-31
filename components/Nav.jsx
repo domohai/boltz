@@ -3,10 +3,8 @@ import {Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navba
 import {Button} from "@nextui-org/button";
 import {Link} from "@nextui-org/link";
 import {Image} from '@nextui-org/image';
-import { signOut, useSession } from "next-auth/react";
 
 const Nav = () => {
-  const { data: session } = useSession();
 
   return (
     <Navbar className="w-full bg-white shadow-md" maxWidth={'full'}>

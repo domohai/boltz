@@ -11,10 +11,10 @@ import {redirect} from "next/navigation";
 
 const ManagementNav = () => {
   // check if the user is logged in
-  const {data: session, status} = useSession();
-  if (!session) {
-    redirect('/login');
-  }
+  // const {data: session, status} = useSession();
+  // if (!session) {
+  //   redirect('/login');
+  // }
 
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const handleLogout = async () => {
@@ -29,7 +29,8 @@ const ManagementNav = () => {
 
         <NavbarContent justify="end">
           <NavbarItem>
-            {session.user.name ? session.user.name : session.user.role}
+            {/* {session.user.name ? session.user.name : session.user.role} */}
+            {"text"}
           </NavbarItem>
           <NavbarItem>
             <Dropdown>
@@ -46,7 +47,9 @@ const ManagementNav = () => {
                 <DropdownItem key="settings" onPress={onOpen}>
                   Cài đặt tài khoản
                 </DropdownItem>
-                <DropdownItem onPress={handleLogout} key="logout" color="danger">
+                <DropdownItem 
+                  // onPress={handleLogout} 
+                  key="logout" color="danger" href="/">
                   Log Out
                 </DropdownItem>
               </DropdownMenu>

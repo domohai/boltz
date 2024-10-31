@@ -9,7 +9,7 @@ const Sidebar = () => {
       <Accordion selectionMode="multiple">
         <AccordionItem title="Leader">
           <div className="flex flex-col">
-            <Button as={Link} href="/leader/dashboard" className="text-left p-2 hover:bg-gray-200 rounded">Thống kê</Button>
+            <Button as={Link} href="/leader" className="text-left p-2 hover:bg-gray-200 rounded">Thống kê</Button>
             <Button as={Link} href="/leader/manage_warehouse" className="text-left p-2 hover:bg-gray-200 rounded">Quản lý kho bãi</Button>
             <Button as={Link} href="/leader/manage_accounts" className="text-left p-2 hover:bg-gray-200 rounded">Quản lý tài khoản</Button>
           </div>
@@ -17,8 +17,8 @@ const Sidebar = () => {
 
         <AccordionItem title="Collection Manager">
           <div className="flex flex-col">
-            <button className="text-left p-2 hover:bg-gray-200 rounded">Sub-item 1</button>
-            <button className="text-left p-2 hover:bg-gray-200 rounded">Sub-item 2</button>
+            <Button as={Link} href="/collection_manager" className="text-left p-2 hover:bg-gray-200 rounded">Thống kê</Button>
+            <Button as={Link} href="/collection_manager/manage_accounts" className="text-left p-2 hover:bg-gray-200 rounded">Quản lý tài khoản</Button>
           </div>
         </AccordionItem>
       </Accordion>

@@ -3,7 +3,7 @@
 const page = () => {
   // Đức Hải
   return (
-    <div>Service manager - thống kê</div>
+    <div>Collection Manager - thống kê</div>
   )
 }
 

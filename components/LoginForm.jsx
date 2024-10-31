@@ -1,23 +1,11 @@
 'use client';
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
-import { Input} from "@nextui-org/input";
+import { Card, CardHeader, CardBody} from "@nextui-org/card";
+import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
-import { useState, useEffect } from 'react';
-import { useSession, signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { ROLES } from "@utils/roles";
+import { useState } from 'react';
+import { signIn } from "next-auth/react";
 
 const LoginForm = () => {
-  const router = useRouter();
-  const { data: session, status: sessionStatus } = useSession();
-  useEffect(() => {
-    if (sessionStatus === 'authenticated') {
-      if (session.user.role === ROLES.LEADER) {
-        router.push('/leader/dashboard');
-      }
-    }
-  }, [sessionStatus, session, router]);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -41,9 +29,8 @@ const LoginForm = () => {
       setError('An unexpected error occurred');
     }
   };
-  console.log(sessionStatus);
 
-  return (sessionStatus !== 'authenticated' && (
+  return (
     <Card className="flex flex-col">
       <CardHeader className="pb-0 font-bold justify-center text-[#022873]">
         <h2>Đăng nhập</h2>
@@ -76,7 +63,7 @@ const LoginForm = () => {
         </form>
       </CardBody>
     </Card>
-  ))
+  )
 }
 
 export default LoginForm;
