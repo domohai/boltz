@@ -43,7 +43,9 @@ export const authOptions = {
   },
   callbacks: {
     async signIn(user, account) {
-      return !!user;
+      if (account?.provider === 'credentials') {
+        return true;
+      }
     },
     async jwt({ token, user }) {
       if (user) {
