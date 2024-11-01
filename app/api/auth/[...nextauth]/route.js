@@ -30,7 +30,7 @@ export const authOptions = {
             console.error("Password mismatch");
             return null;
           }
-          return { id: user.id, email: user.email, role: user.role };
+          return { id: user.id, name: user.name, email: user.email, role: user.role };
         } catch (error) {
           console.error("Authorization error:", error);
           throw new Error("Authorization failed");
@@ -43,12 +43,15 @@ export const authOptions = {
   },
   callbacks: {
     async signIn(user, account) {
-      if (account?.provider === 'credentials') {
+      if (user?.account?.provider === 'credentials') {
+        // console.log("User signed in with credentials provider");
         return true;
       }
+      return false;
     },
     async jwt({ token, user }) {
       if (user) {
+        token.name = user.name;
         token.role = user.role;
       }
       return token;
@@ -56,6 +59,9 @@ export const authOptions = {
     async session({ session, token }) {
       if (token.role) {
         session.user.role = token.role;
+      }
+      if (token.name) {
+        session.user.name = token.name;
       }
       return session;
     },

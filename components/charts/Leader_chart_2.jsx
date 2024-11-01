@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell } from 'recharts';
 
