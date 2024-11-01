@@ -11,15 +11,15 @@ const LoginPage = () => {
   useEffect(() => {
     if (sessionStatus === 'authenticated') {
       if (session.user.role === ROLES.LEADER) {
-        router.push('/leader/dashboard');
+        router.push('/leader');
       } else if (session.user.role === ROLES.COLLECTION_MANAGER) {
-
+        router.push('/collection_manager');
       } else if (session.user.role === ROLES.SERVICE_MANAGER) {
-
+        router.push('/service_manager');
       } else if (session.user.role === ROLES.COLLECTION_STAFF) {
-
+        router.push('/collection_staff');
       } else if (session.user.role === ROLES.SERVICE_STAFF) {
-
+        router.push('/service_staff');
       }
     }
   }, [sessionStatus, session, router]);

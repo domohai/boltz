@@ -12,16 +12,15 @@ const pool = mysql.createPool({
   queueLimit: 0       // Unlimited queued requests when all connections are busy
 });
 
-const addLeaders = async () => {
+const addAccounts = async () => {
   try {
-    // check if leader already exists
-    const [result] = await pool.query(
-      `SELECT * FROM user WHERE role = ?`, ['leader']
-    );
-    if (result.length) {
-      return console.log("Leaders already exist!");
-    }
     for (const leader of leaders) {
+      // check if the user already exists
+      const [rows] = await pool.query(`SELECT * FROM user WHERE email = ?`, [leader.email]);
+      if (rows.length > 0) {
+        console.log(`User with email ${leader.email} already exists`);
+        continue;
+      }
       const hashedPassword = await bcrypt.hash(leader.password, 10);
       const [result] = await pool.query(
         `INSERT INTO user (name, email, password, role) VALUES (?, ?, ?, ?)`,
@@ -34,6 +33,6 @@ const addLeaders = async () => {
   }
 }
 
-// addLeaders();
+// addAccounts();
 
 export default pool;
