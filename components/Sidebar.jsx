@@ -11,27 +11,30 @@ const Sidebar = () => {
 
   const leaderContent = (
     <>
+      <h3 className="mt-2 ml-2 text-xs text-gray-700 font-semibold">Thống kê</h3>
       <Button 
         as={Link} 
         href="/leader" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="assets/icons/chart_icon.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/chart_icon.svg" width={26} height={26}/>}
         radius="none">
         Thống kê
       </Button>
+      <h3 className="mt-2 ml-2 text-xs text-gray-700 font-semibold">Quản lý kho bãi</h3>
       <Button 
         as={Link} 
         href="/leader/manage_warehouse" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/house_icon.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/house_icon.svg" width={26} height={26}/>}
         radius="none">
         Quản lý kho bãi
       </Button>
+      <h3 className="mt-2 ml-2 text-xs text-gray-700 font-semibold">Quản lý tài khoản</h3>
       <Button 
         as={Link} 
         href="/leader/manage_accounts" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/users_icon.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/users_icon.svg" width={26} height={26}/>}
         radius="none">
         Quản lý tài khoản
       </Button>
@@ -40,19 +43,21 @@ const Sidebar = () => {
 
   const collectionManagerContent = (
     <>
+      <h3 className="mt-2 ml-2 text-xs text-gray-700 font-semibold">Thống kê</h3>
       <Button 
         as={Link} 
         href="/collection_manager" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/chart_icon.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/chart_icon.svg" width={26} height={26}/>}
         radius="none">
         Thống kê
       </Button>
+      <h3 className="mt-2 ml-2 text-xs text-gray-700 font-semibold">Quản lý tài khoản</h3>
       <Button 
         as={Link} 
         href="/collection_manager/manage_accounts" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/users_icon.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/users_icon.svg" width={26} height={26}/>}
         radius="none">
         Quản lý tài khoản
       </Button>
@@ -61,19 +66,21 @@ const Sidebar = () => {
 
   const servicePointManagerContent = (
     <>
+      <h3 className="mt-2 ml-2 text-xs text-gray-700 font-semibold">Thống kê</h3>
       <Button 
         as={Link} 
         href="/service_manager"
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/chart_icon.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/chart_icon.svg" width={26} height={26}/>}
         radius="none">
         Thống kê
       </Button>
+      <h3 className="mt-2 ml-2 text-xs text-gray-700 font-semibold">Quản lý tài khoản</h3>
       <Button 
         as={Link} 
         href="/service_manager/manage_accounts" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/users_icon.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/users_icon.svg" width={26} height={26}/>}
         radius="none">
         Quản lý tài khoản
       </Button>
@@ -82,11 +89,12 @@ const Sidebar = () => {
 
   const collectionStaffContent = (
     <>
+      <h3 className="mt-2 ml-2 text-xs text-gray-700 font-semibold">Quản lý đơn hàng</h3>
       <Button 
         as={Link} 
         href="/collection_staff" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/truck.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/truck.svg" width={26} height={26}/>}
         radius="none">
         Đơn hàng chờ vận chuyển
       </Button>
@@ -94,7 +102,7 @@ const Sidebar = () => {
         as={Link} 
         href="/collection_staff/confirm" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/confirm_parcel.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/confirm_parcel.svg" width={26} height={26}/>}
         radius="none">
         Đơn hàng chờ xác nhận
       </Button>
@@ -108,7 +116,7 @@ const Sidebar = () => {
         as={Link} 
         href="/service_staff" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/truck.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/truck.svg" width={26} height={26}/>}
         radius="none">
         Đơn hàng chờ vận chuyển
       </Button>
@@ -116,7 +124,7 @@ const Sidebar = () => {
         as={Link} 
         href="/service_staff/confirm" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/confirm_parcel.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/confirm_parcel.svg" width={26} height={26}/>}
         radius="none">
         Đơn hàng chờ xác nhận
       </Button>
@@ -125,7 +133,7 @@ const Sidebar = () => {
         as={Link} 
         href="/service_staff/create_parcel" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/confirm_parcel.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/create.svg" width={26} height={26}/>}
         radius="none">
         Tạo bưu gửi
       </Button>
@@ -133,7 +141,7 @@ const Sidebar = () => {
         as={Link} 
         href="/service_staff/waiting_parcel" 
         className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/confirm_parcel.svg" width={30} height={30}/>}
+        startContent={<Image src="/assets/icons/waiting_parcel.svg" width={26} height={26}/>}
         radius="none">
         Bưu gửi chờ trả
       </Button>
@@ -153,7 +161,7 @@ const Sidebar = () => {
       case ROLES.SERVICE_STAFF:
         return serviceStaffContent;
       default:
-        return (<h1>Unknown role in Sidebar.jsx: {role}</h1>);
+        return (<h1>Loading...</h1>);
     }
   };
 

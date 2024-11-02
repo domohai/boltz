@@ -1,5 +1,5 @@
 "use server";
-import pool from "@utils/db";
+import pool from "@utils/db.js";
 import {ROLES} from "@utils/roles.js";
 
 export async function getAllCollectionManagers() {
@@ -31,4 +31,11 @@ export async function addCollectionManager(name, email, password) {
     [name, email, password, ROLES.COLLECTION_MANAGER]
   );
   return { id: result.insertId , name, email, role: ROLES.COLLECTION_MANAGER };
+}
+
+export async function deleteCollectionManagerById(id) {
+  const [result] = await pool.query(
+    `DELETE FROM user WHERE id = ?`, [id]
+  );
+  return result;
 }

@@ -42,7 +42,7 @@ const ManagementNav = () => {
                 <DropdownItem 
                   onPress={handleLogout} 
                   key="logout" color="danger">
-                  Log Out
+                  Đăng xuất
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
