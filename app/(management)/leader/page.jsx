@@ -1,3 +1,5 @@
+"use client";
+
 import LeaderChart from "@/components/charts/Leader_chart";
 import LeaderChart2 from "@components/charts/Leader_chart_2";
 
