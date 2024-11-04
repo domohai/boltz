@@ -3,9 +3,12 @@
 import React, { useState } from 'react';
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
+import { Tabs, Tab } from "@nextui-org/tabs";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { DateInput } from "@nextui-org/date-input";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
+import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/table";
+
 
 const gatheringPointAccounts = [
   { key: 'GTP001', place_name: 'Tên A', address: '123 Đường ABC', name: 'Trưởng A' },
@@ -133,18 +136,15 @@ const WarehouseManagement = () => {
       </Modal>
 
       <div className="flex gap-4 mb-6">
-        <Button
-          onClick={() => handleRoleChange('ma_diem_tap_ket')}
-          className={`px-5 py-2 rounded-full ${selectedRole === 'ma_diem_tap_ket' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
+        <Tabs
+          variant='underlined'
+          aria-label='Types of accounts tabs'
+          selectedKey={selectedRole}
+          onSelectionChange={handleRoleChange}
         >
-          Điểm tập kết
-        </Button>
-        <Button
-          onClick={() => handleRoleChange('diem_giao_dich')}
-          className={`px-5 py-2 rounded-full ${selectedRole === 'diem_giao_dich' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
-        >
-          Điểm giao dịch
-        </Button>
+          <Tab key="ma_diem_tap_ket" title="Điểm tập kết" />
+          <Tab key="diem_giao_dich" title="Điểm giao dịch" />
+        </Tabs>
       </div>
 
       {/* Bảng tài khoản */}
