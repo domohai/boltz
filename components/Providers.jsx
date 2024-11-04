@@ -1,11 +1,11 @@
 "use client";
 
-import {NextUIProvider} from "@nextui-org/system";
-import {SessionProvider} from "next-auth/react";
+import { NextUIProvider } from "@nextui-org/system";
+import { SessionProvider } from "next-auth/react";
 
-const Providers = ({ children }) => {
+const Providers = ({ children, session }) => {
   return (
-    <SessionProvider>
+    <SessionProvider session={session}>
       <NextUIProvider>
         {children}
       </NextUIProvider>

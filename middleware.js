@@ -6,26 +6,26 @@ export async function middleware(req) {
   return NextResponse.next();
   const token = await getToken({ req });
   if (!token) {
-    return NextResponse.redirect(new URL('/unauthorized', req.url))
+    return NextResponse.redirect(new URL('/', req.url))
   }
   const role = token.role;
   const { pathname } = req.nextUrl;
 
   // Điều hướng dựa trên role
   if (pathname.startsWith('/leader')) {
-    if (role === ROLES.LEADER) {
+    if (role == ROLES.LEADER) {
       return NextResponse.next();
     } else {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
     }
   } else if (pathname.startsWith('/collection_manager')) {
-    if (role === ROLES.COLLECTION_MANAGER) {
+    if (role == ROLES.COLLECTION_MANAGER) {
       return NextResponse.next();
     } else {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
     }
   } else if (pathname.startsWith('/service_manager')) {
-    if (role === ROLES.SERVICE_MANAGER) {
+    if (role == ROLES.SERVICE_MANAGER) {
       return NextResponse.next(); 
     } else {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
@@ -43,7 +43,7 @@ export async function middleware(req) {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
     }
   }
-  return NextResponse.redirect(new URL('/unauthorized', req.url));
+  return NextResponse.next(new URL('/', req.url));
 }
 
 

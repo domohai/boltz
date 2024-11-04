@@ -7,30 +7,22 @@ import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@nextui-org
 import {Button} from "@nextui-org/button";
 import {Link} from "@nextui-org/link";
 import {useSession, signOut} from "next-auth/react";
-import {redirect} from "next/navigation";
 
 const ManagementNav = () => {
-  // check if the user is logged in
-  // const {data: session, status} = useSession();
-  // if (!session) {
-  //   redirect('/login');
-  // }
-
+  const {data: session, status} = useSession();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+
   const handleLogout = async () => {
     await signOut();
-    redirect('/');
   }
 
   return (
     <div>
       <Navbar position="static" maxWidth={'full'} className=" bg-[#2d8bba] shadow-md">
         <Logo />
-
         <NavbarContent justify="end">
           <NavbarItem>
-            {/* {session.user.name ? session.user.name : session.user.role} */}
-            {"text"}
+            {session.user.name ? session.user.name : session.user.role}
           </NavbarItem>
           <NavbarItem>
             <Dropdown>
@@ -48,8 +40,8 @@ const ManagementNav = () => {
                   Cài đặt tài khoản
                 </DropdownItem>
                 <DropdownItem 
-                  // onPress={handleLogout} 
-                  key="logout" color="danger" href="/">
+                  onPress={handleLogout} 
+                  key="logout" color="danger">
                   Log Out
                 </DropdownItem>
               </DropdownMenu>
@@ -64,9 +56,9 @@ const ManagementNav = () => {
             <>
               <ModalHeader>Thông tin tài khoản</ModalHeader>
               <ModalBody>
-                <p>Username: </p>
-                <p>Email: </p>
-                <p>Role: </p>
+                <p>Name: {session.user.name}</p>
+                <p>Email: {session.user.email}</p>
+                <p>Role: {session.user.role}</p>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

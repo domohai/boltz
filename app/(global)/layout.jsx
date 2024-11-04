@@ -8,7 +8,7 @@ const GlobalLayout = ({ children }) => {
       {/* Navbar start */}
       <Nav />
       {/* NavBar end */}
-      <main>
+      <main className='min-h-[12rem]'>
         {children}
       </main>
       {/* Footer start */}

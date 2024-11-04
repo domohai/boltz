@@ -32,16 +32,6 @@ const Nav = () => {
         </NavbarItem>
       </NavbarContent>  
       <NavbarContent justify="end">
-
-      {/* MHai test */}
-      {/* Press this button to go inside management UI */}
-        <NavbarItem>
-          <Button as={Link} color="primary" href="/leader" variant="flat" className="bg-[#022873] text-white">
-            Management UI
-          </Button>
-        </NavbarItem>
-      {/* MHai test */}
-
         <NavbarItem>
           <Button as={Link} color="primary" href="/login" variant="flat" className="bg-[#022873] text-white">
             Đăng nhập
