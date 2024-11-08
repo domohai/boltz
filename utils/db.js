@@ -1,6 +1,8 @@
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcryptjs';
 import {leaders} from '@utils/leader_data.js';
+import {cp_managers} from '@utils/cp_accounts.js';
+import {sp_managers} from '@utils/sp_manager.js';
 
 const pool = mysql.createPool({
   host: process.env.DATABASE_HOST,
@@ -12,9 +14,9 @@ const pool = mysql.createPool({
   queueLimit: 0       // Unlimited queued requests when all connections are busy
 });
 
-const addAccounts = async () => {
+const addAccounts = async (list) => {
   try {
-    for (const leader of leaders) {
+    for (const leader of list) {
       // check if the user already exists
       const [rows] = await pool.query(`SELECT * FROM user WHERE email = ?`, [leader.email]);
       if (rows.length > 0) {
@@ -33,6 +35,8 @@ const addAccounts = async () => {
   }
 }
 
-// addAccounts();
+// addAccounts(leaders);
+// addAccounts(cp_managers);
+// addAccounts(sp_managers);
 
 export default pool;
