@@ -1,6 +1,9 @@
 # CREATE DATABASE web_56 CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 # USE web_56;
 
+SELECT COUNT(*) FROM user where role = 'sp_manager' and service_point_id is null;
+# select count(*) from service_point where collection_point_id is null;
+
 CREATE TABLE `user` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
@@ -11,9 +14,10 @@ CREATE TABLE `user` (
 
 CREATE TABLE `collection_point` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
+  `city` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
-  `user_id` int,
+  `user_id` int DEFAULT NULL,
    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
 );
 
@@ -23,9 +27,9 @@ CREATE TABLE `service_point` (
   `city` varchar(255) NOT NULL,
   `district` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
-  `user_id` int,
+  `user_id` int DEFAULT NULL,
    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL,
-  `collection_point_id` int,
+  `collection_point_id` int DEFAULT NULL,
    FOREIGN KEY (collection_point_id) REFERENCES collection_point(id) ON DELETE SET NULL
 );
 
