@@ -89,7 +89,7 @@ const Page = () => {
             {currentAccounts.map((account) => (
               <TableRow key={account.key}>
                 <TableCell>{account.key}</TableCell>
-                <TableCell>{account.name}</TableCell>
+                <TableCell>{account.name}</TableCell> 
                 <TableCell>{account.gender}</TableCell>
                 <TableCell>{account.dob}</TableCell>
                 <TableCell>{account.phone}</TableCell>
