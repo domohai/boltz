@@ -32,4 +32,5 @@ const LeaderChart2 = () => {
   );
 };
 
+
 export default LeaderChart2;
