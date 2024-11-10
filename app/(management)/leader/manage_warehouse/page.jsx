@@ -1,211 +1,401 @@
 "use client";
-
-import React, { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { RadioGroup, Radio } from "@nextui-org/radio";
-import { DateInput } from "@nextui-org/date-input";
+import { Tooltip } from "@nextui-org/tooltip";
+import { Pagination } from "@nextui-org/pagination";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
-
-const gatheringPointAccounts = [
-  { key: 'GTP001', place_name: 'Tên A', address: '123 Đường ABC', name: 'Trưởng A' },
-  { key: 'GTP002', place_name: 'Tên B', address: '456 Đường DEF', name: 'Trưởng B' },
-  { key: 'GTP003', place_name: 'Tên C', address: '789 Đường GHI', name: 'Trưởng C' },
-  { key: 'GTP004', place_name: 'Tên D', address: '321 Đường JKL', name: 'Trưởng D' },
-  { key: 'GTP005', place_name: 'Tên E', address: '654 Đường MNO', name: 'Trưởng E' }
-];
-
-const transactionPointAccounts = [
-  { key: 'TP001', place_name: 'Tên F', address: '159 Đường PQR', name: 'Trưởng F', region: 'TB', gather_place: 'HN' },
-  { key: 'TP002', place_name: 'Tên G', address: '753 Đường STU', name: 'Trưởng G', region: 'TB', gather_place: 'HN' },
-  { key: 'TP003', place_name: 'Tên H', address: '357 Đường VWX', name: 'Trưởng H', region: 'TB', gather_place: 'HN' },
-  { key: 'TP004', place_name: 'Tên I', address: '951 Đường YZ', name: 'Trưởng I', region: 'TB', gather_place: 'HN' },
-  { key: 'TP005', place_name: 'Tên J', address: '753 Đường ABC', name: 'Trưởng J', region: 'TB', gather_place: 'HN' }
-];
+import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/table";
+import { Select, SelectItem } from "@nextui-org/select";
 
 const WarehouseManagement = () => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [currentAccounts, setCurrentAccounts] = useState(gatheringPointAccounts);
-  const [selectedRole, setSelectedRole] = useState('ma_diem_tap_ket');
+  const [name, setName] = useState('');
+  const [city, setCity] = useState('');
+  const [address, setAddress] = useState('');
+  const [selectedId, setSelectedId] = useState(null);
+  const [selectedManager, setSelectedManager] = useState(null);
+  const [availableManagers, setAvailableManagers] = useState([]);
+  const {isOpen: isAddModalOpen, onOpen: onAddOpen, onOpenChange: onAddClose } = useDisclosure();
+  const {isOpen: isDeleteModalOpen, onOpen: onDeleteOpen, onOpenChange: onDeleteClose } = useDisclosure();
+  const {isOpen: isEditModalOpen, onOpen: onEditOpen, onOpenChange: onEditClose } = useDisclosure();
+  const [cpList, setCpList] = useState([]);
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 10;
+  const totalPage = useMemo(() => Math.ceil(cpList.length / rowsPerPage), [cpList, rowsPerPage]);
+  
+  const cpPart = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    return cpList.slice(start, end);
+  }, [cpList, page, rowsPerPage]);
 
-  const handleRoleChange = (role) => {
-    if (role === 'ma_diem_tap_ket') {
-      setCurrentAccounts(gatheringPointAccounts);
-    } else if (role === 'diem_giao_dich') {
-      setCurrentAccounts(transactionPointAccounts);
+  const getCollectionPoints = async () => {
+    try {
+      const res = await fetch('/api/leader/warehouse/collection_point', {
+        method: 'GET',
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setCpList(data.collectionPoints);
+      } else {
+        console.error(data.message);
+        alert("An error occurred. See in console for more details.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred. See in console for more details.");
     }
-    setSelectedRole(role);
+  }
+
+  const getAvailableManagers = async () => {
+    try {
+      const res = await fetch('/api/leader/warehouse/collection_point/available_user', {
+        method: 'GET',
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setAvailableManagers(data.users);
+      } else {
+        console.error(data.message);
+        alert("An error occurred. See in console for more details.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred. See in console for more details.");
+    }
+  }
+
+  useEffect(() => {
+    getCollectionPoints();
+  }, []);
+
+  const addCollectionPoint = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/leader/warehouse/collection_point', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, city, address }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        alert("Đã thêm điểm tập kết thành công.");
+        getCollectionPoints();
+        resetForm();
+      } else {
+        console.error(data.message);
+        alert("An error occurred. See in console for more details.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred. See in console for more details.");
+    }
+  }
+
+  const deleteCollectionPoint = async () => {
+    if (!selectedId) return;
+    try {
+      const res = await fetch(`/api/leader/warehouse/collection_point/${selectedId}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.ok) {
+        alert("Đã xoá điểm tập kết thành công.");
+        getCollectionPoints();
+        setSelectedId(null); // reset the selectedAccountId
+			  onDeleteClose(); // close the confirm pop-up
+      } else {
+        console.error(data.message);
+        alert("An error occurred. See in console for more details.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred. See in console for more details.");
+    }
+  }
+
+  const editCollectionPoint = async (e) => {
+    e.preventDefault();
+    // check if the selectedId is valid
+    if (!selectedId) return;
+    // check if there is any change
+    const collectionPoint = cpList.find(cp => cp.id === selectedId);
+    if (!collectionPoint) return;
+    if (collectionPoint.name === name && collectionPoint.city === city && collectionPoint.address === address) {
+      alert("Không có gì thay đổi.");
+      resetForm();
+      return;
+    }
+    // send edit request
+    try {
+      const res = await fetch(`/api/leader/warehouse/collection_point/${selectedId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, city, address }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        alert("Đã chỉnh sửa điểm tập kết thành công.");
+        getCollectionPoints();
+        resetForm();
+        onEditClose();
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred. See in console for more details.");
+    }
+  }
+
+  // open the confirm pop-up
+	const openDeleteModal = (id) => {
+    setSelectedId(id);
+    onDeleteOpen();
   };
+
+  const resetForm = () => {
+    setName('');
+    setCity('');
+    setAddress('');
+    setSelectedId(null);
+  }
+
+  const cpTable = (
+    <Table 
+      aria-label="collection managers table"
+      className='pt-2'
+      bottomContent={
+        <div className="flex w-full justify-center">
+          <Pagination
+            isCompact
+            showControls
+            showShadow
+            variant='light'
+            initialPage={1}
+            page={page}
+            total={totalPage ? totalPage : 1}
+            onChange={(page) => setPage(page)}
+          />
+        </div>
+      }>
+      <TableHeader>
+        <TableColumn>Tên</TableColumn>
+        <TableColumn>Tỉnh/Thành phố</TableColumn>
+        <TableColumn>Địa chỉ</TableColumn>
+        <TableColumn>Email quản lý</TableColumn>
+        <TableColumn>Actions</TableColumn>
+      </TableHeader>
+      <TableBody items={cpPart}>
+        {(item) => (
+          <TableRow key={item.id}>
+            <TableCell>{item.name}</TableCell>
+            <TableCell>{item.city}</TableCell>
+            <TableCell>{item.address}</TableCell>
+            <TableCell>{item.manager_email}</TableCell>
+            <TableCell>
+              <div className="flex">
+                {/* Edit icon */}
+                <Tooltip content="Chỉnh sửa" placement="top" color='primary'>
+                  <Button
+                    size="sm"
+                    isIconOnly
+                    color='primary'
+                    variant="light"
+                    className="h-8 w-8 p-0 text-gray-400"
+                    onPress={() => {
+                      setSelectedId(item.id);
+                      setName(item.name);
+                      setCity(item.city);
+                      setAddress(item.address);
+                      onEditOpen();
+                    }}
+                    startContent={
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                      </svg>
+                    }></Button>
+                </Tooltip>
+                {/* Delete icon */}
+                <Tooltip content="Xoá" placement="top" color='danger'>
+                  <Button 
+                    size="sm" 
+                    isIconOnly
+                    color='danger'
+                    variant="light" 
+                    className="h-8 w-8 p-0 text-gray-400"
+                    onPress={() => openDeleteModal(item.id)}
+                    startContent={
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                      </svg>
+                    }></Button>
+                </Tooltip>
+              </div>
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  );
 
   return (
     <div className="w-full p-6 bg-white min-h-screen">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-xl font-bold text-black">Quản lý kho bãi</h1>
-        <Button
-          className="bg-blue-600 text-white hover:bg-blue-700"
-          onPress={onOpen}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
-          </svg>
+      <div className="flex justify-between items-center mb-2">
+        <h1 className="text-2xl font-bold text-black">Quản lý điểm tập kết</h1>
+        <Button 
+          className="bg-[#0554F2] text-white hover:bg-[#2C6DF9]"
+          startContent={
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819" />
+            </svg>
+          } 
+          onPress={onAddOpen}>
           Thêm
         </Button>
       </div>
-
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      
+      {/* Add modal */}
+      <Modal isOpen={isAddModalOpen} onOpenChange={onAddClose} 
+        placement="top-center" className='px-2'>
         <ModalContent>
           {(onClose) => (
-            <>
+            <form onSubmit={addCollectionPoint}>
               <ModalHeader className="flex justify-center">
-                <h2 className="text-lg font-bold">
-                  {selectedRole === 'ma_diem_tap_ket'
-                    ? 'Thêm tài khoản trưởng điểm tập kết'
-                    : 'Thêm tài khoản trưởng điểm giao dịch'}
-                </h2>
+                <h2 className="text-lg font-bold">Thêm điểm tập kết</h2>
               </ModalHeader>
               <ModalBody>
-                <div className="flex flex-col gap-4">
-                  <label>
-                    Tên:
-                    <Input autoFocus variant="bordered" />
-                  </label>
-
-
-                  <label>
-                    Hotline:
-                    <Input variant="bordered" />
-                  </label>
-
-                  
-                  <label>
-                    Trưởng điểm:
-                    <Input  variant="bordered" />
-                  </label>
-
-                  <label>
-                    Email:
-                    <Input variant="bordered" />
-                  </label>
-
-                  <label>
-                    Địa chỉ:
-                    <Input variant="bordered" />
-                  </label>
-
-                  <label>
-                    Ngày thành lập:
-                    <DateInput />
-                  </label>
-
-                  <label>
-                    Vùng thành lập:
-                    <Input variant="bordered" />
-                  </label>
-
-                  
-                  {selectedRole === 'ma_diem_tap_ket' ? (
-                    <label>
-                      Điểm tập kết:
-                      <Input variant="bordered" />
-                    </label>
-                  ) : (
-                    <>
-                      <label>
-                        Khu vực:
-                        <Input variant="bordered" />
-                      </label>
-                      <label>
-                        Nơi tập kết:
-                        <Input variant="bordered" />
-                      </label>
-                    </>
-                  )}
-                </div>
+                <Input 
+                  autoFocus
+                  isRequired
+                  isClearable
+                  type='text' 
+                  label="Tên điểm tập kết" 
+                  placeholder='Nhập tên điểm tập kết' 
+                  onChange={(e) => setName(e.target.value)}
+                  onClear={() => setName('')}
+                  value={name}
+                  variant="bordered" />
+                <Input 
+                  isRequired
+                  isClearable
+                  type='text' 
+                  label="Tỉnh/Thành phố" 
+                  placeholder='Tỉnh/Thành phố' 
+                  onChange={(e) => setCity(e.target.value)}
+                  onClear={() => setCity('')}
+                  value={city}
+                  variant="bordered" />
+                <Input 
+                  isRequired
+                  isClearable
+                  type='text' 
+                  label="Địa chỉ" 
+                  placeholder='Nhập địa chỉ' 
+                  onChange={(e) => setAddress(e.target.value)}
+                  onClear={() => setAddress('')}
+                  value={address}
+                  variant="bordered" />
+                <Select 
+                  aria-label='Select manager'
+                  label="Trưởng điểm tập kết" 
+                  placeholder='Chọn trưởng điểm tập kết' 
+                  selectedKeys={availableManagers}
+                  onChange={(e) => {setSelectedManager(e.target.value);
+                  console.log(e.target.value);}}>
+                  <SelectItem key={ROLES.COLLECTION_MANAGER} >
+                    Trưởng điểm tập kết
+                  </SelectItem>
+                  <SelectItem key={ROLES.SERVICE_MANAGER} >
+                    Trưởng điểm giao dịch
+                  </SelectItem>
+                </Select>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onPress={onClose} className="w-full">
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Huỷ
+                </Button>
+                <Button type="submit" color="primary" onPress={onClose}>
                   Thêm
                 </Button>
               </ModalFooter>
-            </>
+            </form>
           )}
         </ModalContent>
       </Modal>
 
-      <div className="flex gap-4 mb-6">
-        <Button
-          onClick={() => handleRoleChange('ma_diem_tap_ket')}
-          className={`border rounded py-2 px-4 ${selectedRole === 'ma_diem_tap_ket' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
-        >
-          Điểm tập kết
-        </Button>
-        <Button
-          onClick={() => handleRoleChange('diem_giao_dich')}
-          className={`border rounded py-2 px-4 ${selectedRole === 'diem_giao_dich' ? 'bg-gray-400' : 'bg-gray-300'} hover:bg-gray-350`}
-        >
-          Điểm giao dịch
-        </Button>
-      </div>
+      {/* Edit modal */}
+      <Modal isOpen={isEditModalOpen} onOpenChange={onEditClose} placement="top-center">
+        <ModalContent>
+          {(onClose) => (
+            <form onSubmit={editCollectionPoint}>
+              <ModalHeader className="flex justify-center">
+                <h2 className="text-lg font-bold">Chỉnh sửa điểm tập kết</h2>
+              </ModalHeader>
+              <ModalBody>
+                <Input 
+                  autoFocus
+                  isRequired
+                  type='text' 
+                  label="Tên điểm tập kết" 
+                  placeholder='Nhập tên điểm tập kết' 
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  variant="bordered" />
+                <Input 
+                  isRequired
+                  type='text' 
+                  label="Tỉnh/Thành phố" 
+                  placeholder='Tỉnh/Thành phố' 
+                  onChange={(e) => setCity(e.target.value)}
+                  value={city}
+                  variant="bordered" />
+                <Input 
+                  isRequired
+                  type='text' 
+                  label="Địa chỉ" 
+                  placeholder='Nhập địa chỉ' 
+                  onChange={(e) => setAddress(e.target.value)}
+                  value={address}
+                  variant="bordered" />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Huỷ
+                </Button>
+                <Button type="submit" color="primary" onPress={onClose}>
+                  Lưu
+                </Button>
+              </ModalFooter>
+            </form>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={isDeleteModalOpen} onOpenChange={onDeleteClose} placement="top-center">
+        <ModalContent>
+          <ModalHeader className="flex justify-center">
+            <h2 className="text-lg font-bold">Xác nhận xoá điểm tập kết</h2>
+          </ModalHeader>
+          <ModalBody>
+            <p>Bạn có chắc chắn muốn xoá điểm tập kết này không?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onDeleteClose}>
+              Huỷ
+            </Button>
+            <Button color="primary" onPress={deleteCollectionPoint}>
+              Xoá
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {/* Bảng tài khoản */}
-      <div className="rounded-md border border-gray-700 overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-200">
-            <tr className="border-b border-gray-700">
-              <th className="text-left py-3 px-4 text-black font-medium">Mã</th>
-              <th className="text-left py-3 px-4 text-black font-medium">Tên</th>
-              <th className="text-left py-3 px-4 text-black font-medium">Địa chỉ</th>
-              <th className="text-left py-3 px-4 text-black font-medium">Trưởng</th>
-              {selectedRole === 'diem_giao_dich' && (
-                <>
-                  <th className="text-left py-3 px-4 text-black font-medium">Khu vực</th>
-                  <th className="text-left py-3 px-4 text-black font-medium">Nơi tập kết</th>
-                </>
-              )}
-              <th className="text-left py-3 px-4 text-black font-medium"></th>
-            </tr>
-          </thead>
-          <tbody className="bg-white">
-            {currentAccounts.map((account) => (
-              <tr key={account.key} className="border-b border-gray-700">
-                <td className="py-4 px-4">{account.key}</td>
-                <td className="py-4 px-4">{account.place_name}</td>
-                <td className="py-4 px-4">{account.address}</td>
-                <td className="py-4 px-4">{account.name}</td>
-                {selectedRole === 'diem_giao_dich' && (
-                  <>
-                    <td className="py-4 px-4">{account.region}</td>
-                    <td className="py-4 px-4">{account.gather_place}</td>
-                  </>
-                )}
-                <td className="py-4 px-4">
-                  <div className="flex gap-3">
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                      </svg>
-                    </Button>
-
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
-                      </svg>
-                    </Button>
-
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                      </svg>
-                    </Button>
-
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {cpTable}
     </div>
   );
 };

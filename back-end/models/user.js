@@ -33,3 +33,11 @@ export async function deleteUserById(id) {
   const [result] = await pool.query(`DELETE FROM user WHERE id = ?`, [id]);
   return result;
 }
+
+export async function getAllAvailableCM() {
+  const [result] = await pool.query(
+    `SELECT * FROM user WHERE user.role = ? AND user.collection_point_id IS NULL`,
+    [ROLES.COLLECTION_MANAGER],
+  );
+  return result;
+}

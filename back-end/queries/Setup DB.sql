@@ -16,9 +16,7 @@ CREATE TABLE `collection_point` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `city` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `user_id` int DEFAULT NULL,
-   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
+  `address` varchar(255) NOT NULL
 );
 
 CREATE TABLE `service_point` (
@@ -27,8 +25,6 @@ CREATE TABLE `service_point` (
   `city` varchar(255) NOT NULL,
   `district` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
-  `user_id` int DEFAULT NULL,
-   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL,
   `collection_point_id` int DEFAULT NULL,
    FOREIGN KEY (collection_point_id) REFERENCES collection_point(id) ON DELETE SET NULL
 );
