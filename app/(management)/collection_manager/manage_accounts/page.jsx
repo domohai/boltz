@@ -16,7 +16,7 @@ const Page = () => {
 
   const addManagerHandler = async (e) => {
     e.preventDefault();
-    let response = await fetch('/api/leader/collection_manager', {
+    let response = await fetch('/api/collection_manager', {
       method: 'POST',
       body: JSON.stringify({ name, email, password, role }),
     });
@@ -33,7 +33,7 @@ const Page = () => {
     setName('');
     setEmail('');
     setPassword('');
-    setRole('');
+    setRole('');  
   };
 
   return (
