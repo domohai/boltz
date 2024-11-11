@@ -25,7 +25,6 @@ const Page = () => {
     const data = await res.json();
     if (data.ok) {
       setAccounts(data.users);
-      console.log(data.users);
     } else {
       console.log(data.message);
       alert('Failed to get staff accounts');
