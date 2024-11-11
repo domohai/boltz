@@ -9,7 +9,11 @@ CREATE TABLE `user` (
   `name` varchar(255),
   `email` varchar(255) NOT NULL UNIQUE,
   `password` varchar(255) NOT NULL,
-  `role` enum('leader','cp_manager','sp_manager','collection_staff','service_staff')
+  `role` enum('leader','cp_manager','sp_manager','collection_staff','service_staff'),
+  `service_point_id` int DEFAULT NULL,
+   FOREIGN KEY (service_point_id) REFERENCES service_point(id) ON DELETE SET NULL
+  `collection_point_id` int DEFAULT NULL,
+   FOREIGN KEY (collection_point_id) REFERENCES collection_point(id) ON DELETE SET NULL
 );
 
 CREATE TABLE `collection_point` (
