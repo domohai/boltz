@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell } from 'recharts';
 
-const LeaderChart2 = () => {
+const LeaderChart3 = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
