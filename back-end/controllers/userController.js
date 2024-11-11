@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getAllUsersByRole, addUser, deleteUserById, getAllAvailableCM } from '@back-end/models/user.js';
+import { getAllUsersByRole, addUser, deleteUserById, getAllAvailableCM, getStaffOfCP } from '@back-end/models/user.js';
 import bcrypt from 'bcryptjs';
 
 export async function handleGetAllUsersByRole(req, res) {
-  const role = req.nextUrl.searchParams.get('role');
+  const role = await req.nextUrl.searchParams.get('role');
   try {
     const users = await getAllUsersByRole(role);
     if (!users) {
@@ -47,6 +47,20 @@ export async function handleGetAllAvailableCM(req, res) {
     if (!users) {
       return NextResponse.json({ message: "Failed to available CM!", ok: false }, { status: 400 });
     }
+    return NextResponse.json({ users, ok : true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetStaffOfCP(req, res) {
+  const cp_id = await req.nextUrl.searchParams.get('collection_point_id');
+  try {
+    const users = await getStaffOfCP(cp_id);
+    if (!users) {
+      return NextResponse.json({ message: "Failed to get staff of CP!", ok: false }, { status: 400 });
+    }
+    console.log(users);
     return NextResponse.json({ users, ok : true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
