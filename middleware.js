@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 import { ROLES } from '@utils/roles';
 
 export async function middleware(req) {
-  return NextResponse.next();
   const token = await getToken({ req });
   if (!token) {
     return NextResponse.redirect(new URL('/', req.url))

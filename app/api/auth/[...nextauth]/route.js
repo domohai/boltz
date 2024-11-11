@@ -30,7 +30,7 @@ export const authOptions = {
             console.error("Password mismatch");
             return null;
           }
-          return { id: user.id, name: user.name, email: user.email, role: user.role };
+          return { id: user.id, name: user.name, email: user.email, role: user.role, collection_point_id: user.collection_point_id, service_point_id: user.service_point_id };
         } catch (error) {
           console.error("Authorization error:", error);
           throw new Error("Authorization failed");
@@ -53,6 +53,8 @@ export const authOptions = {
       if (user) {
         token.name = user.name;
         token.role = user.role;
+        token.collection_point_id = user.collection_point_id;
+        token.service_point_id = user.service_point_id;
       }
       return token;
     },
@@ -62,6 +64,12 @@ export const authOptions = {
       }
       if (token.name) {
         session.user.name = token.name;
+      }
+      if (token.service_point_id) {
+        session.user.service_point_id = token.service_point_id;
+      }
+      if (token.collection_point_id) {
+        session.user.collection_point_id = token.collection_point_id;
       }
       return session;
     },
