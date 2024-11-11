@@ -15,32 +15,67 @@ const salesData = [
   {
     name: 'Jan',
     revenue: 4000,
-    profit: 2400,
+
   },
   {
     name: 'Feb',
     revenue: 3000,
-    profit: 1398,
+
   },
   {
     name: 'Mar',
     revenue: 9800,
-    profit: 2000,
+
   },
   {
     name: 'Apr',
     revenue: 3908,
-    profit: 2780,
+
   },
   {
     name: 'May',
     revenue: 4800,
-    profit: 1890,
+
   },
   {
     name: 'Jun',
     revenue: 3800,
-    profit: 2390,
+
+  },
+
+  {
+    name: 'July',
+    revenue: 3800,
+
+  },
+
+  {
+    name: 'August',
+    revenue: 3800,
+
+  },
+
+  {
+    name: 'September',
+    revenue: 3800,
+
+  },
+
+  {
+    name: 'October',
+    revenue: 3800,
+
+  },
+
+  {
+    name: 'November',
+    revenue: 3800,
+
+  },
+
+  {
+    name: 'December',
+    revenue: 3800,
   },
 ];
 
@@ -61,7 +96,6 @@ const LeaderChart = () => {
         <Tooltip content={<CustomTooltip />} />
         <Legend />
         <Line type="monotone" dataKey="revenue" stroke="#3b82f6" />
-        <Line type="monotone" dataKey="profit" stroke="#8b5cf6" />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -77,10 +111,6 @@ const CustomTooltip = ({ active, payload, label }) => {
         <p className="text-sm text-blue-400">
           Revenue:
           <span className="ml-2">${payload[0].value}</span>
-        </p>
-        <p className="text-sm text-indigo-400">
-          Profit:
-          <span className="ml-2">${payload[1].value}</span>
         </p>
       </div>
     );
