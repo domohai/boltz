@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAllUsersByRole, addUser, deleteUserById } from '@back-end/models/user.js';
+import { getAllUsersByRole, addUser, deleteUserById, getAllAvailableCM } from '@back-end/models/user.js';
 import bcrypt from 'bcryptjs';
 
 export async function handleGetAllUsersByRole(req, res) {
@@ -36,6 +36,18 @@ export async function handleDeleteUserById(req, id) {
       return NextResponse.json({ message: "Failed to delete user", ok: false }, { status: 400 });
     }
     return NextResponse.json({ message: `User deleted successfully! Id: ${id}`, ok : true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetAllAvailableCM(req, res) {
+  try {
+    const users = await getAllAvailableCM();
+    if (!users) {
+      return NextResponse.json({ message: "Failed to available CM!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ users, ok : true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
   }

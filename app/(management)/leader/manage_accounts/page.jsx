@@ -17,7 +17,7 @@ const LeaderManageAccount = () => {
   const {isOpen: isAddModalOpen, onOpen: onAddOpen, onOpenChange: onAddClose } = useDisclosure(); // hook to control the add manager pop-up
 	const {isOpen: isDeleteModalOpen, onOpen: onDeleteOpen, onOpenChange: onDeleteClose } = useDisclosure(); // hook to control the delete manager pop-up
   const [role, setRole] = useState(ROLES.COLLECTION_MANAGER); // value to switch between Tabs component
-  const [selectedRole, setSelectedRole] = useState(new Set([ROLES.COLLECTION_MANAGER])); // value of the Select component in the add manager pop-up
+  const [selectedRole, setSelectedRole] = useState(ROLES.COLLECTION_MANAGER); // value of the Select component in the add manager pop-up
   const [cmList, setCmList] = useState([]); // list of collection managers
   const [smList, setSmList] = useState([]); // list of service managers
 	const [selectedAccountId, setSelectedAccountId] = useState(null); // value to store the id of the selected user that we want to delete
@@ -69,10 +69,10 @@ const LeaderManageAccount = () => {
     e.preventDefault();
     // get the role from the Select component
     // because the Select component return a Set object so we need to convert it to an array and get the first element
-    const _role = Array.from(selectedRole)[0] === 'cp_manager' ? ROLES.COLLECTION_MANAGER : ROLES.SERVICE_MANAGER;
+    const _role = selectedRole;
     
     // print the manager info to the console for debugging
-    // console.log(name, email, password, _role);
+    console.log(name, email, password, _role);
 
     let response = await fetch('/api/leader/user', {
       method: 'POST',
@@ -260,7 +260,7 @@ const LeaderManageAccount = () => {
         </Button>
       </div>
 
-      {/* Add manager Modal */}
+      {/* Add Modal */}
       <Modal isOpen={isAddModalOpen} onOpenChange={onAddClose} placement="top-center">
         <ModalContent>
           {(onClose) => (
@@ -272,41 +272,44 @@ const LeaderManageAccount = () => {
                 <div className="flex flex-col gap-4">
                   <Input 
                     autoFocus
+                    isClearable
                     type='text' 
                     label="Họ và tên" 
-                    placeholder='Nhập họ và tên' 
+                    placeholder='Nhập họ và tên'
                     onChange={(e) => setName(e.target.value)}
+                    onClear={() => setName('')}
                     value={name}
-                    defaultValue=''
                     variant="bordered" />
                   <Input 
                     isRequired
+                    isClearable
                     type='email' 
                     label="Email" 
                     placeholder='Nhập email' 
                     onChange={(e) => setEmail(e.target.value)}
+                    onClear={() => setEmail('')}
                     value={email}
-                    defaultValue=''
                     variant="bordered" />
                   <Input 
                     isRequired
+                    isClearable
                     type='password' 
                     label="Mật khẩu" 
                     placeholder='Nhập mật khẩu' 
                     onChange={(e) => setPassword(e.target.value)}
+                    onClear={() => setPassword('')}
                     value={password}
-                    defaultValue=''
                     variant="bordered" />
                   <Select 
                     aria-label='Select role'
                     label="Chức vụ" 
                     placeholder='Chọn chức vụ' 
-                    selectedKey={selectedRole}
-                    onSelectionChange={setSelectedRole}>
-                    <SelectItem key={ROLES.COLLECTION_MANAGER}>
+                    selectedKeys={[selectedRole]}
+                    onChange={(e) => setSelectedRole(e.target.value)}>
+                    <SelectItem key={ROLES.COLLECTION_MANAGER} >
                       Trưởng điểm tập kết
                     </SelectItem>
-                    <SelectItem key={ROLES.SERVICE_MANAGER}>
+                    <SelectItem key={ROLES.SERVICE_MANAGER} >
                       Trưởng điểm giao dịch
                     </SelectItem>
                   </Select>

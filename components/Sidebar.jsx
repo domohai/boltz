@@ -4,6 +4,7 @@ import { Link } from "@nextui-org/link";
 import { Image } from "@nextui-org/image";
 import { useSession } from "next-auth/react";
 import { ROLES } from "@utils/roles.js";
+import { Accordion, AccordionItem } from "@nextui-org/accordion";
 
 const Sidebar = () => {
   const {data: session, status} = useSession();
@@ -21,14 +22,29 @@ const Sidebar = () => {
         Thống kê
       </Button>
       <h3 className="mt-2 ml-2 text-xs text-gray-700 font-semibold">Quản lý kho bãi</h3>
-      <Button 
-        as={Link} 
-        href="/leader/manage_warehouse" 
-        className="justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
-        startContent={<Image src="/assets/icons/house_icon.svg" width={26} height={26}/>}
-        radius="none">
-        Quản lý kho bãi
-      </Button>
+      <Accordion isCompact fullWidth>
+        <AccordionItem 
+          isCompact
+          title={<div className="text-sm text-gray-700">Quản lý kho bãi</div>}
+          className="pl-2 w-full"
+          startContent={<Image src="/assets/icons/house_icon.svg" width={26} height={26}/>}>
+          <Button 
+            as={Link} 
+            href="/leader/manage_warehouse" 
+            className="w-full justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
+            radius="none">
+            Điểm tập kết
+          </Button>
+          <Button 
+            as={Link} 
+            href="/leader/manage_warehouse/service_point" 
+            className="w-full justify-start bg-transparent hover:bg-blue-100 hover:text-blue-700 text-gray-700 transition-colors duration-200 ease-in-out" 
+            radius="none">
+            Điểm giao dịch
+          </Button>
+        </AccordionItem>
+      </Accordion>
+      
       <h3 className="mt-2 ml-2 text-xs text-gray-700 font-semibold">Quản lý tài khoản</h3>
       <Button 
         as={Link} 
