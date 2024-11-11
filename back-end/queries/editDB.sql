@@ -32,14 +32,25 @@ SET u.service_point_id = sp.id
 WHERE u.role = 'sp_manager';
 
 # drop user_id
-SHOW CREATE TABLE collection_point;
-ALTER TABLE collection_point
-DROP FOREIGN KEY collection_point_ibfk_1;
-ALTER TABLE collection_point
-DROP COLUMN user_id;
+# SHOW CREATE TABLE collection_point;
+# ALTER TABLE collection_point
+# DROP FOREIGN KEY collection_point_ibfk_1;
+# ALTER TABLE collection_point
+# DROP COLUMN user_id;
+#
+# SHOW CREATE TABLE service_point;
+# ALTER TABLE service_point
+# DROP FOREIGN KEY service_point_ibfk_1;
+# ALTER TABLE service_point
+# DROP COLUMN user_id;
 
-SHOW CREATE TABLE service_point;
-ALTER TABLE service_point
-DROP FOREIGN KEY service_point_ibfk_1;
-ALTER TABLE service_point
-DROP COLUMN user_id;
+UPDATE user
+SET collection_point_id = 1
+WHERE email IN ('cp_hai@boltz.com', 'cp_hiep@boltz.com', 'cp_haiz@boltz.com', 'cp_duc@boltz.com');
+
+UPDATE user
+SET collection_point_id = 1
+WHERE email IN ('cs_hai@boltz.com', 'cs_hiep@boltz.com', 'cs_haiz@boltz.com', 'cs_duc@boltz.com');
+
+
+

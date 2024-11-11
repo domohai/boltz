@@ -67,6 +67,7 @@ const WarehouseManagement = () => {
 
   useEffect(() => {
     getCollectionPoints();
+    getAvailableManagers();
   }, []);
 
   const addCollectionPoint = async (e) => {
@@ -302,15 +303,14 @@ const WarehouseManagement = () => {
                   aria-label='Select manager'
                   label="Trưởng điểm tập kết" 
                   placeholder='Chọn trưởng điểm tập kết' 
-                  selectedKeys={availableManagers}
+                  selectedKeys={[selectedManager]}
                   onChange={(e) => {setSelectedManager(e.target.value);
                   console.log(e.target.value);}}>
-                  <SelectItem key={ROLES.COLLECTION_MANAGER} >
-                    Trưởng điểm tập kết
-                  </SelectItem>
-                  <SelectItem key={ROLES.SERVICE_MANAGER} >
-                    Trưởng điểm giao dịch
-                  </SelectItem>
+                  {availableManagers.map((manager) => (
+                    <SelectItem key={manager.id} value={manager.id}>
+                      {manager.email}
+                    </SelectItem>
+                  ))}
                 </Select>
               </ModalBody>
               <ModalFooter>
