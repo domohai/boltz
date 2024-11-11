@@ -14,68 +14,68 @@ import {
 const salesData = [
   {
     name: 'Jan',
-    revenue: 4000,
+    cost: 4.001,
 
   },
   {
     name: 'Feb',
-    revenue: 3000,
+    cost: 3.002,
 
   },
   {
     name: 'Mar',
-    revenue: 9800,
+    cost: 9.805,
 
   },
   {
     name: 'Apr',
-    revenue: 3908,
+    cost: 3.908,
 
   },
   {
     name: 'May',
-    revenue: 4800,
+    cost: 4.806,
 
   },
   {
     name: 'Jun',
-    revenue: 3800,
+    cost: 3.808,
 
   },
 
   {
     name: 'July',
-    revenue: 3800,
+    cost: 3.802,
 
   },
 
   {
     name: 'August',
-    revenue: 3800,
+    cost: 3.801,
 
   },
 
   {
     name: 'September',
-    revenue: 3800,
+    cost: 3.805,
 
   },
 
   {
     name: 'October',
-    revenue: 3800,
+    cost: 3.807,
 
   },
 
   {
     name: 'November',
-    revenue: 3800,
+    cost: 3.809,
 
   },
 
   {
     name: 'December',
-    revenue: 3800,
+    cost: 3.801,
   },
 ];
 
@@ -95,7 +95,7 @@ const LeaderChart2 = () => {
         <YAxis />
         <Tooltip content={<CustomTooltip />} />
         <Legend />
-        <Line type="monotone" dataKey="revenue" stroke="#3b82f6" />
+        <Line type="monotone" dataKey="cost" stroke="red" />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -108,9 +108,9 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div className="p-4 bg-slate-900 flex flex-col gap-4 rounded-md">
         <p className="text-lg">{label}</p>
-        <p className="text-sm text-blue-400">
-          Revenue:
-          <span className="ml-2">${payload[0].value}</span>
+        <p className="text-sm text-red-400">
+          Tiền cước:
+          <span className="ml-2">{payload[0].value}.000 ₫</span>
         </p>
       </div>
     );

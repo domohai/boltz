@@ -72,7 +72,7 @@ const LeaderPage = () => {
               <CardHeader className="text-sm font-medium">
                 Tổng tiền cước
               </CardHeader>
-              <CardBody className="text-2xl font-bold">₫45,678,000</CardBody>
+              <CardBody className="text-2xl font-bold">45,678,000₫</CardBody>
               <CardFooter>
                 <p className="text-xs text-muted-foreground">
                   +15.2% so với tháng trước
@@ -81,6 +81,7 @@ const LeaderPage = () => {
             </Card>
           </div>
     
+        {/* Chart Section */}
           <div className="flex flex-col gap-6 p-4">
             {/* First Card */}
             <div className="bg-blue-200 p-6 rounded-lg shadow-lg">
@@ -100,7 +101,6 @@ const LeaderPage = () => {
             {/* Third Card */}
             <div className="bg-blue-200 p-6 rounded-lg shadow-lg">
               <div className="flex mt-4">
-                {/* Chart Section */}
                 <div className="w-1/2">
                   <LeaderChart3 />
                 </div>
