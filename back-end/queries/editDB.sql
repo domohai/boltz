@@ -46,13 +46,27 @@ WHERE u.role = 'sp_manager';
 # ALTER TABLE service_point
 # DROP COLUMN user_id;
 
-UPDATE user
-SET collection_point_id = 1
-WHERE email IN ('cp_hai@boltz.com', 'cp_hiep@boltz.com', 'cp_haiz@boltz.com', 'cp_duc@boltz.com');
+# UPDATE user
+# SET collection_point_id = 1
+# WHERE email IN ('cp_hai@boltz.com', 'cp_hiep@boltz.com', 'cp_haiz@boltz.com', 'cp_duc@boltz.com');
+#
+# UPDATE user
+# SET collection_point_id = 1
+# WHERE email IN ('cs_hai@boltz.com', 'cs_hiep@boltz.com', 'cs_haiz@boltz.com', 'cs_duc@boltz.com');
 
-UPDATE user
-SET collection_point_id = 1
-WHERE email IN ('cs_hai@boltz.com', 'cs_hiep@boltz.com', 'cs_haiz@boltz.com', 'cs_duc@boltz.com');
+INSERT INTO collection_point (name, city, address) VALUES ('DTK Thanh Tri', 'Ha Noi', 'Thanh Tri Ha Noi');
+UPDATE user SET user.collection_point_id = LAST_INSERT_ID() WHERE email IN ('cp_hai@boltz.com', 'cs_hai@boltz.com');
+
+INSERT INTO collection_point (name, city, address) VALUES ('DTK Thai Binh', 'Thai Binh', 'Tinh Thai Binh');
+UPDATE user SET user.collection_point_id = LAST_INSERT_ID() WHERE email IN ('cp_hiep@boltz.com', 'cs_hiep@boltz.com');
+
+INSERT INTO collection_point (name, city, address) VALUES ('DTK Ninh Binh', 'Ninh Binh', 'Tinh Ninh Binh');
+UPDATE user SET user.collection_point_id = LAST_INSERT_ID() WHERE email IN ('cp_haiz@boltz.com', 'cs_haiz@boltz.com');
+
+INSERT INTO collection_point (name, city, address) VALUES ('DTK Tuyen Quang', 'Tuyen Quang', 'Tinh Tuyen Quang');
+UPDATE user SET user.collection_point_id = LAST_INSERT_ID() WHERE email IN ('cp_duc@boltz.com', 'cs_duc@boltz.com');
+
+
 
 
 
