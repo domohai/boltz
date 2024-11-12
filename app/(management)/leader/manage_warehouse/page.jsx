@@ -7,6 +7,7 @@ import { Pagination } from "@nextui-org/pagination";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/table";
 import { Select, SelectItem } from "@nextui-org/select";
+import { Tab } from '@nextui-org/react';
 
 const WarehouseManagement = () => {
   const [name, setName] = useState('');
@@ -21,13 +22,13 @@ const WarehouseManagement = () => {
   const [cpList, setCpList] = useState([]);
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
-  const totalPage = useMemo(() => Math.ceil(cpList.length / rowsPerPage), [cpList, rowsPerPage]);
+  const totalPage = useMemo(() => Math.ceil(cpList.length / rowsPerPage), [cpList.length, rowsPerPage]);
   
   const cpPart = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     return cpList.slice(start, end);
-  }, [cpList, page, rowsPerPage]);
+  }, [cpList.length, page, rowsPerPage]);
 
   const getCollectionPoints = async () => {
     try {
@@ -78,7 +79,7 @@ const WarehouseManagement = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, city, address }),
+        body: JSON.stringify({ name, city, address, selectedManager }),
       });
       const data = await res.json();
       if (data.ok) {
@@ -124,7 +125,7 @@ const WarehouseManagement = () => {
     // check if there is any change
     const collectionPoint = cpList.find(cp => cp.id === selectedId);
     if (!collectionPoint) return;
-    if (collectionPoint.name === name && collectionPoint.city === city && collectionPoint.address === address) {
+    if (collectionPoint.name === name && collectionPoint.city === city && collectionPoint.address === address && collectionPoint.manager_id === selectedManager) {
       alert("Không có gì thay đổi.");
       resetForm();
       return;
@@ -136,7 +137,7 @@ const WarehouseManagement = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, city, address }),
+        body: JSON.stringify({ name, city, address, selectedManager }),
       });
       const data = await res.json();
       if (data.ok) {
@@ -162,6 +163,7 @@ const WarehouseManagement = () => {
     setCity('');
     setAddress('');
     setSelectedId(null);
+    setSelectedManager(null);
   }
 
   const cpTable = (
@@ -183,6 +185,7 @@ const WarehouseManagement = () => {
         </div>
       }>
       <TableHeader>
+        <TableColumn>ID</TableColumn>
         <TableColumn>Tên</TableColumn>
         <TableColumn>Tỉnh/Thành phố</TableColumn>
         <TableColumn>Địa chỉ</TableColumn>
@@ -192,6 +195,7 @@ const WarehouseManagement = () => {
       <TableBody items={cpPart}>
         {(item) => (
           <TableRow key={item.id}>
+            <TableCell>{item.id}</TableCell>
             <TableCell>{item.name}</TableCell>
             <TableCell>{item.city}</TableCell>
             <TableCell>{item.address}</TableCell>
@@ -259,7 +263,12 @@ const WarehouseManagement = () => {
       </div>
       
       {/* Add modal */}
-      <Modal isOpen={isAddModalOpen} onOpenChange={onAddClose} 
+      <Modal 
+        isOpen={isAddModalOpen} 
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {resetForm();}
+          onAddClose(isOpen);
+        }}
         placement="top-center" className='px-2'>
         <ModalContent>
           {(onClose) => (
@@ -302,19 +311,24 @@ const WarehouseManagement = () => {
                 <Select 
                   aria-label='Select manager'
                   label="Trưởng điểm tập kết" 
-                  placeholder='Chọn trưởng điểm tập kết' 
+                  placeholder={availableManagers.length === 0 ? 'Hãy thêm tài khoản trưởng điểm tập kết!' : 'Chọn trưởng điểm tập kết'} 
                   selectedKeys={[selectedManager]}
-                  onChange={(e) => {setSelectedManager(e.target.value);
-                  console.log(e.target.value);}}>
+                  onChange={(e) => setSelectedManager(e.target.value)}>
                   {availableManagers.map((manager) => (
-                    <SelectItem key={manager.id} value={manager.id}>
-                      {manager.email}
+                    <SelectItem key={manager.id} value={manager.email}>
+                      {manager.name + ' - ' + manager.email}
                     </SelectItem>
                   ))}
                 </Select>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button 
+                  color="danger" 
+                  variant="light" 
+                  onPress={() => {
+                    resetForm();
+                    onClose();
+                  }}>
                   Huỷ
                 </Button>
                 <Button type="submit" color="primary" onPress={onClose}>
@@ -327,7 +341,13 @@ const WarehouseManagement = () => {
       </Modal>
 
       {/* Edit modal */}
-      <Modal isOpen={isEditModalOpen} onOpenChange={onEditClose} placement="top-center">
+      <Modal 
+        isOpen={isEditModalOpen} 
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {resetForm();}
+          onEditClose(isOpen);
+        }} 
+        placement="top-center">
         <ModalContent>
           {(onClose) => (
             <form onSubmit={editCollectionPoint}>
@@ -360,9 +380,36 @@ const WarehouseManagement = () => {
                   onChange={(e) => setAddress(e.target.value)}
                   value={address}
                   variant="bordered" />
+                {cpList.find(cp => cp.id === selectedId).manager_id ? (
+                  <Input 
+                    isReadOnly
+                    type='text' 
+                    label="Trưởng điểm tập kết"  
+                    defaultValue={cpList.find(cp => cp.id === selectedId).manager_email}
+                    variant="bordered" />
+                ) : (
+                  <Select 
+                    aria-label='Select manager'
+                    label="Trưởng điểm tập kết" 
+                    placeholder={availableManagers.length === 0 ? 'Hãy thêm tài khoản trưởng điểm tập kết!' : 'Chọn trưởng điểm tập kết'} 
+                    selectedKeys={[selectedManager]}
+                    onChange={(e) => setSelectedManager(e.target.value)}>
+                    {availableManagers.map((manager) => (
+                      <SelectItem key={manager.id} value={manager.email}>
+                        {manager.name + ' - ' + manager.email}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )}
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button 
+                  color="danger" 
+                  variant="light" 
+                  onPress={() => {
+                    resetForm();
+                    onClose();
+                  }}>
                   Huỷ
                 </Button>
                 <Button type="submit" color="primary" onPress={onClose}>
@@ -375,7 +422,13 @@ const WarehouseManagement = () => {
       </Modal>
 
       {/* Delete Confirmation Modal */}
-      <Modal isOpen={isDeleteModalOpen} onOpenChange={onDeleteClose} placement="top-center">
+      <Modal 
+        isOpen={isDeleteModalOpen} 
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {setSelectedId(null);}
+          onDeleteClose(isOpen);
+        }}
+        placement="top-center">
         <ModalContent>
           <ModalHeader className="flex justify-center">
             <h2 className="text-lg font-bold">Xác nhận xoá điểm tập kết</h2>
@@ -384,7 +437,13 @@ const WarehouseManagement = () => {
             <p>Bạn có chắc chắn muốn xoá điểm tập kết này không?</p>
           </ModalBody>
           <ModalFooter>
-            <Button color="danger" variant="light" onPress={onDeleteClose}>
+            <Button 
+              color="danger" 
+              variant="light" 
+              onPress={() => {
+                setSelectedId(null);
+                onDeleteClose();
+              }}>
               Huỷ
             </Button>
             <Button color="primary" onPress={deleteCollectionPoint}>

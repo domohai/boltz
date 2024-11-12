@@ -4,9 +4,10 @@ import pool from "@utils/db.js";
 export async function getAllCollectionPoints() {
   try {
     const [rows] = await pool.query(
-      `SELECT cp.id, cp.city, cp.name, cp.address, u.email AS manager_email
+      `SELECT cp.id, cp.city, cp.name, cp.address, u.id AS manager_id, u.name AS manager_name, u.email AS manager_email
       FROM collection_point cp
-      LEFT JOIN user u ON u.collection_point_id = cp.id;`
+      LEFT JOIN user u ON u.collection_point_id = cp.id
+      WHERE u.role = 'cp_manager' OR u.id IS NULL;`
     );
     return rows;
   } catch (error) {

@@ -41,3 +41,8 @@ export async function getAllAvailableCM() {
   );
   return result;
 }
+
+export async function assignCMToCP(cpId, cmId) {
+  const [result] = await pool.query(`UPDATE user SET collection_point_id = ? WHERE id = ?`, [cpId, cmId]);
+  return result;
+}
