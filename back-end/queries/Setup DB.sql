@@ -9,14 +9,20 @@ CREATE TABLE `user` (
   `name` varchar(255),
   `email` varchar(255) NOT NULL UNIQUE,
   `password` varchar(255) NOT NULL,
-  `role` enum('leader','cp_manager','sp_manager','collection_staff','service_staff')
+  `role` enum('leader','cp_manager','sp_manager','collection_staff','service_staff'),
+  `service_point_id` int DEFAULT NULL,
+   FOREIGN KEY (service_point_id) REFERENCES service_point(id) ON DELETE SET NULL
+  `collection_point_id` int DEFAULT NULL,
+   FOREIGN KEY (collection_point_id) REFERENCES collection_point(id) ON DELETE SET NULL
 );
 
 CREATE TABLE `collection_point` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `city` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `address` varchar(255) NOT NULL
+  `address` varchar(255) NOT NULL,
+  `user_id` int DEFAULT NULL,
+   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
 );
 
 CREATE TABLE `service_point` (
@@ -25,6 +31,8 @@ CREATE TABLE `service_point` (
   `city` varchar(255) NOT NULL,
   `district` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
+  `user_id` int DEFAULT NULL,
+   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL,
   `collection_point_id` int DEFAULT NULL,
    FOREIGN KEY (collection_point_id) REFERENCES collection_point(id) ON DELETE SET NULL
 );

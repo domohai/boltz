@@ -17,6 +17,8 @@ MODIFY COLUMN collection_point_id INT DEFAULT NULL;
 # insert file 'insertCollectionPoint.sql'
 # insert file 'insertServicePoint.sql'
 
+SET SQL_SAFE_UPDATES = 0;
+
 UPDATE service_point sp
 JOIN collection_point cp ON sp.city = cp.city
 SET sp.collection_point_id = cp.id;

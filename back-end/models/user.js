@@ -46,3 +46,11 @@ export async function assignCMToCP(cpId, cmId) {
   const [result] = await pool.query(`UPDATE user SET collection_point_id = ? WHERE id = ?`, [cpId, cmId]);
   return result;
 }
+
+export async function getStaffOfCP(cp_id) {
+  const [result] = await pool.query(
+    `SELECT * FROM user WHERE user.role = ? AND user.collection_point_id = ?`,
+    [ROLES.COLLECTION_STAFF, cp_id],
+  );
+  return result;
+}

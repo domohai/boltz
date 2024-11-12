@@ -7,11 +7,12 @@ import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@nextui-org
 import {Button} from "@nextui-org/button";
 import {Link} from "@nextui-org/link";
 import {useSession, signOut} from "next-auth/react";
+import { useRouter } from 'next/navigation'
 
 const ManagementNav = () => {
   const {data: session, status} = useSession();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
-
+  const router = useRouter();
   const handleLogout = async () => {
     await signOut();
   }
@@ -22,7 +23,7 @@ const ManagementNav = () => {
         <Logo />
         <NavbarContent justify="end">
           <NavbarItem>
-            {session.user.name ? session.user.name : session.user.role}
+            {session?.user?.name ? session?.user?.name : session?.user?.role}
           </NavbarItem>
           <NavbarItem>
             <Dropdown>
