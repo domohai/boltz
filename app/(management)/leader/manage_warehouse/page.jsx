@@ -7,7 +7,6 @@ import { Pagination } from "@nextui-org/pagination";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/table";
 import { Select, SelectItem } from "@nextui-org/select";
-import { Tab } from '@nextui-org/react';
 
 const WarehouseManagement = () => {
   const [name, setName] = useState('');
