@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAllUsersByRole, addUser, deleteUserById, getAllAvailableCM, getStaffOfCP } from '@back-end/models/user.js';
+import { getAllUsersByRole, addUser, deleteUserById, getAllAvailableCM, getStaffOfCP, getAllAvailableSM } from '@back-end/models/user.js';
 import bcrypt from 'bcryptjs';
 
 export async function handleGetAllUsersByRole(req, res) {
@@ -46,6 +46,18 @@ export async function handleGetAllAvailableCM(req, res) {
     const users = await getAllAvailableCM();
     if (!users) {
       return NextResponse.json({ message: "Failed to available CM!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ users, ok : true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetAllAvailableSM(req, res) {
+  try {
+    const users = await getAllAvailableSM();
+    if (!users) {
+      return NextResponse.json({ message: "Failed to available SM!", ok: false }, { status: 400 });
     }
     return NextResponse.json({ users, ok : true }, { status: 200 });
   } catch (error) {

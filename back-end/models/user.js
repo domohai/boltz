@@ -42,8 +42,21 @@ export async function getAllAvailableCM() {
   return result;
 }
 
+export async function getAllAvailableSM() {
+  const [result] = await pool.query(
+    `SELECT * FROM user WHERE user.role = ? AND user.service_point_id IS NULL`,
+    [ROLES.SERVICE_MANAGER],
+  );
+  return result;
+}
+
 export async function assignCMToCP(cpId, cmId) {
   const [result] = await pool.query(`UPDATE user SET collection_point_id = ? WHERE id = ?`, [cpId, cmId]);
+  return result;
+}
+
+export async function assignSMToSP(spId, smId) {
+  const [result] = await pool.query(`UPDATE user SET service_point_id = ? WHERE id = ?`, [spId, smId]);
   return result;
 }
 
