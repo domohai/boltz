@@ -66,7 +66,22 @@ UPDATE user SET user.collection_point_id = LAST_INSERT_ID() WHERE email IN ('cp_
 INSERT INTO collection_point (name, city, address) VALUES ('DTK Tuyen Quang', 'Tuyen Quang', 'Tinh Tuyen Quang');
 UPDATE user SET user.collection_point_id = LAST_INSERT_ID() WHERE email IN ('cp_duc@boltz.com', 'cs_duc@boltz.com');
 
+-- Modify start_time to be NOT NULL
+ALTER TABLE parcel
+MODIFY COLUMN start_time TIMESTAMP NOT NULL;
+-- Modify end_time to have a default value of NULL
+ALTER TABLE parcel
+MODIFY COLUMN end_time TIMESTAMP DEFAULT NULL;
 
-
-
+-- Add new columns: name, sender_id, and receiver_id
+ALTER TABLE parcel
+ADD COLUMN name VARCHAR(255),
+ADD COLUMN sender_id INT,
+ADD COLUMN receiver_id INT,
+ADD COLUMN notes TEXT DEFAULT NULL,
+ADD COLUMN weight INT NOT NULL,
+ADD COLUMN type enum('docs', 'package'),
+MODIFY COLUMN cost INT NOT NULL,
+ADD FOREIGN KEY (sender_id) REFERENCES person(id) ON DELETE SET NULL,
+ADD FOREIGN KEY (receiver_id) REFERENCES person(id) ON DELETE SET NULL;
 

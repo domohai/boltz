@@ -100,3 +100,14 @@ export async function updateServicePoint(id, { name, city, district, address }) 
     throw error;
   }
 }
+
+export async function getCityList() {
+  try {
+    const [rows] = await pool.query(
+      `SELECT MIN(id) AS id, city FROM collection_point GROUP BY city;`
+    );
+    return rows.map((row) => ({ id: row.id, city: row.city }));
+  } catch (error) {
+    throw error;
+  }
+}
