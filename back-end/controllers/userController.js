@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getAllUsersByRole, addUser, deleteUserById, getAllAvailableCM, getStaffOfCP, getAllAvailableSM } from '@back-end/models/user.js';
 import bcrypt from 'bcryptjs';
 
+
 export async function handleGetAllUsersByRole(req, res) {
   const role = await req.nextUrl.searchParams.get('role');
   try {

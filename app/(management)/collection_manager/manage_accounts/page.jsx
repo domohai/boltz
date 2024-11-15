@@ -24,6 +24,7 @@ const Page = () => {
     });
     const data = await res.json();
     if (data.ok) {
+      console.log(data);
       setAccounts(data.users);
     } else {
       console.log(data.message);
@@ -39,7 +40,29 @@ const Page = () => {
 
   const addManagerHandler = async (e) => {
     e.preventDefault();
-    
+    try {
+      const response = await fetch('/api/leader/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password, role: 'collection_staff', collection_point_id: 1 }),
+      });
+      const data = await response.json();
+      if (data.ok) {
+        console.log('Request body:', { name, email, password, role: 'collection_staff', collection_point_id: 1 });
+        alert('Account added successfully!');
+        console.log(data);  
+        resetForm();
+        // refresh the list of accounts
+        getStaffAccounts();
+      } else {
+        alert(`Failed to add account: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error adding account:', error);
+      alert('An error occurred. See console for details.');
+    }
   };
 
   const resetForm = () => {
