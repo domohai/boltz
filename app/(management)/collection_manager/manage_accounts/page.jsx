@@ -46,15 +46,21 @@ const Page = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password, role: 'collection_staff', collection_point_id: 1 }),
+        body: JSON.stringify({ 
+          name, 
+          email, 
+          password, 
+          role: 'collection_staff', 
+          collection_point_id: 1, // Default value
+          service_point_id: null, // Default value
+        }),
       });
       const data = await response.json();
       if (data.ok) {
-        console.log('Request body:', { name, email, password, role: 'collection_staff', collection_point_id: 1 });
         alert('Account added successfully!');
         console.log(data);  
         resetForm();
-        // refresh the list of accounts
+        // Refresh the list of accounts
         getStaffAccounts();
       } else {
         alert(`Failed to add account: ${data.message}`);
@@ -64,7 +70,7 @@ const Page = () => {
       alert('An error occurred. See console for details.');
     }
   };
-
+  
   const resetForm = () => {
     setName('');
     setEmail('');

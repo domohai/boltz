@@ -16,19 +16,21 @@ export async function handleGetAllUsersByRole(req, res) {
   }
 }
 
+
 export async function handleAddUser(req, res) {
-  const { name, email, password, _role } = await req.json();
+  const { name, email, password, role, collection_point_id, service_point_id } = await req.json();
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
-    const result = await addUser(name, email, hashedPassword, _role);
+    const result = await addUser(name, email, hashedPassword, role, collection_point_id, service_point_id);
     if (!result) {
       return NextResponse.json({ message: "Failed to add user", ok: false }, { status: 400 });
     }
-    return NextResponse.json({ user: result , ok : true }, { status: 201 });
+    return NextResponse.json({ user: result, ok: true }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
   }
 }
+
 
 export async function handleDeleteUserById(req, id) {
   try {
