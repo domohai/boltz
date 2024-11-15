@@ -24,10 +24,22 @@ export async function getAllUsersByRole(role) {
   }
 }
 
-export async function addUser(name, email, password, role) {
-  const [result] = await pool.query(`INSERT INTO user (name, email, password, role) VALUES (?, ?, ?, ?)`, [name, email, password, role]);
-  return { id: result.insertId, name, email, role };
+export async function addUser(name, email, password, role, collection_point_id = 1, service_point_id = null) {
+  const [result] = await pool.query(
+    `INSERT INTO user (name, email, password, role, collection_point_id, service_point_id) VALUES (?, ?, ?, ?, ?, ?)`,
+    [name, email, password, role, collection_point_id, service_point_id]
+  );
+  return {
+    id: result.insertId,
+    name,
+    email,
+    role,
+    password, // hashed password
+    collection_point_id,
+    service_point_id,
+  };
 }
+
 
 export async function deleteUserById(id) {
   const [result] = await pool.query(`DELETE FROM user WHERE id = ?`, [id]);
