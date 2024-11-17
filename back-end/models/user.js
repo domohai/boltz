@@ -24,16 +24,36 @@ export async function getAllUsersByRole(role) {
   }
 }
 
-export async function addUser(name, email, password, role) {
-  const [result] = await pool.query(`INSERT INTO user (name, email, password, role) VALUES (?, ?, ?, ?)`, [name, email, password, role]);
-  return { id: result.insertId, name, email, role };
+export async function addUser(name, email, password, role, collection_point_id = 1, service_point_id = null) {
+  const [result] = await pool.query(
+    `INSERT INTO user (name, email, password, role, collection_point_id, service_point_id) VALUES (?, ?, ?, ?, ?, ?)`,
+    [name, email, password, role, collection_point_id, service_point_id]
+  );
+  return {
+    id: result.insertId,
+    name,
+    email,
+    role,
+    password, // hashed password
+    collection_point_id,
+    service_point_id,
+  };
 }
+
+
 
 export async function deleteUserById(id) {
-  const [result] = await pool.query(`DELETE FROM user WHERE id = ?`, [id]);
-  return result;
+  try {
+    const [result] = await pool.query(
+      'DELETE FROM user WHERE id = ?', 
+      [id]
+    );
+    return result;
+  } catch (error) {
+    console.error('Error in deleteUserById:', error);
+    throw error;
+  }
 }
-
 export async function getAllAvailableCM() {
   const [result] = await pool.query(
     `SELECT * FROM user WHERE user.role = ? AND user.collection_point_id IS NULL`,
