@@ -3,168 +3,119 @@ import { useParcel, ParcelProvider } from '@components/parcel/ParcelContext';
 import ContactInfoForm from '@components/parcel/ContactInfoForm';
 import { useState, useMemo } from 'react';
 import { Input } from "@nextui-org/input";
+import { Image } from "@nextui-org/image";
+import { Divider } from "@nextui-org/divider";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { Button } from "@nextui-org/button";
+import { CostUtils } from "@utils/CostUtils.js";
 import { Textarea } from "@nextui-org/input";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
-import { addresses } from './addresses';
+import { Card, CardHeader, CardBody } from "@nextui-org/card";
 
-const AddressForm = ({ title }) => {
-  const [selectedProvince, setSelectedProvince] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedWard, setSelectedWard] = useState("");
-
-  // Get list of provinces
-  const provinces = useMemo(() => Object.keys(addresses), []);
-
-  // Get districts based on selected province
-  const districts = useMemo(() => {
-    if (!selectedProvince) return [];
-    return Object.keys(addresses[selectedProvince]?.districts || {});
-  }, [selectedProvince]);
-
-  // Get wards based on selected province and district
-  const wards = useMemo(() => {
-    if (!selectedProvince || !selectedDistrict) return [];
-    return addresses[selectedProvince]?.districts[selectedDistrict]?.wards || [];
-  }, [selectedProvince, selectedDistrict]);
-
-  // Handle province selection
-  const handleProvinceChange = (value) => {
-    setSelectedProvince(value);
-    setSelectedDistrict("");
-    setSelectedWard("");
-  };
-
-  // Handle district selection
-  const handleDistrictChange = (value) => {
-    setSelectedDistrict(value);
-    setSelectedWard("");
-  };
-
+const CreateParcel = () => {
   return (
-    <div className="bg-gray-200 p-6 rounded-lg">
-      <h3 className="font-bold text-lg mb-4">{title}</h3>
-      <div className="grid grid-cols-2 gap-4">
-        <Input type="text" label="Họ tên" placeholder="Nhập họ tên" />
-        <Input type="tel" label="Số điện thoại" placeholder="Nhập số điện thoại" />
-        <Input className="col-span-2" type="text" label="Địa chỉ" placeholder="Số nhà/tên đường..." />
-        
-        <Autocomplete
-          label="Tỉnh/thành phố"
-          placeholder="Chọn tỉnh/thành phố"
-          selectedKey={selectedProvince}
-          onSelectionChange={handleProvinceChange}
-          className="w-full"
-        >
-          {provinces.map((province) => (
-            <AutocompleteItem key={province} value={province}>
-              {province}
-            </AutocompleteItem>
-          ))}
-        </Autocomplete>
-
-        <Autocomplete
-          label="Huyện/quận"
-          placeholder="Chọn huyện/quận"
-          selectedKey={selectedDistrict}
-          onSelectionChange={handleDistrictChange}
-          isDisabled={!selectedProvince}
-          className="w-full"
-        >
-          {districts.map((district) => (
-            <AutocompleteItem key={district} value={district}>
-              {district}
-            </AutocompleteItem>
-          ))}
-        </Autocomplete>
-
-        <Autocomplete
-          label="Xã/phường"
-          placeholder="Chọn xã/phường"
-          selectedKey={selectedWard}
-          onSelectionChange={setSelectedWard}
-          isDisabled={!selectedDistrict}
-          className="w-full"
-        >
-          {wards.map((ward) => (
-            <AutocompleteItem key={ward} value={ward}>
-              {ward}
-            </AutocompleteItem>
-          ))}
-        </Autocomplete>
-
-        <Input type="text" label="Thôn/xóm" placeholder="Nhập thôn/xóm" />
-      </div>
-    </div>
+    <ParcelProvider>
+      <CreateParcelContent />
+    </ParcelProvider>
   );
 };
 
-const CreateParcel = () => {
-
-
+const CreateParcelContent = () => {
+  const { parcelInfo, updateParcelInfo, createParcel } = useParcel();
+  
 
   return (
-    <ParcelProvider>
-      <div className="w-full p-1 bg-white min-h-screen">
-        {/* title */}
-        <div className="pt-2 pl-4 flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold text-black">Tạo bưu gửi</h1>
-        </div>
-        {/* layout form */}
-        <div className="px-2 grid grid-cols-2 gap-2">
-          {/* col 1 */}
-          <div className="space-y-2">
-            <ContactInfoForm type="sender" />
-            <ContactInfoForm type="receiver" />
-          </div>
-          {/* col 2 */}
-          <div className="bg-gray-200 p-4 rounded-lg">
-            <h3 className="font-bold text-lg mb-4">Thông tin dịch vụ - hàng hoá</h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="font-medium">Loại hàng hoá:</div>
-                <RadioGroup defaultValue="package">
-                  <div className="flex gap-4">
-                    <Radio value="package">Bưu kiện</Radio>
-                    <Radio value="document">Tài liệu</Radio>
-                  </div>
-                </RadioGroup>
-              </div>
-              
-              <Input type="text" label="Tên hàng" placeholder="Nhập tên hàng" />
-              
-              <div className="grid grid-cols-2 gap-4">
-                <Input type="number" label="Số lượng" placeholder="Nhập số lượng" />
-                <Input type="number" label="Trọng lượng" placeholder="Nhập trọng lượng" />
-              </div>
-
-              <div>
-                <div className="font-medium mb-2">Loại dịch vụ:</div>
-                <RadioGroup defaultValue="express">
-                  <div className="flex gap-4">
-                    <Radio value="express">Chuyển phát nhanh</Radio>
-                    <Radio value="urgent">Hỏa tốc</Radio>
-                    <Radio value="saving">Tiết kiệm</Radio>
-                  </div>
-                </RadioGroup>
-              </div>
-
-              <div>
-                <div className="font-medium mb-2">Kích thước (nếu có):</div>
-                <div className="grid grid-cols-3 gap-4">
-                  <Input type="number" label="Dài (cm)" placeholder="Nhập chiều dài" />
-                  <Input type="number" label="Rộng (cm)" placeholder="Nhập chiều rộng" />
-                  <Input type="number" label="Cao (cm)" placeholder="Nhập chiều cao" />
-                </div>
-              </div>
-
-              <Textarea label="Ghi chú" placeholder="Nhập ghi chú" />
-            </div>
-          </div>
-        </div>
+    <div className="w-full p-1 bg-white min-h-screen">
+      {/* title */}
+      <div className="pt-2 pl-4 flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold text-black">Tạo bưu gửi</h1>
       </div>
-    </ParcelProvider>
+      {/* layout form */}
+      <div className="px-2 grid grid-cols-2 gap-2">
+        {/* Sender/Receiver */}
+        <div className="space-y-2">
+          <ContactInfoForm type="sender" />
+          <ContactInfoForm type="receiver" />
+        </div>
+        {/* Package Info */}
+        <Card fullWidth className="bg-gray-200" radius='sm'>
+          <CardHeader className='bg-gray-300 p-2 pl-3'>
+            <Image radius='none' src='/assets/icons/package-1.svg' width={20} height={20} />
+            <h3 className="font-medium text-base ml-1">Thông tin dịch vụ - hàng hoá</h3>
+          </CardHeader>
+          <CardBody>
+            <div className="space-y-2">
+              {/* Package type */}
+              <div className="flex flex-col items-start">
+                <div className='flex flex-row pb-1'>
+                  <Image className='pt-1' src='/assets/icons/package-2.svg' width={26} height={26} />
+                  <h3 className='font-medium ml-1'>Loại hàng hoá</h3>
+                </div>
+                <RadioGroup  
+                  className='space-x-2 my-1 ml-2'
+                  value={parcelInfo.type}
+                  onChange={(e) => updateParcelInfo({ type: e.target.value })}
+                  size='sm'
+                  orientation='horizontal'>
+                  <Radio className='px-4' value="package">Bưu kiện</Radio>
+                  <Radio className='px-4' value="docs">Tài liệu</Radio>
+                </RadioGroup>
+              </div>
+              <Divider />
+              {/* Package name, weight */}
+              <Input 
+                isRequired
+                className=''
+                value={parcelInfo.name}
+                onChange={(e) => updateParcelInfo({ name: e.target.value })} 
+                type="text" 
+                label="Tên hàng" 
+                size='sm'/>
+              <div className='grid grid-cols-2 gap-1'> 
+                <Input 
+                  className='col-span-1' 
+                  type="number" 
+                  label="Trọng lượng (g)"
+                  value={parcelInfo.weight}
+                  onChange={(e) => updateParcelInfo({ weight: e.target.value })} 
+                  size='sm'
+                  radius='sm'
+                  startContent={
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#6b7280" className="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
+                    </svg>
+                  }/>
+                <Input 
+                  className='col-span-1' 
+                  type="number" 
+                  label="Giá trị hàng (đ)" 
+                  value={parcelInfo.value}
+                  onChange={(e) => updateParcelInfo({ value: e.target.value })}
+                  size='sm'
+                  radius='sm'
+                  startContent={
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#6b7280" className="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  }/>
+              </div>
+              <Divider />
+              {/* Calculated cost */}
+              <div className='grid grid-cols-2 gap-4 font-medium'>
+                <div className=''>Tổng cước vận chuyển: </div>
+                <div className='justify-self-end mr-3'>{parcelInfo.cost + 'đ'}</div>
+              </div>
+              <Divider />
+              <Textarea 
+                value={parcelInfo.notes}
+                onChange={(e) => updateParcelInfo({ notes: e.target.value })}
+                labelPlacement='outside'
+                label="Ghi chú" 
+                placeholder="Nhập ghi chú" />
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+    </div>
   );
 };
 

@@ -1,6 +1,7 @@
 "use server";
 import pool from "@utils/db.js";
 
+// Get all collection points with their managers
 export async function getAllCollectionPoints() {
   try {
     const [rows] = await pool.query(
@@ -15,6 +16,7 @@ export async function getAllCollectionPoints() {
   }
 }
 
+// Get all service points with their managers
 export async function getAllServicePoints() {
   try {
     const [rows] = await pool.query(
@@ -29,6 +31,7 @@ export async function getAllServicePoints() {
   }
 }
 
+// Add a new collection point
 export async function addCollectionPoint({ name, city, address }) {
   try {
     const [rows] = await pool.query(
@@ -41,6 +44,7 @@ export async function addCollectionPoint({ name, city, address }) {
   }
 }
 
+// Add a new service point
 export async function addServicePoint({ name, city, district, address }) {
   try {
     const [rows] = await pool.query(
@@ -53,6 +57,7 @@ export async function addServicePoint({ name, city, district, address }) {
   }
 }
 
+// Delete a collection point
 export async function deleteCollectionPoint(id) {
   try {
     const [rows] = await pool.query(
@@ -65,6 +70,7 @@ export async function deleteCollectionPoint(id) {
   }
 }
 
+// Delete a service point
 export async function deleteServicePoint(id) {
   try {
     const [rows] = await pool.query(
@@ -77,6 +83,7 @@ export async function deleteServicePoint(id) {
   }
 }
 
+// Update information of a collection point
 export async function updateCollectionPoint(id, { name, city, address }) {
   try {
     const [rows] = await pool.query(
@@ -89,6 +96,7 @@ export async function updateCollectionPoint(id, { name, city, address }) {
   }
 }
 
+// Update information of a service point
 export async function updateServicePoint(id, { name, city, district, address }) {
   try {
     const [rows] = await pool.query(
@@ -101,12 +109,13 @@ export async function updateServicePoint(id, { name, city, district, address }) 
   }
 }
 
-export async function getCityList() {
+// Get all service points without managers
+export async function getServicePoints() {
   try {
     const [rows] = await pool.query(
-      `SELECT MIN(id) AS id, city FROM collection_point GROUP BY city;`
+      `SELECT * FROM service_point;`
     );
-    return rows.map((row) => ({ id: row.id, city: row.city }));
+    return rows;
   } catch (error) {
     throw error;
   }

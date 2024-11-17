@@ -34,11 +34,11 @@ CREATE TABLE `service_point` (
 );
 
 CREATE TABLE `person` (
-    `id` INT PRIMARY KEY AUTO_INCREMENT,
-    `name` VARCHAR(255) NOT NULL,
-    `phone_number` VARCHAR(20) NOT NULL UNIQUE,
-    `city` VARCHAR(255) NOT NULL,
-    `district` VARCHAR(255) NOT NULL
+  `id` INT PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `phone_number` VARCHAR(20) NOT NULL UNIQUE,
+  `city` VARCHAR(255) NOT NULL,
+  `district` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE `parcel` (
@@ -46,6 +46,7 @@ CREATE TABLE `parcel` (
   `name` VARCHAR(255) NOT NULL,
   `notes` TEXT DEFAULT NULL,
   `weight` INT NOT NULL,
+  `value` INT DEFAULT NULL,
   `type` enum('docs', 'package'),
   `src_service_p` int DEFAULT NULL,
   `src_collection_p` int DEFAULT NULL,

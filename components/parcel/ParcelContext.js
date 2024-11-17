@@ -11,15 +11,16 @@ export const ParcelProvider = ({ children }) => {
     id: "",
     name: "",
     weight: 0,
-    type: "docs",
+    value: 0,
+    type: "package",
     notes: "",
     src_service_p: "",
     src_collection_p: "",
     des_collection_p: "",
     des_service_p: "",
-    curr_point: "",
+    curr_point: "src_service_p",
     moving_to: "",
-    status: "",
+    status: "Chờ xử lý",
     cost: 0.0,
     start_time: "",
     end_time: "",
@@ -55,6 +56,12 @@ export const ParcelProvider = ({ children }) => {
     setReceiver((prevReceiver) => ({ ...prevReceiver, ...newReceiver }));
   }
 
+  const createParcel = () => {
+    console.log("Sender: ", sender);
+    console.log("Receiver: ", receiver);
+    console.log("Parcel: ", parcelInfo);
+  }
+
   return (
     <ParcelContext.Provider 
       value={{ 
@@ -63,7 +70,8 @@ export const ParcelProvider = ({ children }) => {
         sender, 
         receiver,
         updateSender,
-        updateReceiver
+        updateReceiver,
+        createParcel
       }}>
       {children}
     </ParcelContext.Provider>
