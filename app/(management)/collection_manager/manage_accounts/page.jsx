@@ -17,7 +17,9 @@ const Page = () => {
   const [role, setRole] = useState('');
   const {isOpen, onOpen, onOpenChange } = useDisclosure();
   const [accounts, setAccounts] = useState([]);
-  
+  const [selectedId, setSelectedId] = useState(null);
+  const {isOpen: isDeleteModalOpen, onOpen: onDeleteOpen, onOpenChange: onDeleteClose} = useDisclosure();
+
   const getStaffAccounts = async () => {
     const res = await fetch(`/api/collection_manager/user?collection_point_id=${collection_point_id}`, {
       method: 'GET',
@@ -78,6 +80,39 @@ const Page = () => {
     setRole('');  
   };
 
+  const deleteAccountHandler = async () => {
+    if (!selectedId) return;
+    try {
+      const response = await fetch(`/api/collection_manager/user/${selectedId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log("Response received");
+      
+      const data = await response.json();
+
+      console.log("Data deleteaccounthandlers: ", data);
+      if (data.ok) {
+        alert('Account deleted successfully!');
+        getStaffAccounts(); 
+        setSelectedId(null);
+        onDeleteClose();
+      } else {
+        alert(`Failed to delete account: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      alert('An error occurred. See console for details.');
+    }
+  };
+  
+  const openDeleteModal = (id) => {
+    setSelectedId(id);
+    onDeleteOpen();
+  };
 
   return (
     <div className="w-full p-6 bg-white min-h-screen">
@@ -114,6 +149,25 @@ const Page = () => {
               </ModalFooter>
             </form>
           )}
+        </ModalContent>
+      </Modal>
+      
+      <Modal isOpen={isDeleteModalOpen} onOpenChange={onDeleteClose} placement="top-center">
+        <ModalContent>
+          <ModalHeader className="flex justify-center">
+            <h2 className="text-lg font-bold">Xác nhận xoá tài khoản</h2>
+          </ModalHeader>
+          <ModalBody>
+            <p>Bạn có chắc chắn muốn xoá tài khoản này không?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onDeleteClose}>
+              Huỷ
+            </Button>
+            <Button color="primary" onPress={deleteAccountHandler}>
+              Xoá
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
 
