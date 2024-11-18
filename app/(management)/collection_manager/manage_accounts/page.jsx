@@ -43,7 +43,7 @@ const Page = () => {
   const addManagerHandler = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/leader/user', {
+      const response = await fetch('/api/collection_manager/user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ const Page = () => {
           email, 
           password, 
           role: 'collection_staff', 
-          collection_point_id: 1, // Default value
+          collection_point_id: collection_point_id, 
           service_point_id: null, // Default value
         }),
       });
