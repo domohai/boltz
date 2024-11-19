@@ -1,33 +1,37 @@
+-- add two cols to user table
 ALTER TABLE user
 ADD COLUMN service_point_id INT NULL,
 ADD COLUMN collection_point_id INT NULL,
 ADD FOREIGN KEY (service_point_id) REFERENCES service_point(id) ON DELETE SET NULL,
 ADD FOREIGN KEY (collection_point_id) REFERENCES collection_point(id) ON DELETE SET NULL;
 
+-- add 'city' column to collection_point table
 ALTER TABLE collection_point
 ADD COLUMN city VARCHAR(255) NOT NULL;
-ALTER TABLE collection_point
-MODIFY COLUMN user_id INT DEFAULT NULL;
 
-ALTER TABLE service_point
-MODIFY COLUMN user_id INT DEFAULT NULL;
+-- ALTER TABLE collection_point
+-- MODIFY COLUMN user_id INT DEFAULT NULL;
+-- ALTER TABLE service_point
+-- MODIFY COLUMN user_id INT DEFAULT NULL;
 ALTER TABLE service_point
 MODIFY COLUMN collection_point_id INT DEFAULT NULL;
 
-# insert file 'insertCollectionPoint.sql'
-# insert file 'insertServicePoint.sql'
+-- insert file 'insertCollectionPoint.sql'
+-- insert file 'insertServicePoint.sql'
+-- add accounts to DB 
 
 SET SQL_SAFE_UPDATES = 0;
-
+-- set collection_point_id for service_point
 UPDATE service_point sp
 JOIN collection_point cp ON sp.city = cp.city
 SET sp.collection_point_id = cp.id;
 
+-- set manager for collection_point
 UPDATE user u
 JOIN collection_point cp ON u.name = cp.city
 SET u.collection_point_id = cp.id
 WHERE u.role = 'cp_manager';
-
+-- set manager for service_point
 UPDATE user u
 JOIN service_point sp ON u.name = sp.name
 SET u.service_point_id = sp.id

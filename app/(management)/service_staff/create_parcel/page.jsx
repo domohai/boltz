@@ -1,13 +1,13 @@
 "use client";
 import { useParcel, ParcelProvider } from '@components/parcel/ParcelContext';
 import ContactInfoForm from '@components/parcel/ContactInfoForm';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Input } from "@nextui-org/input";
 import { Image } from "@nextui-org/image";
 import { Divider } from "@nextui-org/divider";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { Button } from "@nextui-org/button";
-import { CostUtils } from "@utils/CostUtils.js";
+import CostUtils from "@utils/CostUtils.js";
 import { Textarea } from "@nextui-org/input";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 
@@ -20,8 +20,12 @@ const CreateParcel = () => {
 };
 
 const CreateParcelContent = () => {
-  const { parcelInfo, updateParcelInfo, createParcel } = useParcel();
-  
+  const { parcelInfo, updateParcelInfo, createParcel, resetAll } = useParcel();
+  const cost = useMemo(() => CostUtils.calculateCost(parcelInfo.weight, parcelInfo.type), [parcelInfo.weight, parcelInfo.type]);
+
+  useEffect(() => {
+    updateParcelInfo({ cost: cost });
+  }, [cost]);
 
   return (
     <div className="w-full p-1 bg-white min-h-screen">
@@ -30,6 +34,7 @@ const CreateParcelContent = () => {
         <h1 className="text-2xl font-bold text-black">Tạo bưu gửi</h1>
       </div>
       {/* layout form */}
+      <form onSubmit={createParcel}>
       <div className="px-2 grid grid-cols-2 gap-2">
         {/* Sender/Receiver */}
         <div className="space-y-2">
@@ -102,7 +107,7 @@ const CreateParcelContent = () => {
               {/* Calculated cost */}
               <div className='grid grid-cols-2 gap-4 font-medium'>
                 <div className=''>Tổng cước vận chuyển: </div>
-                <div className='justify-self-end mr-3'>{parcelInfo.cost + 'đ'}</div>
+                <div className='justify-self-end mr-3 text-red-500'>{cost + 'đ'}</div>
               </div>
               <Divider />
               <Textarea 
@@ -112,9 +117,26 @@ const CreateParcelContent = () => {
                 label="Ghi chú" 
                 placeholder="Nhập ghi chú" />
             </div>
+            <div>
+              <Button 
+                className='w-full mt-2' 
+                 
+                type='submit'
+                size='sm' 
+                color='primary'>
+                Tạo bưu gửi
+              </Button>
+              <Button 
+                className='w-full mt-2' 
+                onPress={resetAll} 
+                size='sm'>
+                Làm mới
+              </Button>
+            </div>
           </CardBody>
         </Card>
       </div>
+      </form>
     </div>
   );
 };

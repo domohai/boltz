@@ -95,6 +95,7 @@ const ContactInfoForm = ({ type }) => {
         <Input
           isRequired
           isClearable
+          type='text'
           label="Họ tên"
           value={personData.name}
           onChange={(e) => updatePerson({ name: e.target.value })}
@@ -104,6 +105,7 @@ const ContactInfoForm = ({ type }) => {
           isRequired
           isClearable
           label="Điện thoại"
+          type='text'
           value={personData.phone_number}
           onChange={(e) => updatePerson({ phone_number: e.target.value })}
           onClear={() => updatePerson({ phone_number: "" })}
@@ -113,7 +115,10 @@ const ContactInfoForm = ({ type }) => {
           label="Tỉnh/Thành phố"
           defaultItems={Object.keys(cityDistrictMap).map((city) => ({ key: city, textValue: city }))}
           value={selectedCity}
-          onSelectionChange={setSelectedCity}
+          onSelectionChange={(city) => {
+            setSelectedCity(city);
+            updatePerson({ city: city });
+          }}
           size={size}>
           {(item) => (
             <AutocompleteItem key={item.key}>{item.textValue}</AutocompleteItem>
@@ -124,7 +129,10 @@ const ContactInfoForm = ({ type }) => {
           label="Quận/Huyện"
           defaultItems={districts.map((district) => ({ key: district.district, textValue: district.district }))}
           value={selectedDistrict}
-          onSelectionChange={setSelectedDistrict}
+          onSelectionChange={(district) => {
+            setSelectedDistrict(district);
+            updatePerson({ district: district });
+          }}
           size={size}>
           {(item) => (
             <AutocompleteItem key={item.key}>
