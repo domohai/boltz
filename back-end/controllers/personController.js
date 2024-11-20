@@ -5,7 +5,9 @@ export async function handleGetPersonByPhoneNumber(req, res) {
   const phone_number = await req.nextUrl.searchParams.get("phone_number");
   try {
     const person = await getPersonByPhoneNumber(phone_number);
-    console.log(person);
+    if (person.length === 0) {
+      return NextResponse.json({ person: null, ok: true }, { status: 200 });
+    }
     return NextResponse.json({ person, ok: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });

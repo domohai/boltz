@@ -6,7 +6,7 @@ export async function getPersonByPhoneNumber(phone_number) {
     'SELECT * FROM person WHERE phone_number = ?',
     [phone_number]
   );
-  return result; // Return null if no rows found
+  return result;
 }
 
 export async function addPerson(name, phone_number, city, district) {

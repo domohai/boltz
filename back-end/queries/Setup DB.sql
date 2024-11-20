@@ -57,7 +57,7 @@ CREATE TABLE `parcel` (
    FOREIGN KEY (des_service_p) REFERENCES service_point(id) ON DELETE SET NULL,
    FOREIGN KEY (des_collection_p) REFERENCES collection_point(id) ON DELETE SET NULL,
   `curr_point` enum('src_service_p','src_collection_p','des_collection_p','des_service_p'),
-  `moving_to` enum('src_collection_p','des_collection_p','des_service_p','null'),
+  `moving_to` enum('src_collection_p','des_collection_p','des_service_p') DEFAULT NULL,
   `status` enum('Chờ xử lý','Đang vận chuyển','Chờ trả hàng','Đã trả hàng','Đã huỷ'),
   `cost` INT NOT NULL,
   `start_time` TIMESTAMP NOT NULL,

@@ -87,5 +87,9 @@ ADD COLUMN weight INT NOT NULL,
 ADD COLUMN type enum('docs', 'package'),
 ADD COLUMN value INT DEFAULT 0,
 MODIFY COLUMN cost INT NOT NULL,
+MODIFY COLUMN moving_to ENUM('src_collection_p','des_collection_p','des_service_p') DEFAULT NULL,
 ADD FOREIGN KEY (sender_id) REFERENCES person(id) ON DELETE SET NULL,
 ADD FOREIGN KEY (receiver_id) REFERENCES person(id) ON DELETE SET NULL;
+
+
+

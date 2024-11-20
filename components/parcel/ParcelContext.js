@@ -101,7 +101,7 @@ export const ParcelProvider = ({ children }) => {
         method: 'GET',
       });
       const data = await res.json();
-      if (data.ok && data.person) {
+      if (data.ok) {
         return data.person;
       } else {
         console.error(data.message);
@@ -116,6 +116,7 @@ export const ParcelProvider = ({ children }) => {
     try {
       const res = await fetch('/api/service_staff/person', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({name, phone_number, city, district}),
       });
       const data = await res.json();
@@ -131,10 +132,10 @@ export const ParcelProvider = ({ children }) => {
   }
 
   const addParcel = async () => {
-    return null;
     try {
       const res = await fetch('/api/service_staff/parcel', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parcelInfo),
       });
       const data = await res.json();
@@ -155,25 +156,26 @@ export const ParcelProvider = ({ children }) => {
       // Check if sender and receiver exist in the database
       const _sender = await getPersonByPhoneNumber(sender.phone_number);
       const _receiver = await getPersonByPhoneNumber(receiver.phone_number);
-      console.log(_sender);
       // If not, add them to the database
-      // if (!_sender) {
-      //   const newSender = await addPerson(sender.name, sender.phone_number, sender.city, sender.district);
-      //   updateSender({ id: newSender.id });
-      // } else {
-      //   updateSender({ id: _sender[0].id });
-      // }
-      // if (!_receiver) {
-      //   const newReceiver = await addPerson(receiver.name, receiver.phone_number, receiver.city, receiver.district);
-      //   updateReceiver({ id: newReceiver.id });
-      // } else {
-      //   updateReceiver({ id: _receiver[0].id });
-      // }
+      if (!_sender) {
+        const newSender = await addPerson(sender.name, sender.phone_number, sender.city, sender.district);
+        updateSender({ id: newSender.id });
+      } else {
+        updateSender({ id: _sender[0].id });
+      }
+      if (!_receiver) {
+        const newReceiver = await addPerson(receiver.name, receiver.phone_number, receiver.city, receiver.district);
+        updateReceiver({ id: newReceiver.id });
+      } else {
+        updateReceiver({ id: _receiver[0].id });
+      }
+      console.log(sender);
+      console.log(receiver);
       // Update parcel info with sender and receiver IDs
-      // updateParcelInfo({ sender_id: sender.id, receiver_id: receiver.id });
+      updateParcelInfo({ sender_id: sender.id, receiver_id: receiver.id });
       // Add the parcel to the database
-      // const parcel = await addParcel();
-      // console.log(parcel);
+      const parcel = await addParcel();
+      console.log(parcel);
     } catch (error) {
       console.error(error);
       alert("An error occurred while creating parcel! See console for more details.");
