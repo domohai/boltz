@@ -1,13 +1,62 @@
 "use client";
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { Button } from "@nextui-org/button";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/table";
 import { Checkbox } from "@nextui-org/checkbox";
 import pendingData from "./pendingData";
 
-const Page = () => {
+const ProcessingParcel = () => {
+  // ---------------- MHai starts -----------------
+  const { data: session, status: sessionStatus } = useSession();
+  const service_point_id = useMemo(() => session?.user.service_point_id, [session, sessionStatus]);
+  const [parcels, setParcels] = useState([]);
+
+  // fecth all the parcels with conditions: 
+  // src_service_p == service_point_id && curr_point == "src_service_p" && moving_to == NULL
+  const fetchParcels = async () => {
+    if (!service_point_id) return;
+    try {
+      const res = await fetch(`/api/service_staff?service_point_id=${service_point_id}`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setParcels(data.parcels);
+      } else {
+        console.error("Error fetching processing parcels: ", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching processing parcels: ", error);
+    }
+  };
+
+  useEffect(() => {
+    if (service_point_id) {
+      console.log("Service point ID: ", service_point_id);
+      fetchParcels();
+    }
+  }, [service_point_id]);
+  // ----------------- MHai ends -------------------
+
+  /**
+   * Table component for displaying parcel data
+   * The table will have the following columns:
+   * - Mã đơn hàng (id)
+   * - Tên hàng (name)
+   * - Nơi nhận 
+   * - Trạng thái
+   * - Thao tác
+   * dữ liệu đơn hàng lấy từ biến 'parcels'
+   */
+  const parcelTable = (
+    <Table aria-label="Danh sách đơn hàng chờ vận chuyển">
+      {/* TO-DO */}
+    </Table>
+  );
+
   const [data] = useState(pendingData);
-//select all
+  //select all
   const [selected, setSelected] = useState(new Array(data.length).fill(false));
   const handleSelectAllChange = (isSelected) => {
     setSelected(new Array(data.length).fill(isSelected));
@@ -18,7 +67,7 @@ const Page = () => {
     setSelected(newSelected);
   };
   const isAllSelected = selected.every((item) => item);
-//select all
+
 
   return (
     <div className="w-full p-6 bg-white min-h-screen">
@@ -74,4 +123,4 @@ const Page = () => {
   );
 }
 
-export default Page;
+export default ProcessingParcel;

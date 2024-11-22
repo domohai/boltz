@@ -1,14 +1,13 @@
 "use client";
 import { useParcel, ParcelProvider } from '@components/parcel/ParcelContext';
 import ContactInfoForm from '@components/parcel/ContactInfoForm';
-import { useState, useMemo, useEffect } from 'react';
-import { Input } from "@nextui-org/input";
+import { useMemo, useEffect } from 'react';
+import { Input, Textarea } from "@nextui-org/input";
 import { Image } from "@nextui-org/image";
 import { Divider } from "@nextui-org/divider";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { Button } from "@nextui-org/button";
 import CostUtils from "@utils/CostUtils.js";
-import { Textarea } from "@nextui-org/input";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 
 const CreateParcel = () => {

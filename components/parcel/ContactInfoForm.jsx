@@ -5,8 +5,11 @@ import { Input } from '@nextui-org/input';
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
+import { useSession } from 'next-auth/react';
 
 const ContactInfoForm = ({ type }) => {
+  const { data: session, status: sessionStatus } = useSession();
+  const service_point_id = useMemo(() => session?.user.service_point_id, [session, sessionStatus]);
   const { sender, receiver, updateSender, updateReceiver, parcelInfo, updateParcelInfo } = useParcel();
   const personData = type === 'sender' ? sender : receiver;
   const updatePerson = type === 'sender' ? updateSender : updateReceiver;
@@ -15,6 +18,26 @@ const ContactInfoForm = ({ type }) => {
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedSpId, setSelectedSpId] = useState("");
   const [cityDistrictMap, setCityDistrictMap] = useState({});
+  const [srcServicePoint, setSrcServicePoint] = useState(null);
+
+  useEffect(() => {
+    if (!srcServicePoint && service_point_id) {
+      for (const city in cityDistrictMap) {
+        const servicePoints = cityDistrictMap[city];
+        const foundSp = servicePoints.find((sp) => sp.id === service_point_id);
+        if (foundSp) {
+          setSrcServicePoint(foundSp);
+          break;
+        }
+      }
+    }
+  }, [service_point_id, cityDistrictMap]);
+
+  useEffect(() => {
+    if (session && service_point_id) {
+      updateParcelInfo({ src_service_p: String(service_point_id), src_collection_p: srcServicePoint?.collection_point_id });
+    }
+  }, [service_point_id, srcServicePoint]);
   
   const districts = useMemo(() => {
     if (!selectedCity || !cityDistrictMap[selectedCity]) return [];
@@ -42,11 +65,7 @@ const ContactInfoForm = ({ type }) => {
     if (selectedSp) {
       const {collection_point_id} = selectedSp; // Get collection point ID from selected service point
       // Update parcelInfo with selected service point and collection point IDs
-      if (type === 'sender') {
-        updateParcelInfo({ src_service_p: key, src_collection_p: String(collection_point_id) });
-      } else {
-        updateParcelInfo({ des_service_p: key, des_collection_p: String(collection_point_id) });
-      }
+      updateParcelInfo({ des_service_p: key, des_collection_p: String(collection_point_id) });
     } else {
       console.error("Service point not found for the selected key.");
     }
@@ -140,20 +159,30 @@ const ContactInfoForm = ({ type }) => {
             </AutocompleteItem>
           )}
         </Autocomplete>
-        <Autocomplete 
-          isRequired
-          className='col-span-2'
-          label={type === 'sender' ? "Điểm gửi hàng" : "Điểm nhận hàng"}
-          defaultItems={servicePoints.map((sp) => ({ key: sp.id, textValue: sp.address }))}
-          value={parcelInfo.src_service_p}
-          onSelectionChange={handleUpdateParcelInfo}
-          size={size}>
-          {(item) => (
-            <AutocompleteItem key={item.key}>
-              {item.textValue}
-            </AutocompleteItem>
-          )}
-        </Autocomplete>
+        {type === 'receiver' ? (
+          <Autocomplete 
+            isRequired
+            className='col-span-2'
+            label={"Điểm nhận hàng"}
+            defaultItems={servicePoints.map((sp) => ({ key: sp.id, textValue: sp.address }))}
+            value={parcelInfo.src_service_p}
+            onSelectionChange={handleUpdateParcelInfo}
+            size={size}>
+            {(item) => (
+              <AutocompleteItem key={item.key}>
+                {item.textValue}
+              </AutocompleteItem>
+            )}
+          </Autocomplete>
+        ) : (
+          <Input
+            isReadOnly
+            label="Điểm gửi hàng"
+            type='text'
+            value={srcServicePoint ? srcServicePoint.address : ""}
+            size={size}
+            className='col-span-2'/>
+        )}
       </CardBody>
     </Card>
   )

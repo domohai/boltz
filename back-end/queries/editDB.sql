@@ -84,12 +84,11 @@ ADD COLUMN sender_id INT,
 ADD COLUMN receiver_id INT,
 ADD COLUMN notes TEXT DEFAULT NULL,
 ADD COLUMN weight INT NOT NULL,
-ADD COLUMN type enum('docs', 'package'),
+ADD COLUMN type enum('docs', 'package') DEFAULT 'package',
 ADD COLUMN value INT DEFAULT 0,
 MODIFY COLUMN cost INT NOT NULL,
 MODIFY COLUMN moving_to ENUM('src_collection_p','des_collection_p','des_service_p') DEFAULT NULL,
+MODIFY COLUMN status enum('Chờ xử lý','Đang vận chuyển','Chờ trả hàng','Đã trả hàng','Đã huỷ') DEFAULT 'Chờ xử lý',
 ADD FOREIGN KEY (sender_id) REFERENCES person(id) ON DELETE SET NULL,
 ADD FOREIGN KEY (receiver_id) REFERENCES person(id) ON DELETE SET NULL;
-
-
 

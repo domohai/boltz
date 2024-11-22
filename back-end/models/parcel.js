@@ -16,3 +16,16 @@ export async function addParcel(parcelInfo) {
     return null;
   }
 }
+
+export async function getParcelsByServicePoint(service_point_id) {
+  try {
+    const [parcels] = await pool.query(
+      `SELECT * FROM parcel WHERE src_service_p = ? AND curr_point = ? AND moving_to IS NULL`,
+      [service_point_id, 'src_service_p']
+    );
+    return parcels;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}

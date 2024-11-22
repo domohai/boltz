@@ -111,7 +111,7 @@ export const ParcelProvider = ({ children }) => {
       alert("An error occurred while getting person by phone number! See console for more details.");
     }
   }
-
+  
   const addPerson = async (name, phone_number, city, district) => {
     try {
       const res = await fetch('/api/service_staff/person', {
@@ -130,13 +130,13 @@ export const ParcelProvider = ({ children }) => {
       alert("An error occurred while adding person! See console for more details.");
     }
   }
-
-  const addParcel = async () => {
+  // this function will take the local parcelInfo and send it to the back-end to add a new parcel
+  const addParcel = async (_parcelInfo) => {
     try {
-      const res = await fetch('/api/service_staff/parcel', {
+      const res = await fetch('/api/service_staff/create_parcel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(parcelInfo),
+        body: JSON.stringify(_parcelInfo),
       });
       const data = await res.json();
       if (data.ok) {
@@ -150,32 +150,36 @@ export const ParcelProvider = ({ children }) => {
     }
   }
 
+  // Check if person exists, if not add person
+  const checkAndAddPerson = async (person, updatePerson) => {
+    const existingPerson = await getPersonByPhoneNumber(person.phone_number);
+    let personId;
+  
+    if (!existingPerson) {
+      const newPerson = await addPerson(person.name, person.phone_number, person.city, person.district);
+      personId = newPerson.id;
+      updatePerson({ id: personId });
+    } else {
+      personId = existingPerson[0].id;
+      updatePerson({ id: personId });
+    }
+    return personId;
+  };  
+
   const createParcel = async (e) => {
     e.preventDefault();
     try {
-      // Check if sender and receiver exist in the database
-      const _sender = await getPersonByPhoneNumber(sender.phone_number);
-      const _receiver = await getPersonByPhoneNumber(receiver.phone_number);
-      // If not, add them to the database
-      if (!_sender) {
-        const newSender = await addPerson(sender.name, sender.phone_number, sender.city, sender.district);
-        updateSender({ id: newSender.id });
-      } else {
-        updateSender({ id: _sender[0].id });
-      }
-      if (!_receiver) {
-        const newReceiver = await addPerson(receiver.name, receiver.phone_number, receiver.city, receiver.district);
-        updateReceiver({ id: newReceiver.id });
-      } else {
-        updateReceiver({ id: _receiver[0].id });
-      }
-      console.log(sender);
-      console.log(receiver);
-      // Update parcel info with sender and receiver IDs
-      updateParcelInfo({ sender_id: sender.id, receiver_id: receiver.id });
-      // Add the parcel to the database
-      const parcel = await addParcel();
-      console.log(parcel);
+      // Check and add sender and receiver
+      const senderId = await checkAndAddPerson(sender, updateSender);
+      const receiverId = await checkAndAddPerson(receiver, updateReceiver);
+      // Update parcelInfo with sender_id and receiver_id
+      updateParcelInfo({ sender_id: senderId, receiver_id: receiverId });
+      // due to the async nature of updateParcelInfo, we need to wait for it to finish before accessing parcelInfo
+      // we solve this problem by creating a local copy of parcelInfo with updated sender_id and receiver_id
+      const updatedParcelInfo = { ...parcelInfo, sender_id: senderId, receiver_id: receiverId };
+      // console.log(updatedParcelInfo);
+      const parcel = await addParcel(updatedParcelInfo);
+      console.log(parcelInfo);
     } catch (error) {
       console.error(error);
       alert("An error occurred while creating parcel! See console for more details.");

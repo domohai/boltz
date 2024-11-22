@@ -364,7 +364,7 @@ INSERT INTO service_point (city, name, district, address) VALUES ('Đắk Lắk'
 INSERT INTO service_point (city, name, district, address) VALUES ('Đắk Lắk', 'Đắk Lắk - Buôn Ma Thuột 3', 'Thành phố Buôn Ma Thuột', '36 Mai Thị Lựu, P.EaTam, TP Buôn Ma Thuột, Đăk Lăk');
 INSERT INTO service_point (city, name, district, address) VALUES ('Đắk Lắk', 'Đắk Lắk - Buôn Ma Thuột 2', 'Thành phố Buôn Ma Thuột', '03 Nguyễn Hữu Thấu - Phường Tân Lợi - TP Buôn Ma Thuột - Đắk Lắk');
 INSERT INTO service_point (city, name, district, address) VALUES ('Đắk Lắk', 'Đắk Lắk - Buôn Ma Thuột', 'Thành phố Buôn Ma Thuột', 'Số 30 Đường 10/3 (Đối diện siêu thị GO). Thành Nhất, TP Buôn Ma Thuột, Đắk Lắk');
-INSERT INTO service_point (city, name, district, address) VALUES ('Đắk Lắk', 'Đắk Lắk - MĐrắk', 'Huyện M''Đrắk', '22 Nguyễn Tất Thành, Tổ dân phố 5, Thị trấn M''Drak, Huyện M''Drak, Tỉnh Đăk Lăk');
+INSERT INTO service_point (city, name, district, address) VALUES ('Đắk Lắk', 'Đắk Lắk - MĐrắk', 'Huyện MĐrắk', '22 Nguyễn Tất Thành, Tổ dân phố 5, Thị trấn MDrak, Huyện MDrak, Tỉnh Đăk Lăk');
 INSERT INTO service_point (city, name, district, address) VALUES ('Đắk Lắk', 'Đắk Lắk - Lắk', 'Huyện Lắk', 'Thôn Ngã Ba - Xã Đăk Liêng - Huyện Lăk - Tỉnh Đăk Lăk');
 INSERT INTO service_point (city, name, district, address) VALUES ('Đắk Lắk', 'Đắk Lắk - Krông Pắk', 'Huyện Krông Pắk', '05 Phạm Ngũ Lão - TT Phước An - Krông Pắk - Đắk Lắk');
 INSERT INTO service_point (city, name, district, address) VALUES ('Đắk Lắk', 'Đắk Lắk - Krông Năng', 'Huyện Krông Năng', '64 Hùng Vương, TT. Krông Năng, Krông Năng, Đắk Lắk');

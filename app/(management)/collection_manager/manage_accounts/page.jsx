@@ -3,14 +3,13 @@ import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { useSession } from 'next-auth/react';
-import collectionManagerAccounts from "./collectionManagerAccounts";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/table";
 import { Tooltip } from "@nextui-org/tooltip";
 
 const Page = () => {
-  const {data: session, status} = useSession();
-  const collection_point_id = useMemo(() => session?.user.collection_point_id, [session, status]);
+  const {data: session, status: sessionStatus} = useSession();
+  const collection_point_id = useMemo(() => session?.user.collection_point_id, [session, sessionStatus]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
