@@ -6,9 +6,10 @@ import {
   getAllServicePoints,
   deleteServicePoint,
   addServicePoint,
-  updateServicePoint } from "@back-end/models/warehouse.js";
+  updateServicePoint,
+  getServicePoints } from "@back-end/models/warehouse.js";
 import { NextResponse } from "next/server";
-import { assignCMToCP, assignSMToSP } from "@back-end/models/user";
+import { assignCMToCP, assignSMToSP } from "@back-end/models/user.js";
 
 export async function handleGetAllCollectionPoints(req, res) {
   try {
@@ -141,6 +142,18 @@ export async function handleUpdateServicePoint(req, id) {
       }
     }
     return NextResponse.json({ ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetServicePoints(req, res) {
+  try {
+    const servicePoints = await getServicePoints();
+    if (!servicePoints) {
+      return NextResponse.json({ message: "Failed to get city list", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ servicePoints, ok: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
   }

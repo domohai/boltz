@@ -52,6 +52,7 @@ export const authOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.name = user.name;
+        token.email = user.email;
         token.role = user.role;
         token.collection_point_id = user.collection_point_id;
         token.service_point_id = user.service_point_id;
@@ -59,17 +60,14 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (token.role) {
-        session.user.role = token.role;
-      }
-      if (token.name) {
-        session.user.name = token.name;
-      }
-      if (token.service_point_id) {
-        session.user.service_point_id = token.service_point_id;
-      }
-      if (token.collection_point_id) {
-        session.user.collection_point_id = token.collection_point_id;
+      if (token) {
+        session.user = {
+          name: token.name,
+          email: token.email,
+          role: token.role,
+          collection_point_id: token.collection_point_id,
+          service_point_id: token.service_point_id,
+        };
       }
       return session;
     },
