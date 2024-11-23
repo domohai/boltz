@@ -17,11 +17,31 @@ export async function addParcel(parcelInfo) {
   }
 }
 
+
 export async function getParcelsByServicePoint(service_point_id) {
   try {
-    const [parcels] = await pool.query(
-      `SELECT * FROM parcel WHERE src_service_p = ? AND curr_point = ? AND moving_to IS NULL`,
-      [service_point_id, 'src_service_p']
+    const [parcels] = await pool.query(`
+      SELECT 
+        p.*, 
+        s.name AS sender_name,
+        s.phone_number AS sender_phone,
+        s.city AS sender_city,
+        s.district AS sender_district, 
+        r.name AS receiver_name, 
+        r.phone_number AS receiver_phone,
+        r.city AS receiver_city,
+        r.district AS receiver_district,
+        sp.name AS src_service_point_name,
+        sp.address AS src_service_point_address,
+        dsp.name AS des_service_point_name,
+        dsp.address AS des_service_point_address
+      FROM parcel p
+      LEFT JOIN person s ON p.sender_id = s.id
+      LEFT JOIN person r ON p.receiver_id = r.id
+      LEFT JOIN service_point dsp ON p.des_service_p = dsp.id
+      LEFT JOIN service_point sp ON p.src_service_p = sp.id
+      WHERE p.src_service_p = ? AND p.curr_point = 'src_service_p' AND p.moving_to IS NULL
+      `, [service_point_id]
     );
     return parcels;
   } catch (error) {

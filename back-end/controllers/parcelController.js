@@ -15,12 +15,14 @@ export async function handleAddParcel(req, res) {
 }
 
 export async function handleGetParcelsByServicePoint(req, res) {
-  const { service_point_id } = await req.json();
+  const service_point_id = await req.nextUrl.searchParams.get("service_point_id");
+  // console.log(service_point_id);
   try {
     const parcels = await getParcelsByServicePoint(service_point_id);
     if (!parcels) {
       return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
     }
+    // console.log(parcels);
     return NextResponse.json({ parcels, ok: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
