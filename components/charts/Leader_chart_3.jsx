@@ -32,4 +32,4 @@ const LeaderChart3 = () => {
   );
 };
 
-export default LeaderChart2;
+export default LeaderChart3;
