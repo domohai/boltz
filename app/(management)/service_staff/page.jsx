@@ -175,6 +175,7 @@ const ProcessingParcel = () => {
               <h2 className="text-lg font-semibold">Thông tin đơn hàng vận chuyển</h2>
             </ModalHeader>
             <ModalBody>
+              
               {selectedParcels.size > 0 ? (
                 <Table 
                   isCompact
