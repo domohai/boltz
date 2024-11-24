@@ -14,33 +14,68 @@ import {
 const salesData = [
   {
     name: 'Jan',
-    revenue: 4000,
-    profit: 2400,
+    parcel: 4000,
+
   },
   {
     name: 'Feb',
-    revenue: 3000,
-    profit: 1398,
+    parcel: 3000,
+
   },
   {
     name: 'Mar',
-    revenue: 9800,
-    profit: 2000,
+    parcel: 9800,
+
   },
   {
     name: 'Apr',
-    revenue: 3908,
-    profit: 2780,
+    parcel: 3908,
+
   },
   {
     name: 'May',
-    revenue: 4800,
-    profit: 1890,
+    parcel: 4800,
+
   },
   {
     name: 'Jun',
-    revenue: 3800,
-    profit: 2390,
+    parcel: 3800,
+
+  },
+
+  {
+    name: 'July',
+    parcel: 3800,
+
+  },
+
+  {
+    name: 'August',
+    parcel: 3800,
+
+  },
+
+  {
+    name: 'September',
+    parcel: 3800,
+
+  },
+
+  {
+    name: 'October',
+    parcel: 3800,
+
+  },
+
+  {
+    name: 'November',
+    parcel: 3800,
+
+  },
+
+  {
+    name: 'December',
+    parcel: 3800,
   },
 ];
 
@@ -60,8 +95,7 @@ const LeaderChart = () => {
         <YAxis />
         <Tooltip content={<CustomTooltip />} />
         <Legend />
-        <Line type="monotone" dataKey="revenue" stroke="#3b82f6" />
-        <Line type="monotone" dataKey="profit" stroke="#8b5cf6" />
+        <Line type="monotone" dataKey="parcel" stroke="blue" />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -75,12 +109,8 @@ const CustomTooltip = ({ active, payload, label }) => {
       <div className="p-4 bg-slate-900 flex flex-col gap-4 rounded-md">
         <p className="text-lg">{label}</p>
         <p className="text-sm text-blue-400">
-          Revenue:
-          <span className="ml-2">${payload[0].value}</span>
-        </p>
-        <p className="text-sm text-indigo-400">
-          Profit:
-          <span className="ml-2">${payload[1].value}</span>
+          Đơn hàng:
+          <span className="ml-2">{payload[0].value} đơn</span>
         </p>
       </div>
     );

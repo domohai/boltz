@@ -64,16 +64,16 @@ const Page = () => {
     } catch (error) {
       console.error('Error adding user:', error);
       alert('An error occurred while adding the user');
+
     }
   };
-
+  
   const resetForm = () => {
     setName('');
     setEmail('');
     setPassword('');
     setRole('collection_staff');
   };
-
   return (
     <div className="w-full p-6 bg-white min-h-screen">
       <div className="flex justify-between items-center mb-8">
@@ -157,6 +157,25 @@ const Page = () => {
               </ModalFooter>
             </form>
           )}
+        </ModalContent>
+      </Modal>
+      
+      <Modal isOpen={isDeleteModalOpen} onOpenChange={onDeleteClose} placement="top-center">
+        <ModalContent>
+          <ModalHeader className="flex justify-center">
+            <h2 className="text-lg font-bold">Xác nhận xoá tài khoản</h2>
+          </ModalHeader>
+          <ModalBody>
+            <p>Bạn có chắc chắn muốn xoá tài khoản này không?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onDeleteClose}>
+              Huỷ
+            </Button>
+            <Button color="primary" onPress={deleteAccountHandler}>
+              Xoá
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
 

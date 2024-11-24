@@ -1,10 +1,8 @@
 "use client";
-
-import LeaderChart from "@/components/charts/Leader_chart";
+import LeaderChart from "@components/charts/Leader_chart";
 import LeaderChart2 from "@components/charts/Leader_chart_2";
 
 const page = () => {
-  // Đức Hải
   return (
     <div className="p-4 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Thống kê</h1>
