@@ -2,6 +2,8 @@
 
 import LeaderChart from "@/components/charts/Leader_chart";
 import LeaderChart2 from "@components/charts/Leader_chart_2";
+import LeaderChart3 from "@components/charts/Leader_chart_3";
+import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/card";
 
 const LeaderPage = () => {
     // Đức Hải
@@ -55,39 +57,99 @@ const LeaderPage = () => {
             <button className="px-4 py-2 bg-white rounded-full shadow">Số lượng nhân viên</button>
             <button className="px-4 py-2 bg-white rounded-full shadow">Số lượng điểm GD</button>
           </div>
+
+          <div className="flex gap-4">
+            <Card className="w-48">
+              <CardHeader className="text-sm font-medium">
+                Tổng đơn hàng
+              </CardHeader>
+              <CardBody className="text-2xl font-bold">1,234</CardBody>
+              <CardFooter>
+                <p className="text-xs text-muted-foreground">
+                  +20.1% so với tháng trước
+                </p>
+              </CardFooter>
+            </Card>
+            <Card className="w-48">
+              <CardHeader className="text-sm font-medium">
+                Tổng tiền cước
+              </CardHeader>
+              <CardBody className="text-2xl font-bold">45,678,000₫</CardBody>
+              <CardFooter>
+                <p className="text-xs text-muted-foreground">
+                  +15.2% so với tháng trước
+                </p>
+                </CardFooter>
+            </Card>
+          </div>
     
-          {/* Chart Section */}
-          <div className="bg-blue-200 p-6 rounded-lg shadow">
-            <h2 className="text-lg font-bold mb-2">Biểu đồ thống kê</h2>
-            <div className="h-80">
-              <LeaderChart />
+        {/* Chart Section */}
+          <div className="flex flex-col gap-6 p-4">
+            {/* First Card */}
+            <div className="bg-blue-200 p-6 rounded-lg shadow-lg">
+              <div className="text-lg font-bold mb-2">Biểu đồ thống kê đơn hàng</div>
+              <div className="h-80">
+                <LeaderChart />
+              </div>
+            </div>
+            {/* Second Card */}
+            <div className="bg-blue-200 p-6 rounded-lg shadow-lg">
+              <div className="text-lg font-bold mb-2">Biểu đồ thống kê tiền cước</div>
+              <div className="h-80">
+                <LeaderChart2 />
+              </div>
             </div>
             
-            <div className="flex mt-4">
+            {/* Third Card */}
+            <div className="bg-blue-200 p-6 rounded-lg shadow-lg">
+              <div className="flex mt-4">
                 <div className="w-1/2">
-                    <LeaderChart2 />
+                  <LeaderChart3 />
                 </div>
+                
+                {/* Table Section */}
                 <div className="w-1/2 ml-4">
-                    <table className="w-full">
+                  <table className="w-full">
                     <thead>
-                        <tr>
-                        <th className="text-left">Trạng thái</th>
-                        <th className="text-left">Số lượng</th>
-                        <th className="text-left">Tiền cước</th>
-                        </tr>
+                      <tr>
+                        <th className="text-left font-semibold pb-2">Trạng thái</th>
+                        <th className="text-left font-semibold pb-2">Số lượng</th>
+                        <th className="text-left font-semibold pb-2">Tiền cước</th>
+                      </tr>
                     </thead>
                     <tbody>
-                        <tr><td>Chờ xử lý</td><td>00</td><td>00</td></tr>
-                        <tr><td>Đã tiếp nhận</td><td>00</td><td>00</td></tr>
-                        <tr><td>Đang vận chuyển</td><td>00</td><td>00</td></tr>
-                        <tr><td>Đã tới kho</td><td>00</td><td>00</td></tr>
-                        <tr><td>Đã trả hàng</td><td>00</td><td>00</td></tr>
+                      <tr className="border-b border-blue-300">
+                        <td className="py-2">Chờ xử lý</td>
+                        <td className="py-2">00</td>
+                        <td className="py-2">00</td>
+                      </tr>
+                      <tr className="border-b border-blue-300">
+                        <td className="py-2">Đã tiếp nhận</td>
+                        <td className="py-2">00</td>
+                        <td className="py-2">00</td>
+                      </tr>
+                      <tr className="border-b border-blue-300">
+                        <td className="py-2">Đang vận chuyển</td>
+                        <td className="py-2">00</td>
+                        <td className="py-2">00</td>
+                      </tr>
+                      <tr className="border-b border-blue-300">
+                        <td className="py-2">Đã tới kho</td>
+                        <td className="py-2">00</td>
+                        <td className="py-2">00</td>
+                      </tr>
+                      <tr className="border-b border-blue-300">
+                        <td className="py-2">Đã trả hàng</td>
+                        <td className="py-2">00</td>
+                        <td className="py-2">00</td>
+                      </tr>
                     </tbody>
-                    </table>
+                  </table>
                 </div>
+              </div>
+              
+              <p className="mt-4 text-gray-700">Biểu đồ số liệu các ngày trong tháng</p>
             </div>
-            
-            <p className="mt-4">Biểu đồ số liệu các ngày trong tháng</p>
           </div>
         </div>
     );  
