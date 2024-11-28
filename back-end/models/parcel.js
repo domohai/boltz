@@ -34,16 +34,45 @@ export async function getParcelsByServicePoint(service_point_id) {
         sp.name AS src_service_point_name,
         sp.address AS src_service_point_address,
         dsp.name AS des_service_point_name,
-        dsp.address AS des_service_point_address
+        dsp.address AS des_service_point_address,
+        scp.name AS src_collection_point_name,
+        scp.address AS src_collection_point_address
       FROM parcel p
       LEFT JOIN person s ON p.sender_id = s.id
       LEFT JOIN person r ON p.receiver_id = r.id
       LEFT JOIN service_point dsp ON p.des_service_p = dsp.id
       LEFT JOIN service_point sp ON p.src_service_p = sp.id
-      WHERE p.src_service_p = ? AND p.curr_point = 'src_service_p' AND p.moving_to IS NULL
+      LEFT JOIN collection_point scp ON p.src_collection_p = scp.id
+      WHERE p.src_service_p = ? AND p.curr_point = 'src_service_p' AND p.moving_to IS NULL AND p.status = "Chờ xử lý"
       `, [service_point_id]
     );
     return parcels;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function cancelParcels(parcel_ids, status) {
+  try {
+    const [res] = await pool.query(
+      `UPDATE parcel SET status = ? WHERE id IN (?)`,
+      [status, parcel_ids]
+    );
+    return res;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function transferToSrcCollectionPoint(parcel_ids, status) {
+  try {
+    const [res] = await pool.query(
+      `UPDATE parcel SET moving_to = "src_collection_p", status = ? WHERE id IN (?)`,
+      [status, parcel_ids]
+    );
+    return res;
   } catch (error) {
     console.error(error);
     return null;
