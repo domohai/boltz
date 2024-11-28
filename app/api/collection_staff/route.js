@@ -1,0 +1,1 @@
+// collection_staff/page.jsx

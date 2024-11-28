@@ -10,14 +10,15 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure
 const ProcessingParcel = () => {
   const { data: session, status: sessionStatus } = useSession();
   const service_point_id = useMemo(() => session?.user.service_point_id, [session, sessionStatus]);
-  const [parcels, setParcels] = useState([]);
+  const [parcels, setParcels] = useState([]); // variable to store all parcels
   const [selectedParcels, setSelectedParcels] = useState(new Set([])); // variable to store selected parcels from checkbox in the table
+  // Modals
   const {isOpen: isTransferModalOpen, onOpen: onTransferOpen, onOpenChange: onTransferClose } = useDisclosure();
   const {isOpen: isCancelModalOpen, onOpen: onCancelOpen, onOpenChange: onCancelClose } = useDisclosure();
   const {isOpen: isViewModalOpen, onOpen: onViewOpen, onOpenChange: onViewClose } = useDisclosure();
-  const [selectionMode, setSelectionMode] = useState("single");
-  const [selectedViewParcel, setSelectedViewParcel] = useState(null);
-  // Pagination
+  const [selectionMode, setSelectionMode] = useState("single"); // selection mode of table (to fix the warning of NextUI)
+  const [selectedViewParcel, setSelectedViewParcel] = useState(null); // variable to store the selected parcel to view
+  // Pagination for splitting parcels into pages in the table
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
   const totalPage = useMemo(() => Math.ceil(parcels.length / rowsPerPage), [parcels, rowsPerPage]);
@@ -48,7 +49,7 @@ const ProcessingParcel = () => {
     }
   };
 
-  // use effects
+  // fetch parcels when the service point id is available
   useEffect(() => {
     if (service_point_id) {
       console.log("Service point ID: ", service_point_id);

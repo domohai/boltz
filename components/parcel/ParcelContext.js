@@ -179,6 +179,12 @@ export const ParcelProvider = ({ children }) => {
       const updatedParcelInfo = { ...parcelInfo, sender_id: senderId, receiver_id: receiverId };
       // console.log(updatedParcelInfo);
       const parcel = await addParcel(updatedParcelInfo);
+      if (parcel) {
+        alert("Parcel created successfully!");
+        resetAll();
+      } else {
+        alert("Failed to create parcel!");
+      }
       console.log(parcelInfo);
     } catch (error) {
       console.error(error);

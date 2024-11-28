@@ -177,7 +177,7 @@ const ContactInfoForm = ({ type }) => {
         ) : (
           <Input
             isReadOnly
-            label="Điểm gửi hàng"
+            label="Điểm gửi hàng (fixed)"
             type='text'
             value={srcServicePoint ? srcServicePoint.address : ""}
             size={size}
