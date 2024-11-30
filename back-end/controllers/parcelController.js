@@ -11,7 +11,9 @@ import {
   transferToDesCollectionPoint,
   transferToDesServicePoint,
   getConfirmParcelsByServicePoint,
-  confirmParcelForDesServicePoint
+  confirmParcelForDesServicePoint,
+  getWaitingParcelsByServicePoint,
+  confirmDeliveredParcels
 } from "@back-end/models/parcel.js";
 
 export async function handleAddParcel(req, res) {
@@ -72,6 +74,21 @@ export async function handleGetConfirmParcelsByServicePoint(req, res) {
   }
 }
 
+export async function handleGetWaitingParcelsByServicePoint(req, res) {
+  const service_point_id = await req.nextUrl.searchParams.get("service_point_id");
+  // console.log(service_point_id);
+  try {
+    const parcels = await getWaitingParcelsByServicePoint(service_point_id);
+    if (!parcels) {
+      return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
+    }
+    // console.log(parcels);
+    return NextResponse.json({ parcels, ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
 export async function handleCancelParcels(req, res) {
   const {parcel_ids, status} = await req.json();
   try {
@@ -113,6 +130,19 @@ export async function handleConfirmParcels(req, res) {
       return NextResponse.json({ message: "Failed to confirm parcels!", ok: false }, { status: 400 });
     }
     return NextResponse.json({ ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleConfirmDeliveredParcels(req, res) {
+  const {parcel_ids, status} = await req.json();
+  try {
+    const parcels = await confirmDeliveredParcels(parcel_ids, status);
+    if (!parcels) {
+      return NextResponse.json({ message: "Failed to confirm parcels!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ parcels, ok: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
   }
