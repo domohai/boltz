@@ -5,7 +5,13 @@ import {
   cancelParcels,
   transferToSrcCollectionPoint,
   getParcelsByCollectionPoint,
-  confirmParcelsForSrcCollectionPoint 
+  confirmParcelsForSrcCollectionPoint,
+  confirmParcelForDesCollectionPoint,
+  getTransferParcelsByCollectionPoint,
+  transferToDesCollectionPoint,
+  transferToDesServicePoint,
+  getConfirmParcelsByServicePoint,
+  confirmParcelForDesServicePoint
 } from "@back-end/models/parcel.js";
 
 export async function handleAddParcel(req, res) {
@@ -51,6 +57,21 @@ export async function handleGetParcelsByCollectionPoint(req, res) {
   }
 }
 
+export async function handleGetConfirmParcelsByServicePoint(req, res) {
+  const service_point_id = await req.nextUrl.searchParams.get("service_point_id");
+  // console.log(service_point_id);
+  try {
+    const parcels = await getConfirmParcelsByServicePoint(service_point_id);
+    if (!parcels) {
+      return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
+    }
+    // console.log(parcels);
+    return NextResponse.json({ parcels, ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
 export async function handleCancelParcels(req, res) {
   const {parcel_ids, status} = await req.json();
   try {
@@ -77,10 +98,65 @@ export async function handleTransferToSrcCollectionPoint(req, res) {
   }
 }
 
-export async function handleConfirmParcelsForSrcCollectionPoint(req, res) {
-  const {parcel_ids} = await req.json();
+export async function handleConfirmParcels(req, res) {
+  const {parcelsFromSrcServicePoint, parcelsFromSrcCollectionPoint} = await req.json();
   try {
-    const parcels = await confirmParcelsForSrcCollectionPoint(parcel_ids);
+    let parcelsSrcSP;
+    let parcelsSrcCP;
+    if (parcelsFromSrcServicePoint.length !== 0) {
+      parcelsSrcSP = await confirmParcelsForSrcCollectionPoint(parcelsFromSrcServicePoint);
+    }
+    if (parcelsFromSrcCollectionPoint.length !== 0) {
+      parcelsSrcCP = await confirmParcelForDesCollectionPoint(parcelsFromSrcCollectionPoint);
+    }
+    if (!parcelsSrcSP || !parcelsSrcCP) {
+      return NextResponse.json({ message: "Failed to confirm parcels!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetTransferParcelsByCollectionPoint(req, res) {
+  const collection_point_id = await req.nextUrl.searchParams.get("collection_point_id");
+  // console.log(collection_point_id);
+  try {
+    const parcels = await getTransferParcelsByCollectionPoint(collection_point_id);
+    if (!parcels) {
+      return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
+    }
+    // console.log(parcels);
+    return NextResponse.json({ parcels, ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleTransferFromCollection(req, res) {
+  const {parcelsToCollectionPoint, parcelsToServicePoint} = await req.json();
+  try {
+    let parcelsCP;
+    let parcelsSP;
+    if (parcelsToCollectionPoint.length !== 0) {
+      parcelsCP = await transferToDesCollectionPoint(parcelsToCollectionPoint);
+    }
+    if (parcelsToServicePoint.length !== 0) {
+      parcelsSP = await transferToDesServicePoint(parcelsToServicePoint);
+    }
+    if (!parcelsCP || !parcelsSP) {
+      return NextResponse.json({ message: "Failed to transfer parcels!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleConfirmParcelsForDesServicePoint(req, res) {
+  const {parcel_ids, status} = await req.json();
+  try {
+    const parcels = await confirmParcelForDesServicePoint(parcel_ids, status);
     if (!parcels) {
       return NextResponse.json({ message: "Failed to confirm parcels!", ok: false }, { status: 400 });
     }

@@ -7,6 +7,45 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { useSession } from 'next-auth/react';
 import { useState, useMemo, useEffect } from 'react';
 
+/**
+ * ConfirmParcel component handles the display and management of parcels that need to be confirmed by collection staff.
+ * 
+ * @component
+ * 
+ * @returns {JSX.Element} The ConfirmParcel component.
+ * 
+ * @example
+ * <ConfirmParcel />
+ * 
+ * @description
+ * This component fetches parcels from the server based on the collection point ID of the logged-in user.
+ * It allows the user to view, confirm, or cancel parcels through modals and a table interface.
+ * 
+ * @function
+ * @name ConfirmParcel
+ * 
+ * @property {Object} session - The session object containing user data.
+ * @property {string} session.user.collection_point_id - The collection point ID of the logged-in user.
+ * @property {string} sessionStatus - The status of the session.
+ * @property {string} selectionMode - The selection mode of the table (single or multiple).
+ * @property {boolean} isMultipleSelect - Flag to enable multiple selection mode.
+ * @property {Array} parcels - The list of parcels fetched from the server.
+ * @property {Set} selectedParcels - The set of selected parcels.
+ * @property {number} page - The current page number for pagination.
+ * @property {number} rowsPerPage - The number of rows per page for pagination.
+ * @property {number} totalPage - The total number of pages for pagination.
+ * @property {boolean} isConfirmModalOpen - Flag to control the visibility of the confirm modal.
+ * @property {boolean} isCancelModalOpen - Flag to control the visibility of the cancel modal.
+ * @property {boolean} isViewModalOpen - Flag to control the visibility of the view modal.
+ * @property {Object|null} selectedViewParcel - The selected parcel to view details.
+ * 
+ * @method fetchParcels - Fetches parcels from the server based on the collection point ID.
+ * @method handleSelect - Handles the selection of parcels in the table.
+ * @method cancelParcels - Cancels the selected parcels.
+ * @method updateParcels - Confirms the selected parcels.
+ * @method handleSelectedView - Handles the selection of a parcel to view details.
+ * @method resetForm - Resets the form and selected parcels.
+ */
 const ConfirmParcel = () => {
   const { data: session, status: sessionStatus } = useSession();
   const collection_point_id = useMemo(() => session?.user.collection_point_id, [session, sessionStatus]);
@@ -178,17 +217,29 @@ const ConfirmParcel = () => {
     e.preventDefault();
     if (selectedParcels.size === 0) return;
     let parcelArray = Array.from(selectedParcels);
+    // get all parcels from parcels based on parcelArray (this is a list of ids)
+    const selectedParcelsData = parcels.filter((parcel) => parcelArray.includes(String(parcel.id)));
+    // split the selectedParcelData into two lists. One contains all parcels which have moving_to = "src_collection_p" and the other contains the rest
+    // split the selectedParcelData into two lists based on the moving_to property
+    const parcelsFromSrcServicePoint = selectedParcelsData
+      .filter(parcel => parcel.moving_to === "src_collection_p")
+      .map(parcel => parcel.id);
+
+    const parcelsFromSrcCollectionPoint = selectedParcelsData
+      .filter(parcel => parcel.moving_to === "des_collection_p")
+      .map(parcel => parcel.id);
+
     try {
       const res = await fetch(`/api/collection_staff/confirm`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ parcel_ids: parcelArray }),
+        body: JSON.stringify({ parcelsFromSrcServicePoint, parcelsFromSrcCollectionPoint }),
       });
       const data = await res.json();
       if (data.ok) {
-        console.log("Confirm parcels successfully: ", data.parcels);
+        console.log("Confirm parcels successfully: ", data);
         alert("Đã xác nhận hàng thành công!");
         fetchParcels();
         resetForm();
@@ -360,7 +411,7 @@ const ConfirmParcel = () => {
 
   const resetForm = () => {
     setSelectedParcels(new Set([]));
-    // setSelectedViewParcel(null);
+    setSelectedViewParcel(null);
   };
 
   return (
