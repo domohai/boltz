@@ -123,11 +123,13 @@ export async function handleConfirmParcels(req, res) {
     let parcelsSrcCP;
     if (parcelsFromSrcServicePoint.length !== 0) {
       parcelsSrcSP = await confirmParcelsForSrcCollectionPoint(parcelsFromSrcServicePoint);
+      console.log(parcelsSrcSP);
     }
     if (parcelsFromSrcCollectionPoint.length !== 0) {
       parcelsSrcCP = await confirmParcelForDesCollectionPoint(parcelsFromSrcCollectionPoint);
+      console.log(parcelsSrcCP);
     }
-    if (!parcelsSrcSP || !parcelsSrcCP) {
+    if (!parcelsSrcSP && !parcelsSrcCP) {
       return NextResponse.json({ message: "Failed to confirm parcels!", ok: false }, { status: 400 });
     }
     return NextResponse.json({ ok: true }, { status: 200 });
@@ -175,7 +177,7 @@ export async function handleTransferFromCollection(req, res) {
     if (parcelsToServicePoint.length !== 0) {
       parcelsSP = await transferToDesServicePoint(parcelsToServicePoint);
     }
-    if (!parcelsCP || !parcelsSP) {
+    if (!parcelsCP && !parcelsSP) {
       return NextResponse.json({ message: "Failed to transfer parcels!", ok: false }, { status: 400 });
     }
     return NextResponse.json({ ok: true }, { status: 200 });
