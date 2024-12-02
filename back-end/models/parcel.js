@@ -296,3 +296,66 @@ export async function confirmDeliveredParcels(parcel_ids, status) {
     return null;
   }
 }
+
+export async function getMonthlyParcelStats() {
+  try {
+    const [result] = await pool.query(`
+      SELECT 
+        DATE_FORMAT(start_time, '%b') as name,
+        COUNT(*) as count,
+        SUM(cost) as cost
+      FROM parcel 
+      WHERE YEAR(start_time) = YEAR(CURRENT_DATE())
+      GROUP BY MONTH(start_time), DATE_FORMAT(start_time, '%b')
+      ORDER BY MONTH(start_time)
+    `);
+    return result;
+  } catch (error) {
+    console.error('Error getting monthly stats:', error);
+    throw error;
+  }
+}
+
+export async function getParcelStatsByStatus(cp_id) {
+  try {
+    console.log("Model executing query with cp_id:", cp_id);
+    const [result] = await pool.query(`
+      SELECT 
+        status,
+        COUNT(*) as count,
+        SUM(cost) as total_cost
+      FROM parcel 
+      WHERE (src_collection_p = ?) 
+      GROUP BY status
+    `, [cp_id]);
+
+    return result;
+  } catch (error) {
+    console.error('Error getting status stats:', error);
+    throw error;
+  }
+}
+
+export async function getMonthlyParcelStatsByCP(collection_point_id) {
+  try {
+    const [result] = await pool.query(`
+      SELECT 
+        DATE_FORMAT(start_time, '%b') as name,
+        SUM(CASE WHEN src_collection_p = ? THEN 1 ELSE 0 END) as src_count,
+        SUM(CASE WHEN des_collection_p = ? THEN 1 ELSE 0 END) as des_count,
+        SUM(CASE WHEN src_collection_p = ? THEN cost ELSE 0 END) as src_cost,
+        SUM(CASE WHEN des_collection_p = ? THEN cost ELSE 0 END) as des_cost
+      FROM parcel 
+      WHERE YEAR(start_time) = YEAR(CURRENT_DATE())
+        AND status = "Đã trả hàng"
+        AND (src_collection_p = ? OR des_collection_p = ?)
+      GROUP BY MONTH(start_time), DATE_FORMAT(start_time, '%b')
+      ORDER BY MONTH(start_time)
+    `, [collection_point_id, collection_point_id, collection_point_id, collection_point_id, collection_point_id, collection_point_id]);
+    
+    return result;
+  } catch (error) {
+    console.error('Error getting monthly stats:', error);
+    throw error;
+  }
+}

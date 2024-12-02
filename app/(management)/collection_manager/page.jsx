@@ -5,9 +5,10 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 
 const page = () => {
-  const { data: session } = useSession();
-  // const collection_point_id = useMemo(() => session?.user?.collection_point_id, [session]);
-  const collection_point_id = 68;
+  const { data: session, status } = useSession();
+  const collection_point_id = useMemo(() => session?.user?.collection_point_id, [session, status]);
+  // const collection_point_id = 2;
+
   const [statusStats, setStatusStats] = useState({
     'Chờ xử lý': { count: 0, cost: 0 },
     'Đã tiếp nhận': { count: 0, cost: 0 },
@@ -17,7 +18,10 @@ const page = () => {
   });
 
 const fetchStatusStats = async () => {
-    if (!collection_point_id) return;
+  if (!session || !collection_point_id) {
+    console.log("Session or collection_point_id not available yet");
+    return;
+  }
     try {
       const response = await fetch(`/api/collection_manager/stats?collection_point_id=${collection_point_id}`);
       const data = await response.json();
@@ -40,6 +44,8 @@ const fetchStatusStats = async () => {
 useEffect(() => {
     if (collection_point_id) {
       fetchStatusStats();
+    } else {
+      console.log('Collection point id not available yet');
     }
   }, [collection_point_id]);
   
