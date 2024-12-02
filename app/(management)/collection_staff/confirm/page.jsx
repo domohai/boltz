@@ -222,11 +222,11 @@ const ConfirmParcel = () => {
     // split the selectedParcelData into two lists. One contains all parcels which have moving_to = "src_collection_p" and the other contains the rest
     // split the selectedParcelData into two lists based on the moving_to property
     const parcelsFromSrcServicePoint = selectedParcelsData
-      .filter(parcel => parcel.moving_to === "src_collection_p")
+      .filter(parcel => (parcel.moving_to === "src_collection_p" && parcel.curr_point === "src_service_p"))
       .map(parcel => parcel.id);
 
     const parcelsFromSrcCollectionPoint = selectedParcelsData
-      .filter(parcel => parcel.moving_to === "des_collection_p")
+      .filter(parcel => (parcel.moving_to === "des_collection_p" && parcel.curr_point === "src_collection_p"))
       .map(parcel => parcel.id);
 
     try {
