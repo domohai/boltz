@@ -138,6 +138,7 @@ const ProcessingParcel = () => {
     }
   };
 
+  // Components
   /**
    * Table component for displaying parcel data
    * The table will have the following columns:

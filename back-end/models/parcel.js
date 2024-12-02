@@ -78,8 +78,113 @@ export async function getParcelsByCollectionPoint(collection_point_id) {
       LEFT JOIN service_point dsp ON p.des_service_p = dsp.id
       LEFT JOIN service_point sp ON p.src_service_p = sp.id
       LEFT JOIN collection_point scp ON p.src_collection_p = scp.id
-      WHERE p.src_collection_p = ? AND p.curr_point = 'src_service_p' AND p.moving_to = 'src_collection_p' AND p.status = "Đang vận chuyển"
-      `, [collection_point_id]
+      WHERE ((p.src_collection_p = ? AND p.curr_point = 'src_service_p' AND p.moving_to = 'src_collection_p') OR (p.des_collection_p = ? AND p.curr_point = 'src_collection_p' AND p.moving_to = 'des_collection_p')) AND p.status = "Đang vận chuyển"
+      `, [collection_point_id, collection_point_id]
+    );
+    return parcels;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getTransferParcelsByCollectionPoint(collection_point_id) {
+  try {
+    const [parcels] = await pool.query(`
+      SELECT 
+        p.*, 
+        s.name AS sender_name,
+        s.phone_number AS sender_phone,
+        s.city AS sender_city,
+        s.district AS sender_district, 
+        r.name AS receiver_name, 
+        r.phone_number AS receiver_phone,
+        r.city AS receiver_city,
+        r.district AS receiver_district,
+        sp.name AS src_service_point_name,
+        sp.address AS src_service_point_address,
+        dsp.name AS des_service_point_name,
+        dsp.address AS des_service_point_address,
+        scp.name AS src_collection_point_name,
+        scp.address AS src_collection_point_address
+      FROM parcel p
+      LEFT JOIN person s ON p.sender_id = s.id
+      LEFT JOIN person r ON p.receiver_id = r.id
+      LEFT JOIN service_point dsp ON p.des_service_p = dsp.id
+      LEFT JOIN service_point sp ON p.src_service_p = sp.id
+      LEFT JOIN collection_point scp ON p.src_collection_p = scp.id
+      WHERE ((p.src_collection_p = ? AND p.curr_point = 'src_collection_p' AND p.moving_to = 'src_collection_p') OR (p.des_collection_p = ? AND p.curr_point = 'des_collection_p' AND p.moving_to = 'des_collection_p')) AND p.status = "Đang vận chuyển"
+      `, [collection_point_id, collection_point_id]
+    );
+    return parcels;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getConfirmParcelsByServicePoint(service_point_id) {
+  try {
+    const [parcels] = await pool.query(`
+      SELECT
+        p.*,
+        s.name AS sender_name,
+        s.phone_number AS sender_phone,
+        s.city AS sender_city,
+        s.district AS sender_district,
+        r.name AS receiver_name,
+        r.phone_number AS receiver_phone,
+        r.city AS receiver_city,
+        r.district AS receiver_district,
+        sp.name AS src_service_point_name,
+        sp.address AS src_service_point_address,
+        dsp.name AS des_service_point_name,
+        dsp.address AS des_service_point_address,
+        scp.name AS src_collection_point_name,
+        scp.address AS src_collection_point_address
+      FROM parcel p
+      LEFT JOIN person s ON p.sender_id = s.id
+      LEFT JOIN person r ON p.receiver_id = r.id
+      LEFT JOIN service_point dsp ON p.des_service_p = dsp.id
+      LEFT JOIN service_point sp ON p.src_service_p = sp.id
+      LEFT JOIN collection_point scp ON p.src_collection_p = scp.id
+      WHERE p.des_service_p = ? AND p.curr_point = 'des_collection_p' AND p.moving_to = 'des_service_p' AND p.status = "Đang vận chuyển"
+      `, [service_point_id]
+    );
+    return parcels;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getWaitingParcelsByServicePoint(service_point_id) {
+  try {
+    const [parcels] = await pool.query(`
+      SELECT
+        p.*,
+        s.name AS sender_name,
+        s.phone_number AS sender_phone,
+        s.city AS sender_city,
+        s.district AS sender_district,
+        r.name AS receiver_name,
+        r.phone_number AS receiver_phone,
+        r.city AS receiver_city,
+        r.district AS receiver_district,
+        sp.name AS src_service_point_name,
+        sp.address AS src_service_point_address,
+        dsp.name AS des_service_point_name,
+        dsp.address AS des_service_point_address,
+        scp.name AS src_collection_point_name,
+        scp.address AS src_collection_point_address
+      FROM parcel p
+      LEFT JOIN person s ON p.sender_id = s.id
+      LEFT JOIN person r ON p.receiver_id = r.id
+      LEFT JOIN service_point dsp ON p.des_service_p = dsp.id
+      LEFT JOIN service_point sp ON p.src_service_p = sp.id
+      LEFT JOIN collection_point scp ON p.src_collection_p = scp.id
+      WHERE p.des_service_p = ? AND p.curr_point = 'des_service_p' AND p.moving_to = 'des_service_p' AND p.status = "Chờ trả hàng"
+      `, [service_point_id]
     );
     return parcels;
   } catch (error) {
@@ -114,6 +219,32 @@ export async function transferToSrcCollectionPoint(parcel_ids, status) {
   }
 }
 
+export async function transferToDesCollectionPoint(parcel_ids) {
+  try {
+    const [res] = await pool.query(
+      `UPDATE parcel SET moving_to = "des_collection_p" WHERE id IN (?)`,
+      [parcel_ids]
+    );
+    return res;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function transferToDesServicePoint(parcel_ids) {
+  try {
+    const [res] = await pool.query(
+      `UPDATE parcel SET moving_to = "des_service_p" WHERE id IN (?)`,
+      [parcel_ids]
+    );
+    return res;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 export async function confirmParcelsForSrcCollectionPoint(parcel_ids) {
   try {
     const [res] = await pool.query(
@@ -127,41 +258,41 @@ export async function confirmParcelsForSrcCollectionPoint(parcel_ids) {
   }
 }
 
-export async function getMonthlyParcelStats() {
+export async function confirmParcelForDesCollectionPoint(parcel_ids) {
   try {
-    const [result] = await pool.query(`
-      SELECT 
-        DATE_FORMAT(start_time, '%b') as name,
-        COUNT(*) as count,
-        SUM(cost) as cost
-      FROM parcel 
-      WHERE YEAR(start_time) = YEAR(CURRENT_DATE())
-      GROUP BY MONTH(start_time), DATE_FORMAT(start_time, '%b')
-      ORDER BY MONTH(start_time)
-    `);
-    return result;
+    const [res] = await pool.query(
+      `UPDATE parcel SET curr_point = "des_collection_p" WHERE id IN (?)`,
+      [parcel_ids]
+    );
+    return res;
   } catch (error) {
-    console.error('Error getting monthly stats:', error);
-    throw error;
+    console.error(error);
+    return null;
   }
 }
 
-export async function getParcelStatsByStatus(cp_id) {
+export async function confirmParcelForDesServicePoint(parcel_ids, status) {
   try {
-    const [result] = await pool.query(`
-      SELECT 
-        status,
-        COUNT(*) as count,
-        SUM(cost) as total_cost
-      FROM parcel 
-      WHERE (src_collection_p = ? OR des_collection_p = ?) 
-      GROUP BY status
-    `, [cp_id, cp_id]);
-
-    console.log(result);
-    return result;
+    const [res] = await pool.query(
+      `UPDATE parcel SET curr_point = "des_service_p", status = ? WHERE id IN (?)`,
+      [status, parcel_ids]
+    );
+    return res;
   } catch (error) {
-    console.error('Error getting status stats:', error);
-    throw error;
+    console.error(error);
+    return null;
+  }
+}
+
+export async function confirmDeliveredParcels(parcel_ids, status) {
+  try {
+    const [res] = await pool.query(
+      `UPDATE parcel SET status = ?, end_time = NOW() WHERE id IN (?)`,
+      [status, parcel_ids]
+    );
+    return res;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 }
