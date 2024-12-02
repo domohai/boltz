@@ -14,7 +14,7 @@ const Page = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('collection_staff');
-  const { isOpen: isAddModalOpen, onOpen: onAddOpen, onOpenChange: onAddClose } = useDisclosure();
+  const { isOpen: isDeleteModalOpen, onOpen: onDeleteOpen, onOpenChange: onDeleteClose } = useDisclosure();
   const [accounts, setAccounts] = useState([]);
 
   const getStaffAccounts = async () => {
@@ -74,11 +74,47 @@ const Page = () => {
     setPassword('');
     setRole('collection_staff');
   };
+
+  const deleteAccountHandler = async () => {
+    if (!selectedId) return;
+    try {
+      const response = await fetch(`/api/collection_manager/user/${selectedId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log("Response received");
+      
+      const data = await response.json();
+
+      console.log("Data deleteaccounthandlers: ", data);
+      if (data.ok) {
+        alert('Account deleted successfully!');
+        getStaffAccounts(); 
+        setSelectedId(null);
+        onDeleteClose();
+      } else {
+        alert(`Failed to delete account: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      alert('An error occurred. See console for details.');
+    }
+  };
+
+  const openDeleteModal = (id) => {
+    setSelectedId(id);
+    onDeleteOpen();
+  };
+
+  
   return (
     <div className="w-full p-6 bg-white min-h-screen">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-xl font-bold text-black">Quản lý tài khoản</h1>
-        <Button className="bg-blue-600 text-white hover:bg-blue-700" onPress={onAddOpen}>
+        <Button className="bg-blue-600 text-white hover:bg-blue-700" onPress={onDeleteOpen}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
           </svg>
@@ -87,7 +123,7 @@ const Page = () => {
       </div>
 
       <Modal
-        isOpen={isAddModalOpen}
+        isOpen={isDeleteModalOpen}
         onOpenChange={(isOpen) => {
           if (!isOpen) {
             resetForm();

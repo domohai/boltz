@@ -35,11 +35,11 @@ export async function addCS_User(name, email, password, role, collection_point_i
   return { id: result.insertId, name, email, role, collection_point_id};
 }
 
-export async function deleteUserById(id) {
-  const [result] = await pool.query(`DELETE FROM user WHERE id = ?`, [id]);
-  return result;
+// export async function deleteUserById(id) {
+//   const [result] = await pool.query(`DELETE FROM user WHERE id = ?`, [id]);
+//   return result;
 
-}
+// }
 
 
 
