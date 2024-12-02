@@ -8,7 +8,6 @@ const page = () => {
   const { data: session, status } = useSession();
   const collection_point_id = useMemo(() => session?.user?.collection_point_id, [session, status]);
   // const collection_point_id = 2;
-  console.log('Collection point id: '. collection_point_id);
 
   const [statusStats, setStatusStats] = useState({
     'Chờ xử lý': { count: 0, cost: 0 },

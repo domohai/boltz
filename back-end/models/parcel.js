@@ -336,3 +336,25 @@ export async function getParcelStatsByStatus(cp_id) {
     throw error;
   }
 }
+
+export async function getMonthlyParcelStatsByCP(collection_point_id) {
+  try {
+    const [result] = await pool.query(`
+      SELECT 
+        DATE_FORMAT(start_time, '%b') as name,
+        COUNT(*) as count,
+        SUM(cost) as cost
+      FROM parcel 
+      WHERE YEAR(start_time) = YEAR(CURRENT_DATE())
+        AND (src_collection_p = ? OR des_collection_p = ?)
+      GROUP BY MONTH(start_time), DATE_FORMAT(start_time, '%b')
+      ORDER BY MONTH(start_time)
+    `, [collection_point_id, collection_point_id]);
+    
+    console.log("Monthly stats query result:", result);
+    return result;
+  } catch (error) {
+    console.error('Error in getMonthlyParcelStatsByCP:', error);
+    throw error;
+  }
+}

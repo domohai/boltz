@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import {
   LineChart,
   Line,
@@ -12,16 +13,21 @@ import {
 } from 'recharts';
 
 const LeaderChart = () => {
+  const { data: session } = useSession();
   const [parcelData, setParcelData] = useState([]);
+  const collection_point_id = session?.user?.collection_point_id;
 
   const fetchData = async () => {
+    if (!collection_point_id) return;
+
+
     try {
-      const response = await fetch('/api/leader/chart');
+      const response = await fetch(`/api/collection_manager/chart?collection_point_id=${collection_point_id}`);
       const data = await response.json();
       if (data.ok) {
         const formattedData = data.stats.map(item => ({
           ...item,
-          count: item.count // Use count from parcel stats
+          count: item.count 
         }));
         setParcelData(formattedData);
       } else {
@@ -33,8 +39,10 @@ const LeaderChart = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (collection_point_id) {
+      fetchData();
+    }
+  }, [collection_point_id]);
   
   return (
     <ResponsiveContainer width="100%" height="100%">
