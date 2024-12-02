@@ -1,9 +1,49 @@
 "use client";
 import LeaderChart from "@components/charts/Leader_chart";
 import LeaderChart2 from "@components/charts/Leader_chart_2";
+import { useState, useEffect, useMemo } from 'react';
+import { useSession } from 'next-auth/react';
 
 const page = () => {
-  return (
+  const { data: session } = useSession();
+  // const collection_point_id = useMemo(() => session?.user?.collection_point_id, [session]);
+  const collection_point_id = 68;
+  const [statusStats, setStatusStats] = useState({
+    'Chờ xử lý': { count: 0, cost: 0 },
+    'Đã tiếp nhận': { count: 0, cost: 0 },
+    'Đang vận chuyển': { count: 0, cost: 0 },
+    'Đã tới kho': { count: 0, cost: 0 },
+    'Đã trả hàng': { count: 0, cost: 0 }
+  });
+
+const fetchStatusStats = async () => {
+    if (!collection_point_id) return;
+    try {
+      const response = await fetch(`/api/collection_manager/stats?collection_point_id=${collection_point_id}`);
+      const data = await response.json();
+      if (data.ok) {
+        const newStats = { ...statusStats };
+        data.stats.forEach(stat => {
+          if (newStats[stat.status]) {
+            newStats[stat.status].count = stat.count;
+            newStats[stat.status].cost = stat.total_cost;
+          }
+        });
+        setStatusStats(newStats);
+        console.log(newStats)
+      }
+    } catch (error) {
+      console.error('Error fetching status stats:', error);
+    }
+  };
+
+useEffect(() => {
+    if (collection_point_id) {
+      fetchStatusStats();
+    }
+  }, [collection_point_id]);
+  
+return (
     <div className="p-4 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Thống kê</h1>
 
@@ -71,11 +111,14 @@ const page = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>Chờ xử lý</td><td>00</td><td>00</td></tr>
-                    <tr><td>Đã tiếp nhận</td><td>00</td><td>00</td></tr>
-                    <tr><td>Đang vận chuyển</td><td>00</td><td>00</td></tr>
-                    <tr><td>Đã tới kho</td><td>00</td><td>00</td></tr>
-                    <tr><td>Đã trả hàng</td><td>00</td><td>00</td></tr>
+                  {Object.entries(statusStats).map(([status, stats]) => (
+                    <tr key={status}>
+                      <td>{status}</td>
+                      <td>{stats.count}</td>
+                      <td>{stats.cost.toLocaleString('vi-VN')}đ</td>
+                      {/* <td>0đ</td> */}
+                    </tr>
+                  ))}
                 </tbody>
                 </table>
             </div>
@@ -84,7 +127,7 @@ const page = () => {
         <p className="mt-4">Biểu đồ số liệu các ngày trong tháng</p>
       </div>
     </div>
-  );  
-}
+  )
+};
 
-export default page
+export default page;

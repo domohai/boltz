@@ -126,3 +126,42 @@ export async function confirmParcelsForSrcCollectionPoint(parcel_ids) {
     return null;
   }
 }
+
+export async function getMonthlyParcelStats() {
+  try {
+    const [result] = await pool.query(`
+      SELECT 
+        DATE_FORMAT(start_time, '%b') as name,
+        COUNT(*) as count,
+        SUM(cost) as cost
+      FROM parcel 
+      WHERE YEAR(start_time) = YEAR(CURRENT_DATE())
+      GROUP BY MONTH(start_time), DATE_FORMAT(start_time, '%b')
+      ORDER BY MONTH(start_time)
+    `);
+    return result;
+  } catch (error) {
+    console.error('Error getting monthly stats:', error);
+    throw error;
+  }
+}
+
+export async function getParcelStatsByStatus(cp_id) {
+  try {
+    const [result] = await pool.query(`
+      SELECT 
+        status,
+        COUNT(*) as count,
+        SUM(cost) as total_cost
+      FROM parcel 
+      WHERE (src_collection_p = ? OR des_collection_p = ?) 
+      GROUP BY status
+    `, [cp_id, cp_id]);
+
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.error('Error getting status stats:', error);
+    throw error;
+  }
+}

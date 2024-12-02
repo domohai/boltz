@@ -16,7 +16,7 @@ const Page = () => {
   const [role, setRole] = useState('collection_staff');
   const { isOpen: isAddModalOpen, onOpen: onAddOpen, onOpenChange: onAddClose } = useDisclosure();
   const [accounts, setAccounts] = useState([]);
-  
+
   const getStaffAccounts = async () => {
     try {
       const res = await fetch(`/api/collection_manager/user?collection_point_id=${collection_point_id}`, {
