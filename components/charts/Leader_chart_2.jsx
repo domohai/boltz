@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import {
   LineChart,
   Line,
@@ -11,75 +12,32 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const salesData = [
-  {
-    name: 'Jan',
-    cost: 4.001,
-
-  },
-  {
-    name: 'Feb',
-    cost: 3.002,
-
-  },
-  {
-    name: 'Mar',
-    cost: 9.805,
-
-  },
-  {
-    name: 'Apr',
-    cost: 3.908,
-
-  },
-  {
-    name: 'May',
-    cost: 4.806,
-
-  },
-  {
-    name: 'Jun',
-    cost: 3.808,
-
-  },
-
-  {
-    name: 'July',
-    cost: 3.802,
-
-  },
-
-  {
-    name: 'August',
-    cost: 3.801,
-
-  },
-
-  {
-    name: 'September',
-    cost: 3.805,
-
-  },
-
-  {
-    name: 'October',
-    cost: 3.807,
-
-  },
-
-  {
-    name: 'November',
-    cost: 3.809,
-
-  },
-
-  {
-    name: 'December',
-    cost: 3.801,
-  },
-];
 
 const LeaderChart2 = () => {
+  const [salesData, setSalesData] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/api/leader/chart');
+      const data = await response.json();
+      if (data.ok) {
+        const formattedData = data.stats.map(item => ({
+          ...item,
+          cost: (item.cost / 1000000).toFixed(3) // Convert to millions VND
+        }));
+        setSalesData(formattedData);
+      } else {
+        console.error('Failed to fetch chart data:', data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching chart data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart

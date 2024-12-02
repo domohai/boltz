@@ -1,5 +1,5 @@
 'use client';
-
+import { useState, useEffect } from 'react';
 import {
   LineChart,
   Line,
@@ -11,81 +11,37 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const salesData = [
-  {
-    name: 'Jan',
-    parcel: 4000,
-
-  },
-  {
-    name: 'Feb',
-    parcel: 3000,
-
-  },
-  {
-    name: 'Mar',
-    parcel: 9800,
-
-  },
-  {
-    name: 'Apr',
-    parcel: 3908,
-
-  },
-  {
-    name: 'May',
-    parcel: 4800,
-
-  },
-  {
-    name: 'Jun',
-    parcel: 3800,
-
-  },
-
-  {
-    name: 'July',
-    parcel: 3800,
-
-  },
-
-  {
-    name: 'August',
-    parcel: 3800,
-
-  },
-
-  {
-    name: 'September',
-    parcel: 3800,
-
-  },
-
-  {
-    name: 'October',
-    parcel: 3800,
-
-  },
-
-  {
-    name: 'November',
-    parcel: 3800,
-
-  },
-
-  {
-    name: 'December',
-    parcel: 3800,
-  },
-];
-
 const LeaderChart = () => {
+  const [parcelData, setParcelData] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/api/leader/chart');
+      const data = await response.json();
+      if (data.ok) {
+        const formattedData = data.stats.map(item => ({
+          ...item,
+          count: item.count // Use count from parcel stats
+        }));
+        setParcelData(formattedData);
+      } else {
+        console.error('Failed to fetch chart data:', data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching chart data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
         width={500}
         height={300}
-        data={salesData}
+        data={parcelData}
         margin={{
           right: 30,
         }}
@@ -95,7 +51,7 @@ const LeaderChart = () => {
         <YAxis />
         <Tooltip content={<CustomTooltip />} />
         <Legend />
-        <Line type="monotone" dataKey="parcel" stroke="blue" />
+        <Line type="monotone" dataKey="count" stroke="blue" name="Số lượng đơn hàng" />
       </LineChart>
     </ResponsiveContainer>
   );
