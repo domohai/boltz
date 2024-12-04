@@ -13,7 +13,8 @@ import {
   getConfirmParcelsByServicePoint,
   confirmParcelForDesServicePoint,
   getWaitingParcelsByServicePoint,
-  confirmDeliveredParcels
+  confirmDeliveredParcels,
+  getParcelByTrackingCode
 } from "@back-end/models/parcel.js";
 
 export async function handleAddParcel(req, res) {
@@ -26,6 +27,19 @@ export async function handleAddParcel(req, res) {
     return NextResponse.json({ parcel, ok: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetParcelByTrackingCode(req, res) {
+  const trackingCode = await req.nextUrl.searchParams.get("trackingCode");
+  try {
+    const parcel = await getParcelByTrackingCode(trackingCode);
+    if (parcel.length === 0) {
+      return NextResponse.json({ message: "Không tìm thấy đơn hàng!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ parcel, ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error_msg: error.message, ok: false }, { status: 500 });
   }
 }
 

@@ -17,6 +17,41 @@ export async function addParcel(parcelInfo) {
   }
 }
 
+export async function getParcelByTrackingCode(tracking_code) {
+  try {
+    const [parcel] = await pool.query(
+      `SELECT 
+        p.*,
+        s.name AS sender_name,
+        s.phone_number AS sender_phone,
+        s.city AS sender_city,
+        s.district AS sender_district,
+        r.name AS receiver_name,
+        r.phone_number AS receiver_phone,
+        r.city AS receiver_city,
+        r.district AS receiver_district,
+        sp.name AS src_service_point_name,
+        sp.address AS src_service_point_address,
+        dsp.name AS des_service_point_name,
+        dsp.address AS des_service_point_address,
+        scp.name AS src_collection_point_name,
+        scp.address AS src_collection_point_address
+      FROM parcel p
+      LEFT JOIN person s ON p.sender_id = s.id
+      LEFT JOIN person r ON p.receiver_id = r.id
+      LEFT JOIN service_point dsp ON p.des_service_p = dsp.id
+      LEFT JOIN service_point sp ON p.src_service_p = sp.id
+      LEFT JOIN collection_point scp ON p.src_collection_p = scp.id
+      WHERE p.id = ?`,
+      [tracking_code]
+    );
+    return parcel;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 
 export async function getParcelsByServicePoint(service_point_id) {
   try {
