@@ -14,7 +14,8 @@ import {
   confirmParcelForDesServicePoint,
   getWaitingParcelsByServicePoint,
   confirmDeliveredParcels,
-  getParcelByTrackingCode
+  getParcelByTrackingCode,
+  getParcelsByRange
 } from "@back-end/models/parcel.js";
 
 export async function handleAddParcel(req, res) {
@@ -25,6 +26,21 @@ export async function handleAddParcel(req, res) {
       return NextResponse.json({ message: "Failed to add parcel!", ok: false }, { status: 400 });
     }
     return NextResponse.json({ parcel, ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetParcelsByRange(req, res) {
+  const service_point_id = await req.nextUrl.searchParams.get("service_point_id");
+  const start_date = await req.nextUrl.searchParams.get("start_date");
+  const end_date = await req.nextUrl.searchParams.get("end_date");
+  try {
+    const parcels = await getParcelsByRange(service_point_id, start_date, end_date);
+    if (!parcels) {
+      return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ parcels, ok: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
   }
