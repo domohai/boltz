@@ -3,7 +3,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie } from 'recharts';
+import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { Button } from "@nextui-org/button";
 import DateUtil from "@utils/DateUtil.js";
@@ -21,9 +22,45 @@ const ServicePointStats = () => {
   // Get the current date in the format YYYY-MM-DD
   const currentDate = DateUtil.toCalendarDate(new Date());
   const [dateRange, setDateRange] = useState({
-    start: currentDate,
+    start: currentDate.add({days: -6}),
     end: currentDate,
   });
+  // Data for the line chart
+  const data = useMemo(() => {
+    let sentData = [];
+    let receivedData = [];
+    if (rangeType === "predefine") {
+      if (Array.from(predefineRange)[0] === "7 ngày trước") {
+        sentData = DataUtil.createDayIntervalData(sentParcels, 7, currentDate);
+        receivedData = DataUtil.createDayIntervalData(receivedParcels, 7, currentDate, true);
+      } else if (Array.from(predefineRange)[0] === "1 tháng trước") {
+        sentData = DataUtil.createWeekIntervalData(sentParcels, 1, currentDate);
+        receivedData = DataUtil.createWeekIntervalData(receivedParcels, 1, currentDate, true);
+      } else if (Array.from(predefineRange)[0] === "3 tháng trước") {
+        sentData = DataUtil.createWeekIntervalData(sentParcels, 3, currentDate);
+        receivedData = DataUtil.createWeekIntervalData(receivedParcels, 3, currentDate, true);
+      } else if (Array.from(predefineRange)[0] === "6 tháng trước") {
+        sentData = DataUtil.createMonthIntervalData(sentParcels, 0.5, currentDate);
+        receivedData = DataUtil.createMonthIntervalData(receivedParcels, 0.5, currentDate, true);
+      } else if (Array.from(predefineRange)[0] === "1 năm trước") {
+        sentData = DataUtil.createMonthIntervalData(sentParcels, 1, currentDate);
+        receivedData = DataUtil.createMonthIntervalData(receivedParcels, 1, currentDate, true);
+      }
+    } else {
+      const interval = DateUtil.differenceInDays(dateRange.start, dateRange.end);
+      sentData = DataUtil.createDayIntervalData(sentParcels, interval, currentDate);
+      receivedData = DataUtil.createDayIntervalData(receivedParcels, interval, currentDate, true);
+    }
+    // return merge sent and received data
+    // console.log(sentData, receivedData);
+    // console.log(receivedParcels);
+    return sentData.map((sent, index) => ({
+      date: sent.date.toString(),
+      "Đơn hàng đi": sent.parcels,
+      "Số tiền cước": sent.cost,
+      "Đơn hàng nhận": receivedData[index].parcels,
+    })).sort((a, b) => new Date(a.date) - new Date(b.date));
+  }, [parcels]);
 
   const fetchParcels = async (start_date, end_date) => {
     try {
@@ -33,7 +70,6 @@ const ServicePointStats = () => {
       const data = await res.json();
       if (data.ok) {
         setParcels(DataUtil.reformatDateForParcels(data.parcels));
-        console.log(DataUtil.reformatDateForParcels(data.parcels));
       } else {
         console.error("Failed to fetch parcels: ", data.message);
         alert("An error occurred while fetching parcels. See console for more details.");
@@ -68,7 +104,7 @@ const ServicePointStats = () => {
     let selectedRange = Array.from(newSelection);
     switch (selectedRange[0]) {
       case "7 ngày trước":
-        startDate = currentDate.add({days: -7});
+        startDate = currentDate.add({days: -6});
         break;
       case "1 tháng trước":
         startDate = currentDate.add({months: -1});
@@ -94,15 +130,23 @@ const ServicePointStats = () => {
 
   const cards = (
     <div className='flex gap-4'>
-      <Card className="w-56">
+      <Card className="max-w-62">
         <CardHeader className="text-xl pt-4">
-          Số lượng đơn hàng
+          Số lượng đơn hàng đi
         </CardHeader>
         <CardBody className="pt-0 pb-4 text-2xl font-bold text-blue-500">
           {sentParcels.length}
         </CardBody>
       </Card>
-      <Card className="w-56">
+      <Card className="max-w-62">
+        <CardHeader className="text-xl pt-4">
+          Số lượng đơn hàng đến
+        </CardHeader>
+        <CardBody className="pt-0 pb-4 text-2xl font-bold text-blue-500">
+          {receivedParcels.length}
+        </CardBody>
+      </Card>
+      <Card className="max-w-62">
         <CardHeader className="text-xl pt-4">
           Tổng tiền cước
         </CardHeader>
@@ -176,6 +220,50 @@ const ServicePointStats = () => {
         </RadioGroup>
       </div>
       {cards}
+      <div className='grid grid-cols-2 mt-4 gap-2'>
+        <div className='bg-blue-200 p-4 pl-0 rounded-lg shadow-lg'>
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart
+              width={500}
+              height={300}
+              data={data}
+              margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="Đơn hàng đi" stroke="#8884d8" activeDot={{ r: 4 }} />
+              <Line type="monotone" dataKey="Đơn hàng nhận" stroke="#82ca9d" />
+            </LineChart>
+          </ResponsiveContainer>
+          <p className='text-center font-semibold mt-1'>
+            {"Biểu đồ số lượng đơn hàng" + (rangeType === "predefine" ? (Array.from(predefineRange)[0] === "7 ngày trước" ? " theo ngày" : (Array.from(predefineRange)[0] === "1 tháng trước" || Array.from(predefineRange)[0] === "3 tháng trước" ? " theo tuần" : " theo tháng")) : " theo ngày")}
+          </p>
+        </div>
+        <div className='bg-blue-200 p-4 rounded-lg shadow-lg'>
+          <ResponsiveContainer width="100%" height={400} className="p-2">
+            <LineChart
+              width={500}
+              height={300}
+              data={data}
+              margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="Số tiền cước" stroke="#8884d8" activeDot={{ r: 4 }} />
+            </LineChart>
+          </ResponsiveContainer>
+          <p className='text-center font-semibold mt-1'>
+            {"Biểu đồ số tiền cước" + (rangeType === "predefine" ? (Array.from(predefineRange)[0] === "7 ngày trước" ? " theo ngày" : (Array.from(predefineRange)[0] === "1 tháng trước" || Array.from(predefineRange)[0] === "3 tháng trước" ? " theo tuần" : " theo tháng")) : " theo ngày")}
+          </p>
+        </div>
+        <div className='col-span-2 bg-blue-200 p-4 rounded-lg shadow-lg'>
+
+        </div>
+      </div>
     </div>
   )
 }

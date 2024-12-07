@@ -1,4 +1,4 @@
-import { parseDate, getLocalTimeZone } from "@internationalized/date";
+import { parseDate, getLocalTimeZone, toCalendarDate } from "@internationalized/date";
 
 class DateUtil {
   static toCalendarDate(date) {
@@ -7,6 +7,15 @@ class DateUtil {
     const day = String(date.getDate()).padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}`;
     return parseDate(formattedDate);
+  }
+  
+  // convert calendar date into yyyy-mm-dd format
+  static calendarDateToDate(calendarDate) {
+    const jsDate = calendarDate.toDate(getLocalTimeZone());
+    const year = jsDate.getFullYear();
+    const month = String(jsDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(jsDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   static calendarDateToTimestamp(calendarDate, isEndDate = false) {
@@ -25,7 +34,14 @@ class DateUtil {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
     const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return parseDate(`${year}-${month}-${day}`);
+  }
+
+  static differenceInDays(startDate, endDate) {
+    const start = startDate.toDate(getLocalTimeZone());
+    const end = endDate.toDate(getLocalTimeZone());
+    const diffInMs = end - start;
+    return diffInMs / (1000 * 60 * 60 * 24);
   }
 }
 

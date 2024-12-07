@@ -31,8 +31,8 @@ export async function getParcelsByRange(service_point_id, start_date, end_date) 
         p.src_collection_p,
         p.des_collection_p
       FROM parcel p
-      WHERE (p.src_service_p = ? OR p.des_service_p = ?) AND p.end_time BETWEEN ? AND ?`,
-      [service_point_id, service_point_id, start_date, end_date]
+      WHERE ((p.src_service_p = ? AND p.start_time BETWEEN ? AND ?) OR (p.des_service_p = ? AND p.end_time BETWEEN ? AND ?)) AND p.status = "Đã trả hàng"`,
+      [service_point_id, start_date, end_date, service_point_id, start_date, end_date]
     );
     return parcels;
   } catch (error) {
