@@ -14,7 +14,10 @@ import {
   confirmParcelForDesServicePoint,
   getWaitingParcelsByServicePoint,
   confirmDeliveredParcels,
-  getMonthlyParcelStatsByCP
+  getMonthlyParcelStatsByCP,
+  getParcelByTrackingCode,
+  getParcelsByRange,
+  getParcelsForLeader
 } from "@back-end/models/parcel.js";
 
 export async function handleAddParcel(req, res) {
@@ -27,6 +30,48 @@ export async function handleAddParcel(req, res) {
     return NextResponse.json({ parcel, ok: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetParcelsByRange(req, res) {
+  const service_point_id = await req.nextUrl.searchParams.get("service_point_id");
+  const start_date = await req.nextUrl.searchParams.get("start_date");
+  const end_date = await req.nextUrl.searchParams.get("end_date");
+  try {
+    const parcels = await getParcelsByRange(service_point_id, start_date, end_date);
+    if (!parcels) {
+      return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ parcels, ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetParcelsForLeader(req, res) {
+  const start_date = await req.nextUrl.searchParams.get("start_date");
+  const end_date = await req.nextUrl.searchParams.get("end_date");
+  try {
+    const parcels = await getParcelsForLeader(start_date, end_date);
+    if (!parcels) {
+      return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ parcels, ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetParcelByTrackingCode(req, res) {
+  const trackingCode = await req.nextUrl.searchParams.get("trackingCode");
+  try {
+    const parcel = await getParcelByTrackingCode(trackingCode);
+    if (parcel.length === 0) {
+      return NextResponse.json({ message: "Không tìm thấy đơn hàng!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ parcel, ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error_msg: error.message, ok: false }, { status: 500 });
   }
 }
 

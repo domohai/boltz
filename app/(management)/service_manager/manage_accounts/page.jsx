@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { useSession } from 'next-auth/react';
-import serviceManagerAccounts from "./serviceManagerAccounts";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/table";
 import { Tooltip } from "@nextui-org/tooltip";
