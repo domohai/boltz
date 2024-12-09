@@ -3,7 +3,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell } from "@nextui-org/table";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { Button } from "@nextui-org/button";
@@ -16,9 +17,10 @@ const ServicePointStats = () => {
   const [rangeType, setRangeType] = useState("predefine");
   const [predefineRange, setPredefineRange] = useState(new Set(["7 ngày trước"]));
   const [parcels, setParcels] = useState([]);
-  const sentParcels = useMemo(() => parcels.filter(parcel => parcel.src_service_p === service_point_id), [parcels, service_point_id]);
-  const receivedParcels = useMemo(() => parcels.filter(parcel => parcel.des_service_p === service_point_id), [parcels, service_point_id]);
+  const sentParcels = useMemo(() => parcels.filter(parcel => parcel.src_service_p === service_point_id && parcel.status === "Đã trả hàng"), [parcels, service_point_id]);
+  const receivedParcels = useMemo(() => parcels.filter(parcel => parcel.des_service_p === service_point_id && parcel.status === "Đã trả hàng"), [parcels, service_point_id]);
   const totalCost = useMemo(() => sentParcels.reduce((acc, parcel) => acc + parcel.cost, 0), [sentParcels]);
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
   // Get the current date in the format YYYY-MM-DD
   const currentDate = DateUtil.toCalendarDate(new Date());
   const [dateRange, setDateRange] = useState({
@@ -48,8 +50,8 @@ const ServicePointStats = () => {
       }
     } else {
       const interval = DateUtil.differenceInDays(dateRange.start, dateRange.end);
-      sentData = DataUtil.createDayIntervalData(sentParcels, interval, currentDate);
-      receivedData = DataUtil.createDayIntervalData(receivedParcels, interval, currentDate, true);
+      sentData = DataUtil.createDayIntervalData(sentParcels, interval, dateRange.end);
+      receivedData = DataUtil.createDayIntervalData(receivedParcels, interval, dateRange.end, true);
     }
     // return merge sent and received data
     // console.log(sentData, receivedData);
@@ -61,6 +63,26 @@ const ServicePointStats = () => {
       "Đơn hàng nhận": receivedData[index].parcels,
     })).sort((a, b) => new Date(a.date) - new Date(b.date));
   }, [parcels]);
+
+  const pieData = useMemo(() => {
+    // count the number of parcels for each status
+    // and calculate the cost for each status
+    const pieParcels = parcels.filter(parcel => parcel.src_service_p === service_point_id);
+    const statusCount = pieParcels.reduce((acc, parcel) => {
+      acc[parcel.status] = (acc[parcel.status] || 0) + 1;
+      return acc;
+    }, {});
+    const statusCost = pieParcels.reduce((acc, parcel) => {
+      acc[parcel.status] = (acc[parcel.status] || 0) + parcel.cost;
+      return acc;
+    }, {});
+    return Object.keys(statusCount).map(status => ({
+      name: status,
+      value: statusCount[status],
+      cost: statusCost[status],
+    }));
+  }, [parcels]);
+
 
   const fetchParcels = async (start_date, end_date) => {
     try {
@@ -151,7 +173,7 @@ const ServicePointStats = () => {
           Tổng tiền cước
         </CardHeader>
         <CardBody className="flex-row pt-0 pb-4 text-2xl font-bold text-yellow-400">
-          <span>{totalCost}</span>
+          <span>{totalCost.toLocaleString('vi-VN')}</span>
           <span className='text-lg ml-2'>₫</span>
         </CardBody>
       </Card>
@@ -261,7 +283,49 @@ const ServicePointStats = () => {
           </p>
         </div>
         <div className='col-span-2 bg-blue-200 p-4 rounded-lg shadow-lg'>
-
+          <div className='flex p-2'>
+            <ResponsiveContainer width="100%" height={400} >
+              <PieChart>
+                <Pie 
+                  dataKey="value" 
+                  data={pieData} 
+                  cx="50%" cy="50%" 
+                  outerRadius={130} 
+                  fill="#8884d8" 
+                  label>
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                  </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+            <Table
+              className='max-w-[450px]'
+              removeWrapper
+              aria-label='Status table'>
+              <TableHeader>
+                <TableColumn>Trạng thái</TableColumn>
+                <TableColumn className='text-center'>Số lượng</TableColumn>
+                <TableColumn className='text-right'>Tổng cước</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {pieData.map((entry, index) => (
+                  <TableRow key={entry.name}>
+                    <TableCell className='flex flex-row'>
+                      <div 
+                        className='rounded-xl border-2 w-3 h-3 mt-1 mr-1'
+                        style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                      {entry.name}
+                    </TableCell>
+                    <TableCell className='text-center'>{entry.value}</TableCell>
+                    <TableCell className='text-right'>{entry.cost + " ₫"}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
     </div>

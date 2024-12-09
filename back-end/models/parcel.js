@@ -17,6 +17,32 @@ export async function addParcel(parcelInfo) {
   }
 }
 
+export async function getParcelsForLeader(start_date, end_date) {
+  try {
+    const [parcels] = await pool.query(
+      `SELECT 
+        p.id,
+        p.name,
+        p.weight,
+        p.cost,
+        p.status,
+        p.src_service_p,
+        p.des_service_p,
+        p.src_collection_p,
+        p.des_collection_p,
+        p.start_time,
+        p.end_time
+      FROM parcel p
+      WHERE p.start_time BETWEEN ? AND ?`,
+      [start_date, end_date]
+    );
+    return parcels;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 export async function getParcelsByRange(service_point_id, start_date, end_date) {
   try {
     const [parcels] = await pool.query(
@@ -31,7 +57,7 @@ export async function getParcelsByRange(service_point_id, start_date, end_date) 
         p.src_collection_p,
         p.des_collection_p
       FROM parcel p
-      WHERE ((p.src_service_p = ? AND p.start_time BETWEEN ? AND ?) OR (p.des_service_p = ? AND p.end_time BETWEEN ? AND ?)) AND p.status = "Đã trả hàng"`,
+      WHERE ((p.src_service_p = ? AND p.start_time BETWEEN ? AND ?) OR (p.des_service_p = ? AND p.end_time BETWEEN ? AND ?))`,
       [service_point_id, start_date, end_date, service_point_id, start_date, end_date]
     );
     return parcels;

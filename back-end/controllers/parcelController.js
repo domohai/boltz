@@ -16,7 +16,8 @@ import {
   confirmDeliveredParcels,
   getMonthlyParcelStatsByCP,
   getParcelByTrackingCode,
-  getParcelsByRange
+  getParcelsByRange,
+  getParcelsForLeader
 } from "@back-end/models/parcel.js";
 
 export async function handleAddParcel(req, res) {
@@ -38,6 +39,20 @@ export async function handleGetParcelsByRange(req, res) {
   const end_date = await req.nextUrl.searchParams.get("end_date");
   try {
     const parcels = await getParcelsByRange(service_point_id, start_date, end_date);
+    if (!parcels) {
+      return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
+    }
+    return NextResponse.json({ parcels, ok: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
+  }
+}
+
+export async function handleGetParcelsForLeader(req, res) {
+  const start_date = await req.nextUrl.searchParams.get("start_date");
+  const end_date = await req.nextUrl.searchParams.get("end_date");
+  try {
+    const parcels = await getParcelsForLeader(start_date, end_date);
     if (!parcels) {
       return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
     }

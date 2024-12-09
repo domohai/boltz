@@ -15,7 +15,7 @@ class DataUtil {
       for (let i = 0; i < days; i++) {
         const date = currentDate.add({days: -i});
         const parcelsOnDate = parcels.filter(parcel => {
-          return parcel.start_time === date.toString();
+          return parcel.start_time.toString() === date.toString();
         });
         const cost = parcelsOnDate.reduce((acc, parcel) => acc + parcel.cost, 0);
         data.push({
