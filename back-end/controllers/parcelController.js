@@ -20,8 +20,7 @@ import {
   getParcelsForLeader
 } from "@back-end/models/parcel.js";
 
-export async function handleAddParcel(req, res) {
-  const _parcelInfo = await req.json();
+export async function handleAddParcel(_parcelInfo) {
   try {
     const parcel = await addParcel(_parcelInfo);
     if (!parcel) {
@@ -33,10 +32,7 @@ export async function handleAddParcel(req, res) {
   }
 }
 
-export async function handleGetParcelsByRange(req, res) {
-  const service_point_id = await req.nextUrl.searchParams.get("service_point_id");
-  const start_date = await req.nextUrl.searchParams.get("start_date");
-  const end_date = await req.nextUrl.searchParams.get("end_date");
+export async function handleGetParcelsByRange(service_point_id, start_date, end_date) {
   try {
     const parcels = await getParcelsByRange(service_point_id, start_date, end_date);
     if (!parcels) {
@@ -48,9 +44,7 @@ export async function handleGetParcelsByRange(req, res) {
   }
 }
 
-export async function handleGetParcelsForLeader(req, res) {
-  const start_date = await req.nextUrl.searchParams.get("start_date");
-  const end_date = await req.nextUrl.searchParams.get("end_date");
+export async function handleGetParcelsForLeader(start_date, end_date) {
   try {
     const parcels = await getParcelsForLeader(start_date, end_date);
     if (!parcels) {
@@ -62,8 +56,7 @@ export async function handleGetParcelsForLeader(req, res) {
   }
 }
 
-export async function handleGetParcelByTrackingCode(req, res) {
-  const trackingCode = await req.nextUrl.searchParams.get("trackingCode");
+export async function handleGetParcelByTrackingCode(trackingCode) {
   try {
     const parcel = await getParcelByTrackingCode(trackingCode);
     if (parcel.length === 0) {
@@ -75,9 +68,7 @@ export async function handleGetParcelByTrackingCode(req, res) {
   }
 }
 
-export async function handleGetParcelsByServicePoint(req, res) {
-  const service_point_id = await req.nextUrl.searchParams.get("service_point_id");
-  // console.log(service_point_id);
+export async function handleGetParcelsByServicePoint(service_point_id) {
   try {
     const parcels = await getParcelsByServicePoint(service_point_id);
     if (!parcels) {
@@ -90,9 +81,7 @@ export async function handleGetParcelsByServicePoint(req, res) {
   }
 }
 
-export async function handleGetParcelsByCollectionPoint(req, res) {
-  const collection_point_id = await req.nextUrl.searchParams.get("collection_point_id");
-  // console.log(collection_point_id);
+export async function handleGetParcelsByCollectionPoint(collection_point_id) {
   try {
     const parcels = await getParcelsByCollectionPoint(collection_point_id);
     if (!parcels) {
@@ -105,24 +94,19 @@ export async function handleGetParcelsByCollectionPoint(req, res) {
   }
 }
 
-export async function handleGetConfirmParcelsByServicePoint(req, res) {
-  const service_point_id = await req.nextUrl.searchParams.get("service_point_id");
-  // console.log(service_point_id);
+export async function handleGetConfirmParcelsByServicePoint(service_point_id) {
   try {
     const parcels = await getConfirmParcelsByServicePoint(service_point_id);
     if (!parcels) {
       return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
     }
-    // console.log(parcels);
     return NextResponse.json({ parcels, ok: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
   }
 }
 
-export async function handleGetWaitingParcelsByServicePoint(req, res) {
-  const service_point_id = await req.nextUrl.searchParams.get("service_point_id");
-  // console.log(service_point_id);
+export async function handleGetWaitingParcelsByServicePoint(service_point_id) {  
   try {
     const parcels = await getWaitingParcelsByServicePoint(service_point_id);
     if (!parcels) {
@@ -135,8 +119,7 @@ export async function handleGetWaitingParcelsByServicePoint(req, res) {
   }
 }
 
-export async function handleCancelParcels(req, res) {
-  const {parcel_ids, status} = await req.json();
+export async function handleCancelParcels(parcel_ids, status) {
   try {
     const parcels = await cancelParcels(parcel_ids, status);
     if (!parcels) {
@@ -148,8 +131,7 @@ export async function handleCancelParcels(req, res) {
   }
 }
 
-export async function handleTransferToSrcCollectionPoint(req, res) {
-  const {parcel_ids, status} = await req.json();
+export async function handleTransferToSrcCollectionPoint(parcel_ids, status) {
   try {
     const parcels = await transferToSrcCollectionPoint(parcel_ids, status);
     if (!parcels) {
@@ -161,8 +143,7 @@ export async function handleTransferToSrcCollectionPoint(req, res) {
   }
 }
 
-export async function handleConfirmParcels(req, res) {
-  const {parcelsFromSrcServicePoint, parcelsFromSrcCollectionPoint} = await req.json();
+export async function handleConfirmParcels(parcelsFromSrcServicePoint, parcelsFromSrcCollectionPoint) {
   try {
     let parcelsSrcSP;
     let parcelsSrcCP;
@@ -183,8 +164,7 @@ export async function handleConfirmParcels(req, res) {
   }
 }
 
-export async function handleConfirmDeliveredParcels(req, res) {
-  const {parcel_ids, status} = await req.json();
+export async function handleConfirmDeliveredParcels(parcel_ids, status) {
   try {
     const parcels = await confirmDeliveredParcels(parcel_ids, status);
     if (!parcels) {
@@ -196,23 +176,19 @@ export async function handleConfirmDeliveredParcels(req, res) {
   }
 }
 
-export async function handleGetTransferParcelsByCollectionPoint(req, res) {
-  const collection_point_id = await req.nextUrl.searchParams.get("collection_point_id");
-  // console.log(collection_point_id);
+export async function handleGetTransferParcelsByCollectionPoint(collection_point_id) {
   try {
     const parcels = await getTransferParcelsByCollectionPoint(collection_point_id);
     if (!parcels) {
       return NextResponse.json({ message: "Failed to get parcels!", ok: false }, { status: 400 });
     }
-    // console.log(parcels);
     return NextResponse.json({ parcels, ok: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message, ok: false }, { status: 500 });
   }
 }
 
-export async function handleTransferFromCollection(req, res) {
-  const {parcelsToCollectionPoint, parcelsToServicePoint} = await req.json();
+export async function handleTransferFromCollection(parcelsToCollectionPoint, parcelsToServicePoint) {
   try {
     let parcelsCP;
     let parcelsSP;
@@ -231,8 +207,7 @@ export async function handleTransferFromCollection(req, res) {
   }
 }
 
-export async function handleConfirmParcelsForDesServicePoint(req, res) {
-  const {parcel_ids, status} = await req.json();
+export async function handleConfirmParcelsForDesServicePoint(parcel_ids, status) {
   try {
     const parcels = await confirmParcelForDesServicePoint(parcel_ids, status);
     if (!parcels) {
@@ -244,11 +219,9 @@ export async function handleConfirmParcelsForDesServicePoint(req, res) {
   }
 }
 
-export async function handleGetMonthlyParcelStats(req) {
+export async function handleGetMonthlyParcelStats(collection_point_id) {
   try {
-    const collection_point_id = req.nextUrl.searchParams.get('collection_point_id');
     console.log("Controller received collection_point_id:", collection_point_id);
-    
     if (!collection_point_id) {
       return NextResponse.json({ 
         message: "Missing collection_point_id", 

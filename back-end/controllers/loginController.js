@@ -1,8 +1,7 @@
 import pool from "@utils/db";
 import { NextResponse } from "next/server";
 
-export const handleLogin = async (req, res) => {
-  const { email } = await req.json();
+export const handleLogin = async (email) => {  
   try {
     const user = await pool.query(
       `SELECT * FROM users WHERE email = ?`,

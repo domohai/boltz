@@ -2,10 +2,11 @@ import { handleDeleteCollectionPoint, handleUpdateCollectionPoint } from "@back-
 
 export async function DELETE(req, { params }) {
   const { id } = params;
-  return handleDeleteCollectionPoint(req, id);
+  return handleDeleteCollectionPoint(id);
 }
 
 export async function PUT(req, { params }) {
   const { id } = params;
-  return handleUpdateCollectionPoint(req, id);
+  const { name, city, address, selectedManager } = await req.json();
+  return handleUpdateCollectionPoint(id, name, city, address, selectedManager);
 }

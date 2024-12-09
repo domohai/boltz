@@ -11,7 +11,7 @@ import {
 import { NextResponse } from "next/server";
 import { assignCMToCP, assignSMToSP } from "@back-end/models/user.js";
 
-export async function handleGetAllCollectionPoints(req, res) {
+export async function handleGetAllCollectionPoints() {
   try {
     const collectionPoints = await getAllCollectionPoints();
     if (!collectionPoints) {
@@ -23,7 +23,7 @@ export async function handleGetAllCollectionPoints(req, res) {
   }
 }
 
-export async function handleGetAllServicePoints(req, res) {
+export async function handleGetAllServicePoints() {
   try {
     const servicePoints = await getAllServicePoints();
     if (!servicePoints) {
@@ -35,9 +35,8 @@ export async function handleGetAllServicePoints(req, res) {
   }
 }
 
-export async function handleAddCollectionPoint(req, res) {
+export async function handleAddCollectionPoint(name, city, address, selectedManager) {
   try {
-    const { name, city, address, selectedManager } = await req.json();
     if (!name || !city || !address) {
       return NextResponse.json({ message: "Missing required fields", ok: false }, { status: 400 });
     }
@@ -57,9 +56,8 @@ export async function handleAddCollectionPoint(req, res) {
   }
 }
 
-export async function handleAddServicePoint(req, res) {
+export async function handleAddServicePoint(name, city, district, address, selectedManager) {
   try {
-    const { name, city, district, address, selectedManager } = await req.json();
     if (!name || !city || !district || !address) {
       return NextResponse.json({ message: "Missing required fields", ok: false }, { status: 400 });
     }
@@ -79,7 +77,7 @@ export async function handleAddServicePoint(req, res) {
   }
 }
 
-export async function handleDeleteCollectionPoint(req, id) {
+export async function handleDeleteCollectionPoint(id) {
   try {
     const result = await deleteCollectionPoint(id);
     if (result.affectedRows === 0) {
@@ -91,7 +89,7 @@ export async function handleDeleteCollectionPoint(req, id) {
   }
 }
 
-export async function handleDeleteServicePoint(req, id) {
+export async function handleDeleteServicePoint(id) {
   try {
     const result = await deleteServicePoint(id);
     if (result.affectedRows === 0) {
@@ -103,9 +101,8 @@ export async function handleDeleteServicePoint(req, id) {
   }
 }
 
-export async function handleUpdateCollectionPoint(req, id) {
+export async function handleUpdateCollectionPoint(id, name, city, address, selectedManager) {
   try {
-    const { name, city, address, selectedManager } = await req.json();
     if (!name || !city || !address) {
       return NextResponse.json({ message: "Missing required fields", ok: false }, { status: 400 });
     }
@@ -125,9 +122,8 @@ export async function handleUpdateCollectionPoint(req, id) {
   }
 }
 
-export async function handleUpdateServicePoint(req, id) {
+export async function handleUpdateServicePoint(id, name, city, district, address, selectedManager) {
   try {
-    const { name, city, district, address, selectedManager } = await req.json();
     if (!name || !city || !district || !address) {
       return NextResponse.json({ message: "Missing required fields", ok: false }, { status: 400 });
     }
@@ -147,7 +143,7 @@ export async function handleUpdateServicePoint(req, id) {
   }
 }
 
-export async function handleGetServicePoints(req, res) {
+export async function handleGetServicePoints() {
   try {
     const servicePoints = await getServicePoints();
     if (!servicePoints) {

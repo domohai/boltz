@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import { deleteUserById } from '@back-end/models/user';
+import { deleteUserById } from '@back-end/models/user.js';
 
 export async function DELETE(req, { params }) {
   const { id } = params;
-  
   try {
     const result = await deleteUserById(id);
     if (!result || result.affectedRows === 0) {

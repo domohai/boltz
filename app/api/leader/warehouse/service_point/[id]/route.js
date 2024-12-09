@@ -2,10 +2,11 @@ import { handleDeleteServicePoint, handleUpdateServicePoint } from '@back-end/co
 
 export async function DELETE(req, {params}) {
   const { id } = params;
-  return handleDeleteServicePoint(req, id);
+  return handleDeleteServicePoint(id);
 }
 
 export async function PUT(req, {params}) {
   const { id } = params;
-  return handleUpdateServicePoint(req, id);
+  const { name, city, district, address, selectedManager } = await req.json();
+  return handleUpdateServicePoint(id, name, city, district, address, selectedManager);
 }
