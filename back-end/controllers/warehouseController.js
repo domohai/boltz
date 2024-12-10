@@ -45,9 +45,11 @@ export async function handleAddCollectionPoint(name, city, address, selectedMana
       return NextResponse.json({ message: "Failed to add collection point", ok: false }, { status: 400 });
     }
     if (selectedManager) {
-      const assignResult = await assignCMToCP(result.insertId, selectedManager);
-      if (!assignResult) {
-        return NextResponse.json({ message: "Failed to assign collection manager to collection point", ok: false }, { status: 400 });
+      if (result.insertId) {
+        const assignResult = await assignCMToCP(result.insertId, selectedManager);
+        if (!assignResult) {
+          return NextResponse.json({ message: "Failed to assign collection manager to collection point", ok: false }, { status: 400 });
+        }
       }
     }
     return NextResponse.json({ ok: true }, { status: 200 });
@@ -66,9 +68,11 @@ export async function handleAddServicePoint(name, city, district, address, selec
       return NextResponse.json({ message: "Failed to add service point", ok: false }, { status: 400 });
     }
     if (selectedManager) {
-      const assignResult = await assignCMToCP(result.insertId, selectedManager);
-      if (!assignResult) {
-        return NextResponse.json({ message: "Failed to assign collection manager to service point", ok: false }, { status: 400 });
+      if (result.insertId) {
+        const assignResult = await assignCMToCP(result.insertId, selectedManager);  
+        if (!assignResult) {
+          return NextResponse.json({ message: "Failed to assign collection manager to service point", ok: false }, { status: 400 });
+        }
       }
     }
     return NextResponse.json({ ok: true }, { status: 200 });

@@ -13,7 +13,7 @@ const Page = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState('collection_staff');
   const {isOpen, onOpen, onOpenChange } = useDisclosure();
   const [accounts, setAccounts] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
@@ -80,7 +80,7 @@ const Page = () => {
   const deleteAccountHandler = async () => {
     if (!selectedId) return;
     try {
-      const response = await fetch(`/api/collection_manager/user/${selectedId}`, {
+      const response = await fetch(`/api/collection_manager/user?id=${selectedId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

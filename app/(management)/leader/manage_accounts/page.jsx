@@ -100,7 +100,7 @@ const LeaderManageAccount = () => {
     // that we want to delete. The system will open a confirm pop-up. When we press 'Xoá' button,
     // this function will be called to delete the user.
 		if (!selectedAccountId) return; // check if the selectedAccountId is null or not
-    let response = await fetch(`/api/leader/user/${selectedAccountId}`, {
+    let response = await fetch(`/api/leader/user?id=${selectedAccountId}`, {
       method: 'DELETE',
     });
 
