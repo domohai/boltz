@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPersonByPhoneNumber, addPerson } from "@back-end/models/person.js";
 
-export async function handleGetPersonByPhoneNumber(req, res) {
-  const phone_number = await req.nextUrl.searchParams.get("phone_number");
+export async function handleGetPersonByPhoneNumber(phone_number) {
   try {
     const person = await getPersonByPhoneNumber(phone_number);
     if (person.length === 0) {
@@ -14,8 +13,7 @@ export async function handleGetPersonByPhoneNumber(req, res) {
   }
 }
 
-export async function handleAddPerson(req, res) {
-  const {name, phone_number, city, district} = await req.json();
+export async function handleAddPerson(name, phone_number, city, district) {
   try {
     const person = await addPerson(name, phone_number, city, district);
     if (!person) {

@@ -1,10 +1,10 @@
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcryptjs';
-import {leaders} from '@utils/leader_data.js';
-import {cp_managers} from '@utils/cp_accounts.js';
-import {sp_managers} from '@utils/sp_manager.js';
-import {service_staff} from '@utils/ss_accounts.js';
-import {collection_staff} from '@utils/cs_accounts.js';
+// import {leaders} from '@utils/leader_data.js';
+// import {cp_managers} from '@utils/cp_accounts.js';
+// import {sp_managers} from '@utils/sp_manager.js';
+// import {service_staff} from '@utils/ss_accounts.js';
+// import {collection_staff} from '@utils/cs_accounts.js';
 
 const pool = mysql.createPool({
   host: process.env.MYSQL_SERVICE_HOST || process.env.DATABASE_HOST,

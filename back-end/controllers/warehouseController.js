@@ -11,7 +11,7 @@ import {
 import { NextResponse } from "next/server";
 import { assignCMToCP, assignSMToSP } from "@back-end/models/user.js";
 
-export async function handleGetAllCollectionPoints(req, res) {
+export async function handleGetAllCollectionPoints() {
   try {
     const collectionPoints = await getAllCollectionPoints();
     if (!collectionPoints) {
@@ -23,7 +23,7 @@ export async function handleGetAllCollectionPoints(req, res) {
   }
 }
 
-export async function handleGetAllServicePoints(req, res) {
+export async function handleGetAllServicePoints() {
   try {
     const servicePoints = await getAllServicePoints();
     if (!servicePoints) {
@@ -35,9 +35,8 @@ export async function handleGetAllServicePoints(req, res) {
   }
 }
 
-export async function handleAddCollectionPoint(req, res) {
+export async function handleAddCollectionPoint(name, city, address, selectedManager) {
   try {
-    const { name, city, address, selectedManager } = await req.json();
     if (!name || !city || !address) {
       return NextResponse.json({ message: "Missing required fields", ok: false }, { status: 400 });
     }
@@ -46,9 +45,11 @@ export async function handleAddCollectionPoint(req, res) {
       return NextResponse.json({ message: "Failed to add collection point", ok: false }, { status: 400 });
     }
     if (selectedManager) {
-      const assignResult = await assignCMToCP(result.insertId, selectedManager);
-      if (!assignResult) {
-        return NextResponse.json({ message: "Failed to assign collection manager to collection point", ok: false }, { status: 400 });
+      if (result.insertId) {
+        const assignResult = await assignCMToCP(result.insertId, selectedManager);
+        if (!assignResult) {
+          return NextResponse.json({ message: "Failed to assign collection manager to collection point", ok: false }, { status: 400 });
+        }
       }
     }
     return NextResponse.json({ ok: true }, { status: 200 });
@@ -57,9 +58,8 @@ export async function handleAddCollectionPoint(req, res) {
   }
 }
 
-export async function handleAddServicePoint(req, res) {
+export async function handleAddServicePoint(name, city, district, address, selectedManager) {
   try {
-    const { name, city, district, address, selectedManager } = await req.json();
     if (!name || !city || !district || !address) {
       return NextResponse.json({ message: "Missing required fields", ok: false }, { status: 400 });
     }
@@ -68,9 +68,11 @@ export async function handleAddServicePoint(req, res) {
       return NextResponse.json({ message: "Failed to add service point", ok: false }, { status: 400 });
     }
     if (selectedManager) {
-      const assignResult = await assignCMToCP(result.insertId, selectedManager);
-      if (!assignResult) {
-        return NextResponse.json({ message: "Failed to assign collection manager to service point", ok: false }, { status: 400 });
+      if (result.insertId) {
+        const assignResult = await assignCMToCP(result.insertId, selectedManager);  
+        if (!assignResult) {
+          return NextResponse.json({ message: "Failed to assign collection manager to service point", ok: false }, { status: 400 });
+        }
       }
     }
     return NextResponse.json({ ok: true }, { status: 200 });
@@ -79,7 +81,7 @@ export async function handleAddServicePoint(req, res) {
   }
 }
 
-export async function handleDeleteCollectionPoint(req, id) {
+export async function handleDeleteCollectionPoint(id) {
   try {
     const result = await deleteCollectionPoint(id);
     if (result.affectedRows === 0) {
@@ -91,7 +93,7 @@ export async function handleDeleteCollectionPoint(req, id) {
   }
 }
 
-export async function handleDeleteServicePoint(req, id) {
+export async function handleDeleteServicePoint(id) {
   try {
     const result = await deleteServicePoint(id);
     if (result.affectedRows === 0) {
@@ -103,9 +105,8 @@ export async function handleDeleteServicePoint(req, id) {
   }
 }
 
-export async function handleUpdateCollectionPoint(req, id) {
+export async function handleUpdateCollectionPoint(id, name, city, address, selectedManager) {
   try {
-    const { name, city, address, selectedManager } = await req.json();
     if (!name || !city || !address) {
       return NextResponse.json({ message: "Missing required fields", ok: false }, { status: 400 });
     }
@@ -125,9 +126,8 @@ export async function handleUpdateCollectionPoint(req, id) {
   }
 }
 
-export async function handleUpdateServicePoint(req, id) {
+export async function handleUpdateServicePoint(id, name, city, district, address, selectedManager) {
   try {
-    const { name, city, district, address, selectedManager } = await req.json();
     if (!name || !city || !district || !address) {
       return NextResponse.json({ message: "Missing required fields", ok: false }, { status: 400 });
     }
@@ -147,7 +147,7 @@ export async function handleUpdateServicePoint(req, id) {
   }
 }
 
-export async function handleGetServicePoints(req, res) {
+export async function handleGetServicePoints() {
   try {
     const servicePoints = await getServicePoints();
     if (!servicePoints) {

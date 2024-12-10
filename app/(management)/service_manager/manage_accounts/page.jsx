@@ -81,7 +81,7 @@ const Page = () => {
   const deleteAccountHandler = async () => {
     if (!selectedId) return;
     try {
-      const response = await fetch(`/api/service_manager/user/${selectedId}`, {
+      const response = await fetch(`/api/service_manager/user?id=${selectedId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

@@ -98,7 +98,7 @@ const WarehouseManagement = () => {
   const deleteCollectionPoint = async () => {
     if (!selectedId) return;
     try {
-      const res = await fetch(`/api/leader/warehouse/collection_point/${selectedId}`, {
+      const res = await fetch(`/api/leader/warehouse/collection_point?id=${selectedId}`, {
         method: 'DELETE',
       });
       const data = await res.json();
@@ -131,7 +131,7 @@ const WarehouseManagement = () => {
     }
     // send edit request
     try {
-      const res = await fetch(`/api/leader/warehouse/collection_point/${selectedId}`, {
+      const res = await fetch(`/api/leader/warehouse/collection_point?id=${selectedId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
