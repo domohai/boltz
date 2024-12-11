@@ -3,29 +3,50 @@ import { Card, CardHeader, CardBody} from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { useState } from 'react';
-import { signIn } from "next-auth/react";
+// import { signIn } from "next-auth/react";
 
 const LoginForm = () => {
+  const api_url = process.env.API_URL || 'http://localhost:3001';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    // try {
+    //   const res = await signIn('credentials', {
+    //     email,
+    //     password,
+    //     redirect: false,
+    //   });
+    //   // Check if response is undefined or has an error
+    //   if (!res || res.error) {
+    //     setError(res?.error || 'An unexpected error occurred');
+    //     console.error("Login error:", res?.error);
+    //     return;
+    //   }
+    // } catch (err) {
+    //   console.error("SignIn error:", err);
+    //   setError('An unexpected error occurred');
+    // }
     try {
-      const res = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
+      const res = await fetch(`${api_url}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
-      // Check if response is undefined or has an error
-      if (!res || res.error) {
-        setError(res?.error || 'An unexpected error occurred');
-        console.error("Login error:", res?.error);
+      const data = await res.json();
+      if (!data.success) {
+        setError(data.message || 'An unexpected error occurred');
+        console.error("Login error:", data.message);
         return;
       }
+      // Redirect to the appropriate page based on the user's role
+      window.location.href = data.redirectPath;
     } catch (err) {
-      console.error("SignIn error:", err);
+      console.error("Login error:", err);
       setError('An unexpected error occurred');
     }
   };
