@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { useSession } from 'next-auth/react';
-import serviceManagerAccounts from "./serviceManagerAccounts";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/table";
 import { Tooltip } from "@nextui-org/tooltip";
@@ -82,7 +81,7 @@ const Page = () => {
   const deleteAccountHandler = async () => {
     if (!selectedId) return;
     try {
-      const response = await fetch(`/api/service_manager/user/${selectedId}`, {
+      const response = await fetch(`/api/service_manager/user?id=${selectedId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

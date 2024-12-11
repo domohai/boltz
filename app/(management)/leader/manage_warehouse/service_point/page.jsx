@@ -99,7 +99,7 @@ const ManageServicePoint = () => {
   const deleteServicePoint = async () => {
     if (!selectedId) return;
     try {
-      const res = await fetch(`/api/leader/warehouse/service_point/${selectedId}`, {
+      const res = await fetch(`/api/leader/warehouse/service_point?id=${selectedId}`, {
         method: 'DELETE',
       });
       const data = await res.json();
@@ -132,7 +132,7 @@ const ManageServicePoint = () => {
     }
     // send edit request
     try {
-      const res = await fetch(`/api/leader/warehouse/service_point/${selectedId}`, {
+      const res = await fetch(`/api/leader/warehouse/service_point?id=${selectedId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -17,6 +17,90 @@ export async function addParcel(parcelInfo) {
   }
 }
 
+export async function getParcelsForLeader(start_date, end_date) {
+  try {
+    const [parcels] = await pool.query(
+      `SELECT 
+        p.id,
+        p.name,
+        p.weight,
+        p.cost,
+        p.status,
+        p.src_service_p,
+        p.des_service_p,
+        p.src_collection_p,
+        p.des_collection_p,
+        p.start_time,
+        p.end_time
+      FROM parcel p
+      WHERE p.start_time BETWEEN ? AND ?`,
+      [start_date, end_date]
+    );
+    return parcels;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getParcelsByRange(service_point_id, start_date, end_date) {
+  try {
+    const [parcels] = await pool.query(
+      `SELECT 
+        p.id,
+        p.start_time,
+        p.end_time,
+        p.cost,
+        p.status,
+        p.src_service_p,
+        p.des_service_p,
+        p.src_collection_p,
+        p.des_collection_p
+      FROM parcel p
+      WHERE ((p.src_service_p = ? AND p.start_time BETWEEN ? AND ?) OR (p.des_service_p = ? AND p.end_time BETWEEN ? AND ?))`,
+      [service_point_id, start_date, end_date, service_point_id, start_date, end_date]
+    );
+    return parcels;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getParcelByTrackingCode(tracking_code) {
+  try {
+    const [parcel] = await pool.query(
+      `SELECT 
+        p.*,
+        s.name AS sender_name,
+        s.phone_number AS sender_phone,
+        s.city AS sender_city,
+        s.district AS sender_district,
+        r.name AS receiver_name,
+        r.phone_number AS receiver_phone,
+        r.city AS receiver_city,
+        r.district AS receiver_district,
+        sp.name AS src_service_point_name,
+        sp.address AS src_service_point_address,
+        dsp.name AS des_service_point_name,
+        dsp.address AS des_service_point_address,
+        scp.name AS src_collection_point_name,
+        scp.address AS src_collection_point_address
+      FROM parcel p
+      LEFT JOIN person s ON p.sender_id = s.id
+      LEFT JOIN person r ON p.receiver_id = r.id
+      LEFT JOIN service_point dsp ON p.des_service_p = dsp.id
+      LEFT JOIN service_point sp ON p.src_service_p = sp.id
+      LEFT JOIN collection_point scp ON p.src_collection_p = scp.id
+      WHERE p.id = ?`,
+      [tracking_code]
+    );
+    return parcel;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
 export async function getParcelsByServicePoint(service_point_id) {
   try {
