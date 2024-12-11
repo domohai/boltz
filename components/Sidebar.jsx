@@ -5,10 +5,11 @@ import { Image } from "@nextui-org/image";
 import { useSession } from "next-auth/react";
 import { ROLES } from "@utils/roles.js";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
+import { useMemo } from "react";
 
 const Sidebar = () => {
   const {data: session, status} = useSession();
-  const role = session?.user?.role;
+  const role = useMemo(() => session?.user.role, [session]);
 
   const leaderContent = (
     <>
@@ -181,9 +182,11 @@ const Sidebar = () => {
     }
   };
 
+  const content = useMemo(() => getSidebarContent(), [role]);
+
   return (
     <div className="bg-[#f0f0f2] h-full top-0 left-0 flex flex-col">
-      {getSidebarContent()}
+      {content}
     </div>
   );
 };
