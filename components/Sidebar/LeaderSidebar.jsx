@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/link";
+import Link from "next/link";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Image } from "@nextui-org/image";
 
