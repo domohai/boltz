@@ -1,7 +1,8 @@
 "use client";
 import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/link";
+// import { Link } from "@nextui-org/link";
 import { Image } from "@nextui-org/image";
+import Link from "next/link";
 
 const ServiceStaffSidebar = () => {
   return (

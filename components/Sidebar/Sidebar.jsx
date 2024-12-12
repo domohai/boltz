@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useSession } from "next-auth/react";
 import { ROLES } from "@utils/roles.js";
 import { useMemo } from "react";
@@ -7,13 +7,15 @@ import CollectionManagerSidebar from "@components/Sidebar/CollectionManagerSideb
 import ServiceManagerSidebar from "@components/Sidebar/ServiceManagerSidebar.jsx";
 import CollectionStaffSidebar from "@components/Sidebar/CollectionStaffSidebar.jsx";
 import ServiceStaffSidebar from "@components/Sidebar/ServiceStaffSidebar.jsx";
+import { useSessionData } from "@components/SessionContext.js";
 
 const Sidebar = () => {
-  const {data: session, status} = useSession();
-  const role = useMemo(() => session?.user.role, [session]);
+  // const { session, status } = useSessionData();
+  const { data: session, status } = useSession({ required: true });
+  const role = useMemo(() => session?.user.role, [session, status]);
 
   const content = useMemo(() => {
-    switch (role) {
+    switch (session?.user?.role) {
       case ROLES.LEADER:
         return <LeaderSidebar />;
       case ROLES.COLLECTION_MANAGER:
@@ -27,7 +29,7 @@ const Sidebar = () => {
       default:
         return <h1>Loading...</h1>;
     }
-  }, [role]);
+  }, [role, session, status]);
 
   // const leaderContent = (
   //   <>
