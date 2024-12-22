@@ -17,7 +17,8 @@ import {
   getMonthlyParcelStatsByCP,
   getParcelByTrackingCode,
   getParcelsByRange,
-  getParcelsForLeader
+  getParcelsForLeader,
+  getParcelsForCollectionManager
 } from "@back-end/models/parcel.js";
 
 export async function handleAddParcel(_parcelInfo) {
@@ -237,5 +238,25 @@ export async function handleGetMonthlyParcelStats(collection_point_id) {
       message: error.message, 
       ok: false 
     }, { status: 500 });
+  }
+}
+
+export async function handleGetParcelsForCollectionManager(collection_point_id, start_date, end_date) {
+  try {
+    if (!collection_point_id) {
+      return NextResponse.json(
+        { message: "Missing collection_point_id", ok: false },
+        { status: 400 }
+      );
+    }
+
+    const parcels = await getParcelsForCollectionManager(collection_point_id, start_date, end_date);
+    return NextResponse.json({ parcels, ok: true }, { status: 200 });
+  } catch (error) {
+    console.error("Controller error:", error);
+    return NextResponse.json(
+      { message: error.message, ok: false },
+      { status: 500 }
+    );
   }
 }
