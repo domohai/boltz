@@ -443,3 +443,30 @@ export async function getMonthlyParcelStatsByCP(collection_point_id) {
     throw error;
   }
 }
+
+export async function getParcelsForCollectionManager(collection_point_id, start_date, end_date) {
+  try {
+    const [parcels] = await pool.query(
+      `SELECT 
+        p.id,
+        p.name,
+        p.weight,
+        p.cost,
+        p.status,
+        p.src_service_p,
+        p.des_service_p,
+        p.src_collection_p,
+        p.des_collection_p,
+        p.start_time,
+        p.end_time
+      FROM parcel p
+      WHERE (p.des_collection_p = ? OR p.src_collection_p = ?)
+      AND p.start_time BETWEEN ? AND ?`,
+      [collection_point_id, collection_point_id, start_date, end_date]
+    );
+    return parcels;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
