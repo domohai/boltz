@@ -1,5 +1,11 @@
-# BoltZ
-An express management system
+# BoltZ  
+An express management system. The website is hosted at http://fall2024c56g2.int3306.freeddns.org/ and is only available when needed due to limited resources.
+
+## Features  
+- User authentication and role-based access control.  
+- Manage service points, collection hubs, and staff accounts.  
+- Track shipments from sender to recipient with real-time status updates.  
+- Generate statistical reports and visualizations for shipments and operations. 
 
 ## Prerequisites
 
